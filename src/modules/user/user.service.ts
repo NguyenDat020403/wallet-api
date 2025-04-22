@@ -22,7 +22,7 @@ export class UserService {
     private config: ConfigService,
   ) {}
 
-  async findById(id: string, isCurrentUser: boolean) {
+  async findById(id: string, isCurrentUser?: boolean) {
     console.log(id);
 
     const user = await this.prisma.user.findUnique({
