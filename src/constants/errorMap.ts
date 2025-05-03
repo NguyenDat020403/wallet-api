@@ -1,4 +1,7 @@
 export const ERROR_MAP = {
+  NETWORK_CREATION_FAILED: 'network creation failed',
+  INCORRECT_PASSWORD: 'incorrect password',
+  TOKEN_NOT_EXIST: 'something wrong',
   EMAIL_ALREADY_EXIST: 'email already exist',
   ACCOUNT_NOT_FOUND: 'account not found',
   USER_NOT_FOUND: 'user not found',

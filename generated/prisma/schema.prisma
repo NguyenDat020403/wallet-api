@@ -8,145 +8,118 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model network {
-  id                    String                  @id @unique(map: "idx_network_id") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  name                  String                  @db.VarChar(255)
-  rpc_url               String                  @db.VarChar(255)
-  chain_id              Int
-  current_symbol        String                  @db.VarChar(255)
-  price_feed_id         String?                 @db.VarChar(255)
-  block_explorer_url    String?                 @db.VarChar(255)
-  thumbnail             String?                 @db.VarChar(255)
-  is_default_network    Boolean?                @default(false)
-  is_testnet            Boolean?                @default(false)
-  networkswapid         String?                 @unique @db.Uuid
-  creatorid             String?                 @db.Uuid
-  created_at            DateTime?               @default(now()) @db.Timestamptz(6)
-  updated_at            DateTime?               @db.Timestamptz(6)
-  deleted_at            DateTime?               @db.Timestamptz(6)
-  network_swap          network_swap?
-  token_network         token_network[]
-  transaction           transaction[]
-  user_networks_network user_networks_network[]
+model audit_logs {
+  log_id       String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  user_id      String?   @db.Uuid
+  action       String    @db.VarChar(255)
+  target_table String?   @db.VarChar(255)
+  target_id    String?   @db.Uuid
+  created_at   DateTime? @default(now()) @db.Timestamp(6)
+  users        users?    @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
 }
 
-model network_swap {
-  id                       String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  network_id               String?   @unique(map: "idx_network_swap_network") @db.Uuid
-  swap_contract_address    String    @db.VarChar(255)
-  factory_contract_address String    @db.VarChar(255)
-  quote_contract_address   String    @db.VarChar(255)
-  wrapped_token_address    String    @db.VarChar(255)
-  created_at               DateTime? @default(now()) @db.Timestamptz(6)
-  updated_at               DateTime? @db.Timestamptz(6)
-  deleted_at               DateTime? @db.Timestamptz(6)
-  network                  network?  @relation(fields: [network_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_network_swap_network")
+model networks {
+  network_id         String            @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  network_name       String            @db.VarChar(255)
+  symbol             String            @db.VarChar(255)
+  thumbnail          String?           @db.VarChar(255)
+  chain_id           String            @db.VarChar(255)
+  block_explorer_url String?           @db.VarChar(255)
+  price_feed_id      String?           @db.VarChar(255)
+  is_default_network Boolean           @default(false)
+  is_testnet         Boolean           @default(false)
+  rpc_url            String            @db.VarChar(255)
+  created_at         DateTime?         @default(now()) @db.Timestamp(6)
+  updated_at         DateTime?         @default(now()) @db.Timestamp(6)
+  deleted_at         DateTime?         @db.Timestamp(6)
+  creator_id         String?           @db.Uuid
+  users              users?            @relation(fields: [creator_id], references: [user_id], onUpdate: NoAction)
+  token_networks     token_networks[]
+  wallet_networks    wallet_networks[]
 }
 
-model token {
-  id                String          @id @unique(map: "idx_token_id") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  name              String          @db.VarChar(255)
-  symbol            String          @db.VarChar(255)
-  decimal           Int
-  thumbnail         String?         @db.VarChar(255)
-  price_feed_id     String?         @db.VarChar(255)
-  hz_percent_change String?         @map("24hz_percent_change") @db.VarChar(255)
-  created_at        DateTime?       @default(now()) @db.Timestamptz(6)
-  updated_at        DateTime?       @db.Timestamptz(6)
-  token_network     token_network[]
-  transaction       transaction[]
+model token_networks {
+  token_network_id      String                  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  token_id              String?                 @db.Uuid
+  network_id            String?                 @db.Uuid
+  contract_address      String                  @db.VarChar(255)
+  networks              networks?               @relation(fields: [network_id], references: [network_id], onDelete: Cascade, onUpdate: NoAction)
+  tokens                tokens?                 @relation(fields: [token_id], references: [token_id], onDelete: Cascade, onUpdate: NoAction)
+  wallet_network_tokens wallet_network_tokens[]
+
+  @@unique([token_id, network_id])
+  @@index([network_id], map: "idx_token_networks_network_id")
+  @@index([token_id], map: "idx_token_networks_token_id")
 }
 
-model token_network {
-  token_network_id   String               @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  contract_address   String               @db.VarChar(255)
-  token_id           String?              @db.Uuid
-  network_id         String?              @db.Uuid
-  network            network?             @relation(fields: [network_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_token_network_network")
-  token              token?               @relation(fields: [token_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_token_network_token")
-  user_network_token user_network_token[]
-
-  @@index([network_id], map: "idx_token_network_network")
-  @@index([token_id], map: "idx_token_network_token")
+model tokens {
+  token_id           String           @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  token_name         String           @db.VarChar(255)
+  symbol             String           @db.VarChar(255)
+  decimals           Int
+  thumbnail          String?          @db.VarChar(255)
+  price_feed_id      String?          @db.VarChar(255)
+  percent_change_24h String?          @db.VarChar(255)
+  created_at         DateTime?        @default(now()) @db.Timestamp(6)
+  updated_at         DateTime?        @default(now()) @db.Timestamp(6)
+  deleted_at         DateTime?        @db.Timestamp(6)
+  token_networks     token_networks[]
 }
 
-model transaction {
-  id                       String              @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  transaction_status       etransactionstatus? @default(pending)
-  transaction_gas          Float?
-  transaction_hash         String?             @db.VarChar(255)
-  block_hash               String?             @db.VarChar(255)
-  block_number             Int?
-  from_address             String              @db.VarChar(255)
-  to_address               String              @db.VarChar(255)
-  token_contract_address   String?             @db.VarChar(255)
-  max_priority_fee_per_gas Float?
-  base_fee                 Float?
-  token_id                 String?             @db.Uuid
-  network_id               String?             @db.Uuid
-  amount                   Float
-  created_at               DateTime?           @default(now()) @db.Timestamptz(6)
-  network                  network?            @relation(fields: [network_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_transaction_network")
-  token                    token?              @relation(fields: [token_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_transaction_token")
-
-  @@index([network_id], map: "idx_transaction_network")
-  @@index([token_id], map: "idx_transaction_token")
+model users {
+  user_id       String       @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  username      String       @db.VarChar(255)
+  avatar        String?      @db.VarChar(255)
+  bio           String?      @db.VarChar(255)
+  email         String       @unique @db.VarChar(255)
+  password_hash String       @db.VarChar(255)
+  created_at    DateTime?    @default(now()) @db.Timestamp(6)
+  updated_at    DateTime?    @default(now()) @db.Timestamp(6)
+  deleted_at    DateTime?    @db.Timestamp(6)
+  audit_logs    audit_logs[]
+  networks      networks[]
+  wallets       wallets[]
 }
 
-model user {
-  id                                     String                  @id @unique(map: "IDX_user_id") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  name                                   String?                 @db.VarChar(255)
-  email                                  String?                 @unique(map: "IDX_user_email") @db.VarChar(255)
-  address                                String                  @db.VarChar(255)
-  password                               String?                 @db.VarChar(255)
-  avatar                                 String?                 @db.VarChar(255)
-  secretid                               String?                 @db.Uuid
-  currentselectednetworkid               String?                 @db.Uuid
-  push_notification_tokens               String[]                @default([]) @db.VarChar(255)
-  created_at                             DateTime?               @default(now()) @db.Timestamptz(6)
-  updated_at                             DateTime?               @db.Timestamptz(6)
-  deleted_at                             DateTime?               @db.Timestamptz(6)
-  user_secret_user_secretidTouser_secret user_secret?            @relation("user_secretidTouser_secret", fields: [secretid], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_secret")
-  user_network_token                     user_network_token[]
-  user_networks_network                  user_networks_network[]
-  user_secret_user_secret_useridTouser   user_secret?            @relation("user_secret_useridTouser")
+model wallet_network_tokens {
+  wallet_network_token_id String          @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  token_network_id        String?         @db.Uuid
+  wallet_id               String?         @db.Uuid
+  balance                 Decimal         @default(0) @db.Decimal(20, 8)
+  updated_at              DateTime?       @default(now()) @db.Timestamp(6)
+  token_networks          token_networks? @relation(fields: [token_network_id], references: [token_network_id], onDelete: Cascade, onUpdate: NoAction)
+  wallets                 wallets?        @relation(fields: [wallet_id], references: [wallet_id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@unique([token_network_id, wallet_id])
+  @@index([wallet_id], map: "idx_wallet_network_tokens_wallet_id")
 }
 
-model user_network_token {
-  user_network_token_id String        @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  userid                String        @db.Uuid
-  tokennetworkid        String        @db.Uuid
-  token_network         token_network @relation(fields: [tokennetworkid], references: [token_network_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_token_network")
-  user                  user          @relation(fields: [userid], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user")
+model wallet_networks {
+  wallet_network_id String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  wallet_id         String?   @db.Uuid
+  network_id        String?   @db.Uuid
+  address           String    @db.VarChar(255)
+  created_at        DateTime? @default(now()) @db.Timestamp(6)
+  updated_at        DateTime? @default(now()) @db.Timestamp(6)
+  networks          networks? @relation(fields: [network_id], references: [network_id], onDelete: Cascade, onUpdate: NoAction)
+  wallets           wallets?  @relation(fields: [wallet_id], references: [wallet_id], onDelete: Cascade, onUpdate: NoAction)
 
-  @@index([tokennetworkid], map: "idx_user_network_token_token")
-  @@index([userid], map: "idx_user_network_token_user")
+  @@unique([wallet_id, network_id])
 }
 
-model user_networks_network {
-  userid    String  @db.Uuid
-  networkid String  @db.Uuid
-  network   network @relation(fields: [networkid], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  user      user    @relation(fields: [userid], references: [id], onDelete: NoAction, onUpdate: NoAction)
+model wallets {
+  wallet_id             String                  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  user_id               String?                 @db.Uuid
+  wallet_name           String                  @db.VarChar(255)
+  wallet_balance        Decimal                 @default(0) @db.Decimal(20, 8)
+  wallet_address        String                  @db.VarChar(255)
+  wallet_phrase         String?                 @db.VarChar(255)
+  created_at            DateTime?               @default(now()) @db.Timestamp(6)
+  updated_at            DateTime?               @default(now()) @db.Timestamp(6)
+  deleted_at            DateTime?               @db.Timestamp(6)
+  wallet_network_tokens wallet_network_tokens[]
+  wallet_networks       wallet_networks[]
+  users                 users?                  @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction)
 
-  @@id([userid, networkid])
-}
-
-model user_secret {
-  id                              String    @id @unique(map: "IDX_user_secret_id") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  userid                          String?   @unique @db.Uuid
-  private_key                     String    @db.VarChar(255)
-  public_key                      String    @db.VarChar(255)
-  mnemonic                        String    @unique(map: "IDX_user_secret_mnemonic") @db.VarChar(255)
-  biometric_public_key            String?   @db.VarChar(255)
-  created_at                      DateTime? @default(now()) @db.Timestamptz(6)
-  user_user_secretidTouser_secret user[]    @relation("user_secretidTouser_secret")
-  user_user_secret_useridTouser   user?     @relation("user_secret_useridTouser", fields: [userid], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user")
-}
-
-enum etransactionstatus {
-  pending
-  completed
-  canceled
-  failed
+  @@index([user_id], map: "idx_wallets_user_id")
 }

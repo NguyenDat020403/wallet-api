@@ -14,30 +14,22 @@ export class SignUpDto {
   @IsString()
   @IsNotEmpty()
   password: string;
+  @IsString()
+  @IsOptional()
+  avatar: string;
 
   @IsString()
   @IsNotEmpty()
-  name: string;
-
-  @IsString()
-  @IsOptional()
-  biometricPublicKey?: string;
+  username: string;
 }
 export class SignInDto {
   @IsEmail()
   @IsOptional()
   email?: string;
-  @IsString()
-  @IsOptional()
-  address?: string;
 
   @IsString()
   @IsNotEmpty()
   password: string;
-
-  @IsString()
-  @IsOptional()
-  biometricPublicKey?: string;
 }
 
 export class ImportWalletDto {

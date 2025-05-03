@@ -1,18 +1,20 @@
-import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Post, UseGuards } from '@nestjs/common';
 import { JwtGuard } from 'src/guards';
 import { TokenService } from './token.service';
-import { CreateTokenDto, QueryTokensDto } from './token.dto';
+import {
+  CreateTokenDto,
+  //   QueryTokenFromAddressDto,
+  //   QueryTokensDto,
+} from './token.dto';
+import { generateResponse } from 'src/utils/response';
 
 @UseGuards(JwtGuard)
 @Controller('tokens')
 export class TokenController {
   constructor(private tokenService: TokenService) {}
-  @Post('createToken')
+  @Post('create')
   async createToken(@Body() body: CreateTokenDto) {
-    return this.tokenService.createToken(body);
-  }
-  @Get('getTokens')
-  async getTokens(@Query() query: QueryTokensDto) {
-    return this.tokenService.getTokens(query);
+    const data = await this.tokenService.createToken(body);
+    return generateResponse('success', data);
   }
 }

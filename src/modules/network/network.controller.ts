@@ -1,22 +1,24 @@
-import { Body, Controller, Param, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { JwtGuard } from 'src/guards';
 import { NetworkService } from './network.services';
 import { User } from 'src/decorators/user.decorator';
-import { CreateNetworkDto, CreateNetworkSwapDto } from './network.dto';
+import { CreateNetworkDto } from './network.dto';
 
 @UseGuards(JwtGuard)
 @Controller('networks')
 export class NetworkController {
   constructor(private networkService: NetworkService) {}
-  @Post('createNetwork')
-  createNetwork(@User('sub') id: string, @Body() body: CreateNetworkDto) {
-    return this.networkService.createNetwork(id, body);
-  }
-  @Post(':id/createNetworkSwap')
-  async createNetworkSwap(
-    @Param('id') id: string,
-    @Body() body: CreateNetworkSwapDto,
+
+  @Post('create')
+  async createNetwork(
+    @User('sub') userId: string,
+    @Body() dto: CreateNetworkDto,
   ) {
-    return this.networkService.createNetworkSwap(id, body);
+    return this.networkService.createNetwork(userId, dto);
+  }
+
+  @Get('getNetwork')
+  async getNetwork(@User('sub') userId: string) {
+    return await this.networkService.getNetworkByUserId(userId);
   }
 }

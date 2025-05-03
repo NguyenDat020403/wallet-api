@@ -1,4 +1,3 @@
-import { Expose } from 'class-transformer';
 import {
   IsArray,
   IsEnum,
@@ -10,19 +9,22 @@ import {
 } from 'class-validator';
 
 export class CreateTokenDto {
+  @IsUUID('4')
+  @IsNotEmpty()
+  wallet_id: string;
+
   @IsString()
   @IsNotEmpty()
-  name: string;
+  token_name: string;
 
   @IsString()
   @IsNotEmpty()
   symbol: string;
 
   @IsNumber()
-  decimal: number;
+  decimals: number;
 
   @IsString()
-  @IsNotEmpty()
   contract_address: string;
 
   @IsString()
@@ -35,8 +37,7 @@ export class CreateTokenDto {
 
   @IsString()
   @IsOptional()
-  @Expose({ name: '24hr_percent_change' })
-  ['percent_change_24hr']?: string;
+  percent_change_24hr: string;
 
   @IsUUID('4')
   network_id: string;
@@ -73,6 +74,10 @@ export class QueryTokenFromAddressDto {
 
   @IsUUID('4')
   network_id: string;
+
+  @IsUUID('4')
+  @IsNotEmpty()
+  wallet_id: string;
 }
 
 export class QueryTokensDto extends PaginationDto {

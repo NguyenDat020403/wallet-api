@@ -117,107 +117,91 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
   Serializable: 'Serializable'
 });
 
-exports.Prisma.NetworkScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  rpc_url: 'rpc_url',
-  chain_id: 'chain_id',
-  current_symbol: 'current_symbol',
-  price_feed_id: 'price_feed_id',
-  block_explorer_url: 'block_explorer_url',
+exports.Prisma.Audit_logsScalarFieldEnum = {
+  log_id: 'log_id',
+  user_id: 'user_id',
+  action: 'action',
+  target_table: 'target_table',
+  target_id: 'target_id',
+  created_at: 'created_at'
+};
+
+exports.Prisma.NetworksScalarFieldEnum = {
+  network_id: 'network_id',
+  network_name: 'network_name',
+  symbol: 'symbol',
   thumbnail: 'thumbnail',
+  chain_id: 'chain_id',
+  block_explorer_url: 'block_explorer_url',
+  price_feed_id: 'price_feed_id',
   is_default_network: 'is_default_network',
   is_testnet: 'is_testnet',
-  networkswapid: 'networkswapid',
-  creatorid: 'creatorid',
+  rpc_url: 'rpc_url',
   created_at: 'created_at',
   updated_at: 'updated_at',
-  deleted_at: 'deleted_at'
+  deleted_at: 'deleted_at',
+  creator_id: 'creator_id'
 };
 
-exports.Prisma.Network_swapScalarFieldEnum = {
-  id: 'id',
+exports.Prisma.Token_networksScalarFieldEnum = {
+  token_network_id: 'token_network_id',
+  token_id: 'token_id',
   network_id: 'network_id',
-  swap_contract_address: 'swap_contract_address',
-  factory_contract_address: 'factory_contract_address',
-  quote_contract_address: 'quote_contract_address',
-  wrapped_token_address: 'wrapped_token_address',
-  created_at: 'created_at',
-  updated_at: 'updated_at',
-  deleted_at: 'deleted_at'
+  contract_address: 'contract_address'
 };
 
-exports.Prisma.TokenScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
+exports.Prisma.TokensScalarFieldEnum = {
+  token_id: 'token_id',
+  token_name: 'token_name',
   symbol: 'symbol',
-  decimal: 'decimal',
+  decimals: 'decimals',
   thumbnail: 'thumbnail',
   price_feed_id: 'price_feed_id',
-  hz_percent_change: 'hz_percent_change',
+  percent_change_24h: 'percent_change_24h',
+  created_at: 'created_at',
+  updated_at: 'updated_at',
+  deleted_at: 'deleted_at'
+};
+
+exports.Prisma.UsersScalarFieldEnum = {
+  user_id: 'user_id',
+  username: 'username',
+  avatar: 'avatar',
+  bio: 'bio',
+  email: 'email',
+  password_hash: 'password_hash',
+  created_at: 'created_at',
+  updated_at: 'updated_at',
+  deleted_at: 'deleted_at'
+};
+
+exports.Prisma.Wallet_network_tokensScalarFieldEnum = {
+  wallet_network_token_id: 'wallet_network_token_id',
+  token_network_id: 'token_network_id',
+  wallet_id: 'wallet_id',
+  balance: 'balance',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.Wallet_networksScalarFieldEnum = {
+  wallet_network_id: 'wallet_network_id',
+  wallet_id: 'wallet_id',
+  network_id: 'network_id',
+  address: 'address',
   created_at: 'created_at',
   updated_at: 'updated_at'
 };
 
-exports.Prisma.Token_networkScalarFieldEnum = {
-  token_network_id: 'token_network_id',
-  contract_address: 'contract_address',
-  token_id: 'token_id',
-  network_id: 'network_id'
-};
-
-exports.Prisma.TransactionScalarFieldEnum = {
-  id: 'id',
-  transaction_status: 'transaction_status',
-  transaction_gas: 'transaction_gas',
-  transaction_hash: 'transaction_hash',
-  block_hash: 'block_hash',
-  block_number: 'block_number',
-  from_address: 'from_address',
-  to_address: 'to_address',
-  token_contract_address: 'token_contract_address',
-  max_priority_fee_per_gas: 'max_priority_fee_per_gas',
-  base_fee: 'base_fee',
-  token_id: 'token_id',
-  network_id: 'network_id',
-  amount: 'amount',
-  created_at: 'created_at'
-};
-
-exports.Prisma.UserScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  email: 'email',
-  address: 'address',
-  password: 'password',
-  avatar: 'avatar',
-  secretid: 'secretid',
-  currentselectednetworkid: 'currentselectednetworkid',
-  push_notification_tokens: 'push_notification_tokens',
+exports.Prisma.WalletsScalarFieldEnum = {
+  wallet_id: 'wallet_id',
+  user_id: 'user_id',
+  wallet_name: 'wallet_name',
+  wallet_balance: 'wallet_balance',
+  wallet_address: 'wallet_address',
+  wallet_phrase: 'wallet_phrase',
   created_at: 'created_at',
   updated_at: 'updated_at',
   deleted_at: 'deleted_at'
-};
-
-exports.Prisma.User_network_tokenScalarFieldEnum = {
-  user_network_token_id: 'user_network_token_id',
-  userid: 'userid',
-  tokennetworkid: 'tokennetworkid'
-};
-
-exports.Prisma.User_networks_networkScalarFieldEnum = {
-  userid: 'userid',
-  networkid: 'networkid'
-};
-
-exports.Prisma.User_secretScalarFieldEnum = {
-  id: 'id',
-  userid: 'userid',
-  private_key: 'private_key',
-  public_key: 'public_key',
-  mnemonic: 'mnemonic',
-  biometric_public_key: 'biometric_public_key',
-  created_at: 'created_at'
 };
 
 exports.Prisma.SortOrder = {
@@ -234,23 +218,17 @@ exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
-exports.etransactionstatus = exports.$Enums.etransactionstatus = {
-  pending: 'pending',
-  completed: 'completed',
-  canceled: 'canceled',
-  failed: 'failed'
-};
+
 
 exports.Prisma.ModelName = {
-  network: 'network',
-  network_swap: 'network_swap',
-  token: 'token',
-  token_network: 'token_network',
-  transaction: 'transaction',
-  user: 'user',
-  user_network_token: 'user_network_token',
-  user_networks_network: 'user_networks_network',
-  user_secret: 'user_secret'
+  audit_logs: 'audit_logs',
+  networks: 'networks',
+  token_networks: 'token_networks',
+  tokens: 'tokens',
+  users: 'users',
+  wallet_network_tokens: 'wallet_network_tokens',
+  wallet_networks: 'wallet_networks',
+  wallets: 'wallets'
 };
 
 /**
