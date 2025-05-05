@@ -26,3 +26,22 @@ export const ERROR_MAP = {
 export const ERROR_WEB3_MAP = {
   [-32000]: 'insufficient funds',
 };
+
+export const ERROR_AUTH_MAP = {
+  EA01: 'user not existed',
+  EA02: 'Invalid password',
+  EA10: 'Internal server error',
+};
+
+export const ERROR_AUTH_HTTP_STATUS_MAP = {
+  '200': 'Success', // Đăng nhập thành công
+  '400': 'Bad Request Missing or invalid parameters', // Ví dụ thiếu email/password hoặc format sai
+  '401': 'Unauthorized Invalid credentials', // Email hoặc mật khẩu sai
+  '403': 'Forbidden – Access denied', // Tài khoản bị khóa hoặc không có quyền
+  '404': 'Not Found – User does not exist', // Không tìm thấy tài khoản
+  '409': 'Conflict – Email already exists or duplicate action', // Khi đăng ký
+  '422': 'Unprocessable Entity – Validation failed', // Format không hợp lệ (ví dụ: password quá ngắn)
+  '429': 'Too Many Requests – Too many login attempts', // Bảo vệ khỏi brute force
+  '500': 'Internal Server Error – Something went wrong on server', // Lỗi không xác định
+  '503': 'Service Unavailable – Try again later', // Server quá tải hoặc bảo trì
+};

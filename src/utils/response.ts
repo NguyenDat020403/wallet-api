@@ -2,6 +2,8 @@
 export const generateResponse = (
   message: string,
   data: any,
+  status?: string,
+  error?: string,
   pagination?: {
     offset: number;
     limit: number;
@@ -11,6 +13,8 @@ export const generateResponse = (
   const response = {
     message,
     data,
+    status,
+    error,
   };
 
   if (pagination) {

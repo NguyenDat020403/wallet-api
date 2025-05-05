@@ -28,7 +28,13 @@ export class NetworkService {
     }
     return generateResponse('success', network);
   }
-
+  async findDefaultNetwork() {
+    return await this.prisma.networks.findMany({
+      where: {
+        is_default_network: true,
+      },
+    });
+  }
   async findById(id: string) {
     return this.prisma.networks.findFirst({
       where: {

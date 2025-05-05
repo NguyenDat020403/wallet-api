@@ -6,13 +6,11 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { JwtGuard } from 'src/guards';
 import { PrismaService } from 'src/prisma/prisma.service';
-import {
-  createNewWalletAccount,
-  getAccountFromMnemonic,
-  getBalanceByNetwork,
-} from 'src/utils/wallet';
+import { CreateWalletETH, getAccountFromMnemonic } from 'src/utils/wallet';
 import { GetWalletRequest, ImportWalletRequest } from './wallet.dto';
 import { Decimal } from 'generated/prisma/runtime/library';
+import { NetworkService } from '../network/network.services';
+import { TokenService } from '../token/token.service';
 @UseGuards(JwtGuard)
 @Injectable()
 export class WalletService {
@@ -20,39 +18,70 @@ export class WalletService {
     private prisma: PrismaService,
     private jwt: JwtService,
     private config: ConfigService,
+    private networkService: NetworkService,
+    private tokenService: TokenService,
   ) {}
   async createWallet(userId: string) {
-    const walletAccount = createNewWalletAccount();
-
+    const walletMulti = await CreateWalletETH();
     const wallet = await this.prisma.wallets.create({
       data: {
         wallet_name: 'Default Wallet',
         wallet_balance: 0,
-        wallet_address: walletAccount.address,
+        wallet_address: '',
         user_id: userId,
       },
     });
 
     //FIX: add list Network Default
-    const network = await this.prisma.networks.findMany({
-      where: {
-        is_default_network: true,
-      },
-    });
-    const networkIds = network.map((n) => n.network_id);
-    const walletNetworks = await this.prisma.wallet_networks.createMany({
-      data: networkIds.map((networkId) => ({
+    const network = await this.networkService.findDefaultNetwork();
+
+    const walletNetworkList = network.map((n) => {
+      let address;
+      if (n.symbol === 'BTC') {
+        address = walletMulti.wallets[1].address;
+      } else if (n.symbol === 'ETH') {
+        address = walletMulti.wallets[0].address;
+      }
+      return {
+        address: address,
         wallet_id: wallet.wallet_id,
-        network_id: networkId,
-        address: walletAccount.address,
-      })),
+        network_id: n.network_id,
+      };
     });
 
-    console.log(walletNetworks);
+    await this.createManyWalletNetwork(walletNetworkList);
+
+    //CREATE WALLET_TOKEN_NETWORK
+    // NETWORK_ID List -> list TOKEN_NETWORK
+    // TOKEN_NETWORK List + wallet_ID -> WalletTokenNetwork
+    const tokenNetworks = await Promise.all(
+      network.map(async (n) => {
+        return await this.prisma.token_networks.findFirst({
+          where: {
+            network_id: n.network_id,
+          },
+        });
+      }),
+    );
+    console.log(tokenNetworks);
+    // const walletTokenNetwork =
+    await Promise.all(
+      tokenNetworks.map(async (tokenNetwork) => {
+        return await this.prisma.wallet_network_tokens.create({
+          data: {
+            token_network_id: tokenNetwork?.token_network_id,
+            wallet_id: wallet.wallet_id,
+          },
+        });
+      }),
+    );
     return {
       wallet: wallet,
-      walletSecret: walletAccount,
-      walletNetwork: walletNetworks,
+      walletSecret: {
+        mnemonic: walletMulti.mnemonic,
+        wallets: walletMulti.wallets,
+      },
+      // walletTokenNetwork: walletTokenNetwork,
     };
   }
   async getWalletDefault(userId: string) {
@@ -67,51 +96,14 @@ export class WalletService {
   async getWallet(userId: string, dto: GetWalletRequest) {
     const wallet = await this.prisma.wallets.findFirst({
       where: {
-        user_id: userId,
         wallet_id: dto.wallet_id,
       },
-      include: {
-        wallet_network_tokens: true,
-      },
     });
-    if (!wallet) throw new BadRequestException('Wallet not found');
-    const { wallet_network_tokens, ...sanitizedWallet } = wallet;
-
-    const token_networkIds = wallet_network_tokens
-      .map((wn) => wn.token_network_id)
-      .filter((id): id is string => id !== null);
-
-    const tokenNetworks = await this.prisma.token_networks.findMany({
-      where: {
-        token_network_id: {
-          in: token_networkIds,
-        },
-      },
-      include: {
-        tokens: true,
-        networks: true,
-      },
-    });
-    console.log(tokenNetworks);
-    const enrichedTokens = await Promise.all(
-      tokenNetworks.map(async (tn) => {
-        const balanceToken = await getBalanceByNetwork(
-          tn.networks!,
-          wallet.wallet_address,
-          tn.contract_address,
-          tn.tokens?.decimals,
-        );
-        return {
-          ...tn.tokens,
-          network: tn.networks,
-          balanceToken,
-        };
-      }),
-    );
+    const tokens = await this.tokenService.getTokens(dto.wallet_id);
 
     return {
-      ...sanitizedWallet,
-      token_list: enrichedTokens,
+      tokens,
+      wallet,
     };
   }
   async importWallet(userId: string, dto: ImportWalletRequest) {
@@ -144,5 +136,11 @@ export class WalletService {
       },
     });
     return wallet;
+  }
+  async createManyWalletNetwork(walletNetworkList) {
+    const walletNetworks = await this.prisma.wallet_networks.createMany({
+      data: walletNetworkList,
+    });
+    return walletNetworks;
   }
 }

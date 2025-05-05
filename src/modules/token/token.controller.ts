@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { JwtGuard } from 'src/guards';
 import { TokenService } from './token.service';
 import {
@@ -16,5 +16,9 @@ export class TokenController {
   async createToken(@Body() body: CreateTokenDto) {
     const data = await this.tokenService.createToken(body);
     return generateResponse('success', data);
+  }
+  @Get('demoTokenDefaultCreate')
+  async createTokenDefault(wallet_id: string) {
+    return await this.tokenService.getTokens(wallet_id);
   }
 }

@@ -10,7 +10,7 @@ import { CreateTokenDto, QueryTokenFromAddressDto } from './token.dto';
 import { ERROR_MAP } from 'src/constants/errorMap';
 import Moralis from 'moralis';
 import { NetworkService } from '../network/network.services';
-import { getBalance } from 'src/utils/wallet';
+import { getBalance, getBalanceV1 } from 'src/utils/wallet';
 @UseGuards(JwtGuard)
 @Injectable()
 export class TokenService {
@@ -67,7 +67,63 @@ export class TokenService {
     console.log(111, walletTokenNetwork);
     return tokenNetwork;
   }
+  // async createDefaultToken(wallet_id, network_id, contract_address) {
+  //   // const netWorkSymbolDefault = ['BTC', 'ETH'];
+  //   const walletNetwork = await this.prisma.wallet_networks.findMany({
+  //     where: wallet_id,
+  //     include: {
+  //       networks: true,
+  //     },
+  //   });
 
+  //   console.log(walletNetwork);
+  // }
+
+  async getTokens(wallet_id) {
+    const walletNetwork = await this.prisma.wallet_networks.findMany({
+      where: { wallet_id: wallet_id },
+      include: {
+        networks: true,
+      },
+    });
+    const netWorkIds = walletNetwork
+      .map((wn) => wn.networks?.network_id)
+      .filter((id): id is string => id !== undefined);
+
+    const tokenNetwork = await this.prisma.token_networks.findMany({
+      where: {
+        network_id: {
+          in: netWorkIds,
+        },
+      },
+      include: {
+        tokens: true,
+        networks: true,
+      },
+    });
+
+    return await Promise.all(
+      tokenNetwork.map(async (tn) => {
+        const walletAddress = walletNetwork.find(
+          (wn) => wn.networks?.network_id === tn.network_id,
+        )?.address;
+
+        if (!walletAddress || !tn.networks?.rpc_url) return null;
+
+        const balance = await getBalanceV1(
+          walletAddress,
+          tn.networks.symbol,
+          tn.networks.rpc_url,
+        );
+
+        return {
+          token: tn.tokens,
+          network_id: tn.network_id,
+          balance,
+        };
+      }),
+    );
+  }
   //   async getTokens(query: QueryTokensDto) {
   //     const {
   //       limit = 10,

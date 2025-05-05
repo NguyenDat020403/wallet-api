@@ -5,7 +5,11 @@ import { ConfigService } from '@nestjs/config';
 import { SignInDto, SignUpDto } from './auth.dto';
 import { generateResponse } from 'src/utils/response';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { ERROR_MAP } from 'src/constants/errorMap';
+import {
+  ERROR_AUTH_HTTP_STATUS_MAP,
+  ERROR_AUTH_MAP,
+  ERROR_MAP,
+} from 'src/constants/errorMap';
 import { WalletService } from '../wallet/wallet.service';
 
 @Injectable()
@@ -43,7 +47,7 @@ export class AuthService {
     return generateResponse('success', {
       token: token,
       user,
-      walletSecret: walletDefault.walletSecret,
+      walletDefault,
     });
   }
   async login(dto: SignInDto) {
@@ -53,18 +57,16 @@ export class AuthService {
       },
     });
     if (!user) {
-      throw new BadRequestException(ERROR_MAP.USER_NOT_FOUND);
+      return generateResponse('login failed', '', '400', 'EA01');
     }
     const pwMatches = await argon.verify(
       user.password_hash || '',
       dto.password,
     );
     if (!pwMatches) {
-      throw new BadRequestException(ERROR_MAP.INCORRECT_PASSWORD);
+      return generateResponse('login failed', '', '401', 'EA02');
     }
     const token = await this.signToken(user.user_id, user.email || '');
-
-    //send back the user
     return generateResponse('success', {
       token: token,
       user,
