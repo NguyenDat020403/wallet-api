@@ -6,7 +6,12 @@ export class GetWalletRequest {
   @IsUUID('4')
   wallet_id: string;
 }
-
+export class WalletNetworksRequest {
+  @IsString()
+  @IsNotEmpty()
+  @IsUUID('4')
+  wallet_id: string;
+}
 export class ImportWalletRequest {
   @IsString()
   @IsNotEmpty()

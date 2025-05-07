@@ -169,13 +169,13 @@ export async function getBalanceV1(
   network_rpcURL: string | undefined,
 ): Promise<string> {
   const config = new ConfigService();
-  if (networkSymbol === 'ETH') {
+  if (networkSymbol !== 'BTC') {
     console.log(network_rpcURL);
+    console.log(network_rpcURL! + config.get('INFURA_KEY'));
     const provider = new ethers.JsonRpcProvider(
       network_rpcURL! + config.get('INFURA_KEY'),
     );
     const balanceBigInt = await provider.getBalance(address);
-    console.log(ethers.formatEther(balanceBigInt));
     return ethers.formatEther(balanceBigInt);
   } else if (networkSymbol === 'BTC') {
     const res = await fetch(

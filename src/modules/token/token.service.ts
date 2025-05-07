@@ -109,7 +109,7 @@ export class TokenService {
         )?.address;
 
         if (!walletAddress || !tn.networks?.rpc_url) return null;
-
+        console.log(tn);
         const balance = await getBalanceV1(
           walletAddress,
           tn.networks.symbol,

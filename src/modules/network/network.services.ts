@@ -50,6 +50,7 @@ export class NetworkService {
     });
     return generateResponse('success', networks);
   }
+
   async getPriceFeedId(tokenSymbol: string | undefined) {
     const query = `Crypto.${tokenSymbol?.toLocaleUpperCase()}/USD`;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

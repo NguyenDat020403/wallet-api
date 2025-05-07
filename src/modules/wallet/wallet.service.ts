@@ -39,7 +39,7 @@ export class WalletService {
       let address;
       if (n.symbol === 'BTC') {
         address = walletMulti.wallets[1].address;
-      } else if (n.symbol === 'ETH') {
+      } else {
         address = walletMulti.wallets[0].address;
       }
       return {
@@ -48,7 +48,7 @@ export class WalletService {
         network_id: n.network_id,
       };
     });
-
+    console.log(walletNetworkList);
     await this.createManyWalletNetwork(walletNetworkList);
 
     //CREATE WALLET_TOKEN_NETWORK
@@ -64,7 +64,6 @@ export class WalletService {
       }),
     );
     console.log(tokenNetworks);
-    // const walletTokenNetwork =
     await Promise.all(
       tokenNetworks.map(async (tokenNetwork) => {
         return await this.prisma.wallet_network_tokens.create({
@@ -136,6 +135,26 @@ export class WalletService {
       },
     });
     return wallet;
+  }
+
+  async getUserWallets(userId: string) {
+    const wallet = await this.prisma.wallets.findMany({
+      where: {
+        user_id: userId,
+      },
+    });
+    return wallet;
+  }
+  async getUserWalletNetwork(wallet_id) {
+    const walletNetworks = await this.prisma.wallet_networks.findMany({
+      where: {
+        wallet_id: wallet_id,
+      },
+      include: {
+        networks: true,
+      },
+    });
+    return walletNetworks;
   }
   async createManyWalletNetwork(walletNetworkList) {
     const walletNetworks = await this.prisma.wallet_networks.createMany({

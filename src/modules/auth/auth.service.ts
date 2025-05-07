@@ -5,11 +5,7 @@ import { ConfigService } from '@nestjs/config';
 import { SignInDto, SignUpDto } from './auth.dto';
 import { generateResponse } from 'src/utils/response';
 import { PrismaService } from 'src/prisma/prisma.service';
-import {
-  ERROR_AUTH_HTTP_STATUS_MAP,
-  ERROR_AUTH_MAP,
-  ERROR_MAP,
-} from 'src/constants/errorMap';
+import { ERROR_MAP } from 'src/constants/errorMap';
 import { WalletService } from '../wallet/wallet.service';
 
 @Injectable()
@@ -66,11 +62,17 @@ export class AuthService {
     if (!pwMatches) {
       return generateResponse('login failed', '', '401', 'EA02');
     }
+    const wallet = await this.walletService.getWalletDefault(user.user_id);
     const token = await this.signToken(user.user_id, user.email || '');
-    return generateResponse('success', {
-      token: token,
-      user,
-    });
+    return generateResponse(
+      'success',
+      {
+        token: token,
+        user,
+        wallet,
+      },
+      '200',
+    );
   }
   // async importWallet(dto: ImportWalletDto) {
   //   const { mnemonic, password } = dto;

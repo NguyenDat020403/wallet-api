@@ -3,7 +3,11 @@ import { JwtGuard } from 'src/guards';
 import { WalletService } from './wallet.service';
 import { User } from 'src/decorators/user.decorator';
 import { generateResponse } from 'src/utils/response';
-import { GetWalletRequest, ImportWalletRequest } from './wallet.dto';
+import {
+  GetWalletRequest,
+  ImportWalletRequest,
+  WalletNetworksRequest,
+} from './wallet.dto';
 
 @UseGuards(JwtGuard)
 @Controller('wallets')
@@ -16,14 +20,9 @@ export class WalletController {
     return generateResponse('success', response);
   }
 
-  @Get('getWallet')
+  @Post('getWallet')
   async getWallet(@User('sub') userId: string, @Body() dto: GetWalletRequest) {
     const response = await this.walletService.getWallet(userId, dto);
-    return generateResponse('success', response);
-  }
-  @Get('getWalletDefault')
-  async getWalletDefault(@User('sub') userId: string) {
-    const response = await this.walletService.getWalletDefault(userId);
     return generateResponse('success', response);
   }
 
@@ -33,6 +32,20 @@ export class WalletController {
     @Body() dto: ImportWalletRequest,
   ) {
     const response = await this.walletService.importWallet(userId, dto);
+    return generateResponse('success', response);
+  }
+
+  @Get('getUserWallets')
+  async getUserWallets(@User('sub') userId: string) {
+    const response = await this.walletService.getUserWallets(userId);
+    return generateResponse('success', response);
+  }
+
+  @Get('getUserWalletNetwork')
+  async getUserWalletNetwork(@Body() dto: WalletNetworksRequest) {
+    const response = await this.walletService.getUserWalletNetwork(
+      dto.wallet_id,
+    );
     return generateResponse('success', response);
   }
 }
