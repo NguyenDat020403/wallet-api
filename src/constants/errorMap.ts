@@ -45,3 +45,8 @@ export const ERROR_AUTH_HTTP_STATUS_MAP = {
   '500': 'Internal Server Error – Something went wrong on server', // Lỗi không xác định
   '503': 'Service Unavailable – Try again later', // Server quá tải hoặc bảo trì
 };
+
+const WALLET_MAP = {
+  WR01: 'wallet does not exist',
+  WR02: 'wallet existed',
+};

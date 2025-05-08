@@ -32,7 +32,7 @@ export class WalletController {
     @Body() dto: ImportWalletRequest,
   ) {
     const response = await this.walletService.importWallet(userId, dto);
-    return generateResponse('success', response);
+    return generateResponse('success', response, '200');
   }
 
   @Get('getUserWallets')

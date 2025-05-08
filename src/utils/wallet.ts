@@ -108,7 +108,7 @@ export async function getAccountFromMnemonic(mnemonic: string) {
   };
 }
 
-export async function CreateWalletETH() {
+export async function CreateWallet() {
   const mnemonic = bip39.generateMnemonic();
   const seed = await bip39.mnemonicToSeed(mnemonic);
   const bip32 = BIP32Factory(ecc);
@@ -160,6 +160,44 @@ export async function CreateWalletETH() {
         publickey: publicKeyBTCHex,
       },
     ],
+  };
+}
+
+export async function importWallet(mnemonic: string) {
+  const seed = await bip39.mnemonicToSeed(mnemonic);
+  const bip32 = BIP32Factory(ecc);
+  const root = bip32.fromSeed(seed);
+  //Tạo Ethereum
+  const ethPath = "m/44'/60'/0'/0/0"; // BIP44 path cho Ethereum
+  const ethNode = root.derivePath(ethPath);
+  const ethWalletPrivateKey: Buffer<ArrayBuffer> = Buffer.from(
+    ethNode.privateKey as Uint8Array,
+  );
+  const ethWalletPublicKey = Buffer.from(ethNode.publicKey);
+  const privateKeyHex = '0x' + ethWalletPrivateKey.toString('hex');
+  const ethWallet = new ethers.Wallet(privateKeyHex);
+  //Bitcoin Testnet
+  const btcPath = "m/44'/1'/0'/0/0"; // BIP44 path cho Bitcoin
+  const btcNode = root.derivePath(btcPath);
+  const publicKeyBufferBTC = Buffer.from(btcNode.publicKey);
+  const publicKeyHexBTC = Buffer.from(btcNode.publicKey).toString('hex');
+  const privateKeyHexBTC = Buffer.from(btcNode.privateKey!).toString('hex');
+
+  const btcWallet = bitcoin.payments.p2pkh({
+    pubkey: publicKeyBufferBTC,
+    network: bitcoin.networks.testnet,
+  });
+  return {
+    evm: {
+      publicKey: ethWalletPublicKey,
+      privateKey: privateKeyHex,
+      address: ethWallet.address,
+    },
+    bitcoin: {
+      publicKey: publicKeyHexBTC,
+      privateKey: privateKeyHexBTC,
+      address: btcWallet.address,
+    },
   };
 }
 
