@@ -17,9 +17,9 @@ export class TokenController {
     const data = await this.tokenService.createToken(body);
     return generateResponse('success', data);
   }
-  @Get('demoTokenDefaultCreate')
-  async createTokenDefault(wallet_id: string) {
-    return await this.tokenService.getTokens(wallet_id);
+  @Get('createTokenDefault')
+  async createTokenDefault() {
+    return await this.tokenService.createDefaultToken();
   }
   @Post('resetDatabase')
   async resetDatabase() {

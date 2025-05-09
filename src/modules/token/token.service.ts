@@ -11,6 +11,7 @@ import { ERROR_MAP } from 'src/constants/errorMap';
 import Moralis from 'moralis';
 import { NetworkService } from '../network/network.services';
 import { getBalanceV1 } from 'src/utils/wallet';
+import { TokenDefault } from './tokenDefaultList';
 @UseGuards(JwtGuard)
 @Injectable()
 export class TokenService {
@@ -70,17 +71,13 @@ export class TokenService {
       walletTokenNetwork,
     };
   }
-  // async createDefaultToken(wallet_id, network_id, contract_address) {
-  //   // const netWorkSymbolDefault = ['BTC', 'ETH'];
-  //   const walletNetwork = await this.prisma.wallet_networks.findMany({
-  //     where: wallet_id,
-  //     include: {
-  //       networks: true,
-  //     },
-  //   });
-
-  //   console.log(walletNetwork);
-  // }
+  async createDefaultToken() {
+    const listTokenDefault = TokenDefault;
+    const tokens = this.prisma.tokens.createMany({
+      data: listTokenDefault,
+    });
+    return tokens;
+  }
 
   async getTokens(wallet_id) {
     const walletNetwork = await this.prisma.wallet_networks.findMany({
