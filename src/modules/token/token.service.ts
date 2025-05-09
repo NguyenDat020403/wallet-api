@@ -51,7 +51,7 @@ export class TokenService {
     });
 
     const balanceToken = await getBalanceV1(
-      walletNetwork!.address,
+      walletNetwork.address,
       network.symbol,
       network.rpc_url,
     );
@@ -127,137 +127,21 @@ export class TokenService {
       }),
     );
   }
-  //   async getTokens(query: QueryTokensDto) {
-  //     const {
-  //       limit = 10,
-  //       offset = 0,
-  //       // sortBy = 'created_at',
-  //       // sortOrder = 'DESC',
-  //       keyword = '',
-  //       exclude_contract_addresses = [],
-  //       ...filter
-  //     } = query;
-  //     const network = await this.prisma.network.findUnique({
-  //       where: {
-  //         id: filter.network_id,
-  //       },
-  //     });
-  //     if (!network) throw new BadRequestException(ERROR_MAP.NETWORK_NOT_FOUND);
-  //     const tokensNetwork = await this.prisma.token_network.findMany({
-  //       where: {
-  //         network: {
-  //           id: filter.network_id,
-  //         },
-  //         contract_address: {
-  //           notIn: exclude_contract_addresses,
-  //         },
-  //         token: {
-  //           OR: [
-  //             {
-  //               name: {
-  //                 contains: keyword,
-  //                 mode: 'insensitive',
-  //               },
-  //             },
-  //             {
-  //               symbol: {
-  //                 contains: keyword,
-  //                 mode: 'insensitive',
-  //               },
-  //             },
-  //           ],
-  //         },
-  //       },
-  //       take: Number(limit),
-  //       skip: Number(offset),
-  //       // order: {
-  //       //   [`token.${sortBy}`]: sortOrder,
-  //       // },
-  //     });
-  //     const count = await this.prisma.token_network.count({
-  //       where: {
-  //         network_id: filter.network_id,
-  //         contract_address: {
-  //           notIn: exclude_contract_addresses,
-  //         },
-  //         token: {
-  //           OR: [
-  //             {
-  //               name: {
-  //                 contains: keyword,
-  //                 mode: 'insensitive',
-  //               },
-  //             },
-  //             {
-  //               symbol: {
-  //                 contains: keyword,
-  //                 mode: 'insensitive',
-  //               },
-  //             },
-  //           ],
-  //         },
-  //       },
-  //     });
-  //     return generateResponse(
-  //       'success',
-  //       tokensNetwork.map((item) => ({
-  //         ...item,
-  //         contract_address: item.contract_address,
-  //       })),
-  //       {
-  //         limit: query.limit || 10,
-  //         offset: query.offset || 0,
-  //         total: count,
-  //       },
-  //     );
-  //   }
-  //   async getInfoFromAddress(query: QueryTokenFromAddressDto) {
-  //     const tokenNetwork = await this.prisma.token_network.findFirst({
-  //       where: {
-  //         contract_address: query.contract_address,
-  //         network: {
-  //           id: query.network_id,
-  //         },
-  //       },
-  //       include: {
-  //         token: true,
-  //       },
-  //     });
-  //     if (tokenNetwork) {
-  //       return {
-  //         name: tokenNetwork.token?.name,
-  //         symbol: tokenNetwork.token?.symbol,
-  //         decimal: tokenNetwork.token?.decimal,
-  //         thumbnail: tokenNetwork.token?.thumbnail,
-  //         priceFeedId: tokenNetwork.token?.price_feed_id,
-  //       };
-  //     }
 
-  //     try {
-  //       const network = await this.prisma.network.findUnique({
-  //         where: { id: query.network_id },
-  //       });
-  //       const chainHex = '0x' + network?.chain_id.toString(16);
-  //       const [infoToken] = await Promise.all([
-  //         Moralis.EvmApi.token.getTokenMetadata({
-  //           chain: chainHex,
-  //           addresses: [query.contract_address],
-  //         }),
-  //       ]);
-  //       console.log(infoToken);
-  //       const token = infoToken.raw[0];
-  //       if (!token) return null;
-
-  //       return {
-  //         name: token.name,
-  //         symbol: token.symbol,
-  //         decimal: Number(token.decimals),
-  //         thumbnail: token.thumbnail,
-  //       };
-  //     } catch (erorr) {
-  //       throw new BadRequestException(erorr);
-  //     }
-  //   }
+  async resetTokenDefault() {
+    const tokenNetworks = await this.prisma.token_networks.deleteMany({
+      where: {},
+    });
+    if (tokenNetworks === null) {
+      console.log('Da xoa tokenNetworks');
+    }
+    const tokens = await this.prisma.tokens.deleteMany({
+      where: {},
+    });
+    if (tokens === null) {
+      console.log('Da xoa tokens');
+    }
+  }
 
   async findOrCreateIfNotExist(query: QueryTokenFromAddressDto) {
     const tokenNetwork = await this.prisma.token_networks.findFirst({
