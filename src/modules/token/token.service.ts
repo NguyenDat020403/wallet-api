@@ -73,7 +73,7 @@ export class TokenService {
   }
   async createDefaultToken() {
     const listTokenDefault = TokenDefault;
-    const tokens = this.prisma.tokens.createMany({
+    const tokens = await this.prisma.tokens.createMany({
       data: listTokenDefault,
     });
     return tokens;
