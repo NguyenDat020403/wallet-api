@@ -103,19 +103,19 @@ export const TokenNetworkDefault = [
     network_id: '57b49cdd-8f9a-434c-a8e9-1eb1ed9700c0',
   },
   {
-    token_name: 'Polygon Mainnet',
+    // token_name: 'Polygon Mainnet',
     token_id: '3c8e0a6d-e2e6-46a1-bbe1-1a114419472a',
     contract_address: '',
     network_id: 'b48dc739-6ef6-45be-a9f6-c206fdf241a6',
   },
   {
-    token_name: 'BNB Testnet',
+    // token_name: 'BNB Testnet',
     token_id: 'bb589200-e6b2-45cb-8e6a-9fc5a2cc6f37',
     contract_address: '',
     network_id: '25e762b5-aad0-4745-be5f-c53a13871fb5',
   },
   {
-    token_name: 'Bitcoin',
+    // token_name: 'Bitcoin',
     token_id: '6b153f05-c660-4305-b031-0eedf19d6205',
     contract_address: '',
     network_id: '1e678413-6e40-4b63-af0e-499c1ca46de3',
