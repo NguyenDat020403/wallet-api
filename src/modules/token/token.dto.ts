@@ -37,7 +37,7 @@ export class CreateTokenDto {
 
   @IsString()
   @IsOptional()
-  percent_change_24hr: string;
+  percent_change_24h: string;
 
   @IsUUID('4')
   network_id: string;
