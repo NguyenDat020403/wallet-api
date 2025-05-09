@@ -310,7 +310,7 @@ export class TokenService {
         contract_address: query.contract_address,
         network_id: query.network_id,
         price_feed_id: priceFeedId || '',
-        percent_change_24hr: '',
+        percent_change_24h: '',
       });
 
       return result;
