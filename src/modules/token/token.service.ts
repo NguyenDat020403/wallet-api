@@ -51,7 +51,7 @@ export class TokenService {
     });
 
     const balanceToken = await getBalanceV1(
-      walletNetwork.address,
+      walletNetwork?.address || '123123',
       network.symbol,
       network.rpc_url,
     );
