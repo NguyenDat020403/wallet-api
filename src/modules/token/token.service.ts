@@ -128,7 +128,7 @@ export class TokenService {
     );
   }
 
-  async resetTokenDefault() {
+  async resetDatabase() {
     const tokenNetworks = await this.prisma.token_networks.deleteMany({
       where: {},
     });
@@ -140,6 +140,12 @@ export class TokenService {
     });
     if (tokens === null) {
       console.log('Da xoa tokens');
+    }
+    const user = await this.prisma.users.deleteMany({ where: {} });
+    if (user === null) {
+      console.log(
+        'da xoa user - wallet - wallet_network - wallet_network_token',
+      );
     }
   }
 
