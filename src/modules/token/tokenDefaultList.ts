@@ -77,6 +77,50 @@ export const TokenDefault = [
     // network_id: '1e678413-6e40-4b63-af0e-499c1ca46de3',
   },
 ];
+export const TokenNetworkDefault = [
+  {
+    // token_name: 'ETH',
+    token_id: '9927a126-b8be-4fd4-b91b-7b316f4c2bbc',
+    contract_address: '',
+    network_id: 'aeb07639-5193-45ff-9233-1eb1df4c46e6',
+  },
+  {
+    // token_name: 'ETH Sepolia',
+    token_id: 'e2ffc47c-83c6-4a72-b925-66236a45f1dc',
+    contract_address: '',
+    network_id: 'aeb07639-5193-45ff-9233-1eb1df4c46e6',
+  },
+  {
+    // token_name: 'Polygon Testnet',
+    token_id: '1876b221-156b-4ec3-ba6d-6767bc7cb27c',
+    contract_address: '',
+    network_id: '96eb465e-8367-4159-80f9-895bc877d74d',
+  },
+  {
+    // token_name: 'BNB Maintest',
+    token_id: 'e77e4101-4602-4e58-9143-d0f0c9fd4589',
+    contract_address: '',
+    network_id: '57b49cdd-8f9a-434c-a8e9-1eb1ed9700c0',
+  },
+  {
+    token_name: 'Polygon Mainnet',
+    token_id: '3c8e0a6d-e2e6-46a1-bbe1-1a114419472a',
+    contract_address: '',
+    network_id: 'b48dc739-6ef6-45be-a9f6-c206fdf241a6',
+  },
+  {
+    token_name: 'BNB Testnet',
+    token_id: 'bb589200-e6b2-45cb-8e6a-9fc5a2cc6f37',
+    contract_address: '',
+    network_id: '25e762b5-aad0-4745-be5f-c53a13871fb5',
+  },
+  {
+    token_name: 'Bitcoin',
+    token_id: '6b153f05-c660-4305-b031-0eedf19d6205',
+    contract_address: '',
+    network_id: '1e678413-6e40-4b63-af0e-499c1ca46de3',
+  },
+];
 
 export const listNetworkDefault = [
   {

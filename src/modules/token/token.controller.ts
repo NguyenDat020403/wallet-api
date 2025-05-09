@@ -21,6 +21,10 @@ export class TokenController {
   async createTokenDefault() {
     return await this.tokenService.createDefaultToken();
   }
+  @Get('createDefaultTokenNetwork')
+  async createDefaultTokenNetwork() {
+    return await this.tokenService.createDefaultTokenNetwork();
+  }
   @Post('resetDatabase')
   async resetDatabase() {
     return await this.tokenService.resetDatabase();
