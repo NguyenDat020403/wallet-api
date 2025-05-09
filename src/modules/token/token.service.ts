@@ -10,7 +10,7 @@ import { CreateTokenDto, QueryTokenFromAddressDto } from './token.dto';
 import { ERROR_MAP } from 'src/constants/errorMap';
 import Moralis from 'moralis';
 import { NetworkService } from '../network/network.services';
-import { getBalance, getBalanceV1 } from 'src/utils/wallet';
+import { getBalanceV1 } from 'src/utils/wallet';
 @UseGuards(JwtGuard)
 @Injectable()
 export class TokenService {
@@ -35,7 +35,6 @@ export class TokenService {
     const token = await this.prisma.tokens.create({
       data: {
         ...body,
-        price_feed_id: network.price_feed_id,
       },
     });
     const tokenNetwork = await this.prisma.token_networks.create({
@@ -51,21 +50,25 @@ export class TokenService {
       },
     });
 
-    const balanceToken = await getBalance(walletNetwork?.address || '');
-
-    const balanceString = balanceToken
-      ? (Number(balanceToken) / 1e18).toFixed(8)
-      : '0';
+    const balanceToken = await getBalanceV1(
+      walletNetwork!.address,
+      network.symbol,
+      network.rpc_url,
+    );
 
     const walletTokenNetwork = await this.prisma.wallet_network_tokens.create({
       data: {
         wallet_id: wallet_id,
         token_network_id: tokenNetwork.token_network_id,
-        balance: balanceString,
+        balance: balanceToken,
       },
     });
-    console.log(111, walletTokenNetwork);
-    return tokenNetwork;
+    return {
+      token,
+      network,
+      tokenNetwork,
+      walletTokenNetwork,
+    };
   }
   // async createDefaultToken(wallet_id, network_id, contract_address) {
   //   // const netWorkSymbolDefault = ['BTC', 'ETH'];
