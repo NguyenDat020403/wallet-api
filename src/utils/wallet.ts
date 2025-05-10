@@ -210,9 +210,7 @@ export async function getBalanceV1(
   if (networkSymbol !== 'BTC') {
     console.log(network_rpcURL);
     console.log(network_rpcURL! + config.get('INFURA_KEY'));
-    const provider = new ethers.JsonRpcProvider(
-      network_rpcURL! + config.get('INFURA_KEY'),
-    );
+    const provider = new ethers.JsonRpcProvider(network_rpcURL);
     const balanceBigInt = await provider.getBalance(address);
     return ethers.formatEther(balanceBigInt);
   } else if (networkSymbol === 'BTC') {

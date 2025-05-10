@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { JwtGuard } from 'src/guards';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { getGasPrice } from 'src/utils/transaction';
+import { getGasPriceInfuraAPI } from 'src/utils/transaction';
 import { FeeRequest } from './transaction.dto';
 import { generateResponse } from 'src/utils/response';
 @UseGuards(JwtGuard)
@@ -16,7 +16,7 @@ export class TransactionService {
   ) {}
   async getEstimateGas(data: FeeRequest) {
     console.log(data);
-    const feeData = await getGasPrice(data.rpc_url);
+    const feeData = await getGasPriceInfuraAPI('1');
     if (!feeData) {
       return generateResponse('fail', '', '200', 'fail to load feeData');
     }
