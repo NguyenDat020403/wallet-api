@@ -3,6 +3,7 @@ import { JwtGuard } from 'src/guards';
 import { TokenService } from './token.service';
 import {
   CreateTokenDto,
+  GetTokenDetailDTO,
   //   QueryTokenFromAddressDto,
   //   QueryTokensDto,
 } from './token.dto';
@@ -17,6 +18,13 @@ export class TokenController {
     const data = await this.tokenService.createToken(body);
     return generateResponse('success', data);
   }
+
+  @Get('tokenDetail')
+  async getTokenDetail(@Body() body: GetTokenDetailDTO) {
+    const data = await this.tokenService.getTokenDetail(body);
+    return generateResponse('success', data);
+  }
+
   @Get('createTokenDefault')
   async createTokenDefault() {
     return await this.tokenService.createDefaultToken();

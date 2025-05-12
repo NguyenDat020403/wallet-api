@@ -66,4 +66,13 @@ export class NetworkService {
       return priceFeedId;
     }
   }
+
+  async findNetworkByChainId(chain_id: string) {
+    const network = await this.prisma.networks.findFirst({
+      where: {
+        chain_id: chain_id,
+      },
+    });
+    return network;
+  }
 }

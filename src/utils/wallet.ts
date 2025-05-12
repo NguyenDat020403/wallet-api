@@ -1,7 +1,7 @@
 import BIP32Factory from 'bip32';
 import * as bip39 from 'bip39';
 import * as ecc from 'tiny-secp256k1';
-import { ethers } from 'ethers';
+import { BigNumberish, ethers } from 'ethers';
 import { networks } from 'generated/prisma';
 import * as bitcoin from 'bitcoinjs-lib';
 import { ConfigService } from '@nestjs/config';
@@ -205,14 +205,25 @@ export async function getBalanceV1(
   address: string,
   networkSymbol: string | undefined,
   network_rpcURL: string | undefined,
+  contract_address?: string,
+  decimals?: number,
 ): Promise<string> {
   const config = new ConfigService();
   if (networkSymbol !== 'BTC') {
-    console.log(network_rpcURL);
-    console.log(network_rpcURL! + config.get('INFURA_KEY'));
     const provider = new ethers.JsonRpcProvider(network_rpcURL);
-    const balanceBigInt = await provider.getBalance(address);
-    return ethers.formatEther(balanceBigInt);
+    if (!contract_address) {
+      const balanceBigInt = await provider.getBalance(address);
+      return ethers.formatEther(balanceBigInt);
+    } else {
+      const ERC20_ABI = [
+        'function balanceOf(address owner) view returns (uint256)',
+      ];
+      const erc20 = new ethers.Contract(contract_address, ERC20_ABI, provider);
+
+      const balance = await erc20.balanceOf(address);
+
+      return ethers.formatUnits(balance as BigNumberish, decimals);
+    }
   } else if (networkSymbol === 'BTC') {
     const res = await fetch(
       `https://blockstream.info/testnet/api/address/${address}`,

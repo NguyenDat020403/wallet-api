@@ -151,3 +151,16 @@ export const listNetworkDefault = [
     is_testnet: false,
   },
 ];
+
+export const defaultTokens = [
+  // Native coins
+  { chainId: 0, address: '', coingeckoId: 'bitcoin' }, // BTC
+  { chainId: 1, address: '', coingeckoId: 'ethereum' }, // ETH
+  { chainId: 56, address: '', coingeckoId: 'binancecoin' }, // BNB
+  { chainId: 137, address: '', coingeckoId: 'matic-network' }, // MATIC
+
+  // ERC-20 / BEP-20 tokens
+  { chainId: 1, address: '0xdAC17F958D2ee523a2206206994597C13D831ec7' }, // USDT Ethereum
+  { chainId: 1, address: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606EB48' }, // USDC Ethereum
+  { chainId: 56, address: '0x55d398326f99059fF775485246999027B3197955' }, // USDT BSC
+];

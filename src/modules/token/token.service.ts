@@ -6,12 +6,18 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { JwtGuard } from 'src/guards';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateTokenDto, QueryTokenFromAddressDto } from './token.dto';
+import {
+  CreateTokenDto,
+  GetTokenDetailDTO,
+  QueryTokenFromAddressDto,
+  TokenMetadata,
+} from './token.dto';
 import { ERROR_MAP } from 'src/constants/errorMap';
 import Moralis from 'moralis';
 import { NetworkService } from '../network/network.services';
 import { getBalanceV1 } from 'src/utils/wallet';
-import { TokenDefault, TokenNetworkDefault } from './tokenDefaultList';
+import { defaultTokens, TokenNetworkDefault } from './tokenDefaultList';
+import axios from 'axios';
 @UseGuards(JwtGuard)
 @Injectable()
 export class TokenService {
@@ -72,6 +78,7 @@ export class TokenService {
     };
   }
 
+  async getTokenDetail(dto: GetTokenDetailDTO) {}
   async getTokens(wallet_id) {
     const walletNetwork = await this.prisma.wallet_networks.findMany({
       where: { wallet_id: wallet_id },
@@ -102,27 +109,71 @@ export class TokenService {
         )?.address;
 
         if (!walletAddress || !tn.networks?.rpc_url) return null;
-        console.log(tn);
         const balance = await getBalanceV1(
           walletAddress,
           tn.networks.symbol,
           tn.networks.rpc_url,
+          tn.contract_address,
+          tn.tokens?.decimals,
         );
 
         return {
           token: tn.tokens,
-          network_id: tn.network_id,
+          network: tn.networks,
           balance,
         };
       }),
     );
   }
   async createDefaultToken() {
-    const listTokenDefault = TokenDefault;
-    const tokens = await this.prisma.tokens.createMany({
-      data: listTokenDefault,
+    const tokenMetadataList: TokenMetadata[] = [];
+    for (const token of defaultTokens) {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      const tokenMetadata = await this.$getTokenInfoMoralis(
+        token.chainId,
+        token.address.toLowerCase(),
+        token.coingeckoId,
+      );
+      if (tokenMetadata) {
+        tokenMetadataList.push(tokenMetadata);
+      }
+    }
+
+    const tokenListResponse = await Promise.all(
+      tokenMetadataList.map(async (token) => {
+        const tokenSaved = await this.prisma.tokens.create({
+          data: {
+            token_name: token.token_name,
+            symbol: token.symbol,
+            thumbnail: token.thumbnail,
+            decimals: token.decimals,
+          },
+        });
+        return tokenSaved;
+      }),
+    );
+    console.log('chieu dai chuoi', tokenListResponse.length);
+    // if (tokenListResponse) {
+    //   console.log(tokenListResponse);
+    // }
+    const networkIds = await Promise.all(
+      tokenMetadataList.map(async (token) => {
+        const network = await this.networkService.findNetworkByChainId(
+          token.chainId.toString(),
+        );
+        return network?.network_id;
+      }),
+    );
+    console.log('networkIds', networkIds);
+    const tokenNetworkData = tokenMetadataList.map((token, index) => ({
+      token_id: tokenListResponse[index].token_id, // ID của token vừa tạo
+      network_id: networkIds[index],
+      contract_address: token.address,
+    }));
+    await this.prisma.token_networks.createMany({
+      data: tokenNetworkData,
     });
-    return tokens;
   }
   async createDefaultTokenNetwork() {
     const listTokenNetworkDefault = TokenNetworkDefault;
@@ -210,24 +261,46 @@ export class TokenService {
     }
   }
 
-  async $getTokenInfoMoralis(chainId: number, address: string) {
+  async $getTokenInfoMoralis(
+    chainId: number,
+    address: string,
+    coingeckoId?: string,
+  ) {
     try {
-      const chainHex = '0x' + chainId.toString(16);
-      const [infoData] = await Promise.all([
-        Moralis.EvmApi.token.getTokenMetadata({
-          chain: chainHex,
-          addresses: [address],
-        }),
-      ]);
-      const token = infoData.raw[0];
+      if (address === '') {
+        const res = await axios.get(
+          `https://api.coingecko.com/api/v3/coins/${coingeckoId}`,
+        );
+        const data = res.data;
 
-      if (!token) return null;
-      return {
-        token_name: token.name,
-        symbol: token.symbol,
-        decimals: Number(token.decimals),
-        thumbnail: token.thumbnail || '',
-      };
+        return {
+          chainId: chainId,
+          address: '',
+          token_name: data.name,
+          symbol: data.symbol.toUpperCase(),
+          decimals: 8,
+          thumbnail: data.image?.thumb || '',
+        };
+      } else {
+        const chainHex = '0x' + chainId.toString(16);
+        const [infoData] = await Promise.all([
+          Moralis.EvmApi.token.getTokenMetadata({
+            chain: chainHex,
+            addresses: [address],
+          }),
+        ]);
+        const token = infoData.raw[0];
+
+        if (!token) return null;
+        return {
+          chainId: chainId,
+          address: token.address,
+          token_name: token.name,
+          symbol: token.symbol,
+          decimals: Number(token.decimals),
+          thumbnail: token.thumbnail || token.logo || '',
+        };
+      }
     } catch (error) {
       console.log(error);
     }

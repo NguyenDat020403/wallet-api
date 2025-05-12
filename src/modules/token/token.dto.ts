@@ -89,3 +89,16 @@ export class QueryTokensDto extends PaginationDto {
   @IsString({ each: true })
   exclude_contract_addresses?: string[];
 }
+
+export class GetTokenDetailDTO {
+  @IsUUID('4')
+  token_id: string;
+}
+export type TokenMetadata = {
+  chainId: number;
+  address: string;
+  token_name: string;
+  symbol: string;
+  decimals: number;
+  thumbnail: string;
+};
