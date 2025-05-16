@@ -26,7 +26,7 @@ export class NetworkController {
     return await this.networkService.getNetworkList();
   }
 
-  @Get('createNetworkDefault')
+  @Post('createNetworkDefault')
   async createNetworkDefault() {
     return await this.networkService.resetNetworkDefault();
   }
