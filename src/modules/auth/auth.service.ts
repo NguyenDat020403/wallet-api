@@ -7,6 +7,7 @@ import { generateResponse } from 'src/utils/response';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ERROR_MAP } from 'src/constants/errorMap';
 import { WalletService } from '../wallet/wallet.service';
+import { ListNetworkDefault } from '../network/networkDefault';
 
 @Injectable()
 export class AuthService {
@@ -147,5 +148,15 @@ export class AuthService {
       refresh_token,
       exp: '1d',
     };
+  }
+  async resetNetworkDefault() {
+    const deleteNetwork = await this.prisma.networks.deleteMany({});
+
+    if (!deleteNetwork) {
+      const network = await this.prisma.networks.createMany({
+        data: ListNetworkDefault,
+      });
+      return network;
+    }
   }
 }

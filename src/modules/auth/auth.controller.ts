@@ -19,4 +19,8 @@ export class AuthController {
   // importWallet(@Body() dto: ImportWalletDto) {
   //   return this.authService.importWallet(dto);
   // }
+  @Post('createNetworkDefault')
+  async createNetworkDefault() {
+    return await this.authService.resetNetworkDefault();
+  }
 }
