@@ -33,6 +33,7 @@ model networks {
   updated_at         DateTime?         @default(now()) @db.Timestamp(6)
   deleted_at         DateTime?         @db.Timestamp(6)
   creator_id         String?           @db.Uuid
+  isEVM              Boolean           @default(false)
   users              users?            @relation(fields: [creator_id], references: [user_id], onUpdate: NoAction)
   token_networks     token_networks[]
   wallet_networks    wallet_networks[]

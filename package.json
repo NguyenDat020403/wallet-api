@@ -39,6 +39,7 @@
     "bitcoinjs-lib": "^6.1.7",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
+    "ecpair": "^3.0.0",
     "ethereum-cryptography": "^3.1.0",
     "ethers": "^6.13.7",
     "lodash": "^4.17.21",

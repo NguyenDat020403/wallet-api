@@ -2811,6 +2811,7 @@ export namespace Prisma {
     updated_at: Date | null
     deleted_at: Date | null
     creator_id: string | null
+    isEVM: boolean | null
   }
 
   export type NetworksMaxAggregateOutputType = {
@@ -2828,6 +2829,7 @@ export namespace Prisma {
     updated_at: Date | null
     deleted_at: Date | null
     creator_id: string | null
+    isEVM: boolean | null
   }
 
   export type NetworksCountAggregateOutputType = {
@@ -2845,6 +2847,7 @@ export namespace Prisma {
     updated_at: number
     deleted_at: number
     creator_id: number
+    isEVM: number
     _all: number
   }
 
@@ -2864,6 +2867,7 @@ export namespace Prisma {
     updated_at?: true
     deleted_at?: true
     creator_id?: true
+    isEVM?: true
   }
 
   export type NetworksMaxAggregateInputType = {
@@ -2881,6 +2885,7 @@ export namespace Prisma {
     updated_at?: true
     deleted_at?: true
     creator_id?: true
+    isEVM?: true
   }
 
   export type NetworksCountAggregateInputType = {
@@ -2898,6 +2903,7 @@ export namespace Prisma {
     updated_at?: true
     deleted_at?: true
     creator_id?: true
+    isEVM?: true
     _all?: true
   }
 
@@ -2988,6 +2994,7 @@ export namespace Prisma {
     updated_at: Date | null
     deleted_at: Date | null
     creator_id: string | null
+    isEVM: boolean
     _count: NetworksCountAggregateOutputType | null
     _min: NetworksMinAggregateOutputType | null
     _max: NetworksMaxAggregateOutputType | null
@@ -3022,6 +3029,7 @@ export namespace Prisma {
     updated_at?: boolean
     deleted_at?: boolean
     creator_id?: boolean
+    isEVM?: boolean
     users?: boolean | networks$usersArgs<ExtArgs>
     token_networks?: boolean | networks$token_networksArgs<ExtArgs>
     wallet_networks?: boolean | networks$wallet_networksArgs<ExtArgs>
@@ -3043,6 +3051,7 @@ export namespace Prisma {
     updated_at?: boolean
     deleted_at?: boolean
     creator_id?: boolean
+    isEVM?: boolean
     users?: boolean | networks$usersArgs<ExtArgs>
   }, ExtArgs["result"]["networks"]>
 
@@ -3061,6 +3070,7 @@ export namespace Prisma {
     updated_at?: boolean
     deleted_at?: boolean
     creator_id?: boolean
+    isEVM?: boolean
     users?: boolean | networks$usersArgs<ExtArgs>
   }, ExtArgs["result"]["networks"]>
 
@@ -3079,9 +3089,10 @@ export namespace Prisma {
     updated_at?: boolean
     deleted_at?: boolean
     creator_id?: boolean
+    isEVM?: boolean
   }
 
-  export type networksOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"network_id" | "network_name" | "symbol" | "thumbnail" | "chain_id" | "block_explorer_url" | "price_feed_id" | "is_default_network" | "is_testnet" | "rpc_url" | "created_at" | "updated_at" | "deleted_at" | "creator_id", ExtArgs["result"]["networks"]>
+  export type networksOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"network_id" | "network_name" | "symbol" | "thumbnail" | "chain_id" | "block_explorer_url" | "price_feed_id" | "is_default_network" | "is_testnet" | "rpc_url" | "created_at" | "updated_at" | "deleted_at" | "creator_id" | "isEVM", ExtArgs["result"]["networks"]>
   export type networksInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     users?: boolean | networks$usersArgs<ExtArgs>
     token_networks?: boolean | networks$token_networksArgs<ExtArgs>
@@ -3117,6 +3128,7 @@ export namespace Prisma {
       updated_at: Date | null
       deleted_at: Date | null
       creator_id: string | null
+      isEVM: boolean
     }, ExtArgs["result"]["networks"]>
     composites: {}
   }
@@ -3557,6 +3569,7 @@ export namespace Prisma {
     readonly updated_at: FieldRef<"networks", 'DateTime'>
     readonly deleted_at: FieldRef<"networks", 'DateTime'>
     readonly creator_id: FieldRef<"networks", 'String'>
+    readonly isEVM: FieldRef<"networks", 'Boolean'>
   }
     
 
@@ -11022,7 +11035,8 @@ export namespace Prisma {
     created_at: 'created_at',
     updated_at: 'updated_at',
     deleted_at: 'deleted_at',
-    creator_id: 'creator_id'
+    creator_id: 'creator_id',
+    isEVM: 'isEVM'
   };
 
   export type NetworksScalarFieldEnum = (typeof NetworksScalarFieldEnum)[keyof typeof NetworksScalarFieldEnum]
@@ -11294,6 +11308,7 @@ export namespace Prisma {
     updated_at?: DateTimeNullableFilter<"networks"> | Date | string | null
     deleted_at?: DateTimeNullableFilter<"networks"> | Date | string | null
     creator_id?: UuidNullableFilter<"networks"> | string | null
+    isEVM?: BoolFilter<"networks"> | boolean
     users?: XOR<UsersNullableScalarRelationFilter, usersWhereInput> | null
     token_networks?: Token_networksListRelationFilter
     wallet_networks?: Wallet_networksListRelationFilter
@@ -11314,6 +11329,7 @@ export namespace Prisma {
     updated_at?: SortOrderInput | SortOrder
     deleted_at?: SortOrderInput | SortOrder
     creator_id?: SortOrderInput | SortOrder
+    isEVM?: SortOrder
     users?: usersOrderByWithRelationInput
     token_networks?: token_networksOrderByRelationAggregateInput
     wallet_networks?: wallet_networksOrderByRelationAggregateInput
@@ -11337,6 +11353,7 @@ export namespace Prisma {
     updated_at?: DateTimeNullableFilter<"networks"> | Date | string | null
     deleted_at?: DateTimeNullableFilter<"networks"> | Date | string | null
     creator_id?: UuidNullableFilter<"networks"> | string | null
+    isEVM?: BoolFilter<"networks"> | boolean
     users?: XOR<UsersNullableScalarRelationFilter, usersWhereInput> | null
     token_networks?: Token_networksListRelationFilter
     wallet_networks?: Wallet_networksListRelationFilter
@@ -11357,6 +11374,7 @@ export namespace Prisma {
     updated_at?: SortOrderInput | SortOrder
     deleted_at?: SortOrderInput | SortOrder
     creator_id?: SortOrderInput | SortOrder
+    isEVM?: SortOrder
     _count?: networksCountOrderByAggregateInput
     _max?: networksMaxOrderByAggregateInput
     _min?: networksMinOrderByAggregateInput
@@ -11380,6 +11398,7 @@ export namespace Prisma {
     updated_at?: DateTimeNullableWithAggregatesFilter<"networks"> | Date | string | null
     deleted_at?: DateTimeNullableWithAggregatesFilter<"networks"> | Date | string | null
     creator_id?: UuidNullableWithAggregatesFilter<"networks"> | string | null
+    isEVM?: BoolWithAggregatesFilter<"networks"> | boolean
   }
 
   export type token_networksWhereInput = {
@@ -11886,6 +11905,7 @@ export namespace Prisma {
     created_at?: Date | string | null
     updated_at?: Date | string | null
     deleted_at?: Date | string | null
+    isEVM?: boolean
     users?: usersCreateNestedOneWithoutNetworksInput
     token_networks?: token_networksCreateNestedManyWithoutNetworksInput
     wallet_networks?: wallet_networksCreateNestedManyWithoutNetworksInput
@@ -11906,6 +11926,7 @@ export namespace Prisma {
     updated_at?: Date | string | null
     deleted_at?: Date | string | null
     creator_id?: string | null
+    isEVM?: boolean
     token_networks?: token_networksUncheckedCreateNestedManyWithoutNetworksInput
     wallet_networks?: wallet_networksUncheckedCreateNestedManyWithoutNetworksInput
   }
@@ -11924,6 +11945,7 @@ export namespace Prisma {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isEVM?: BoolFieldUpdateOperationsInput | boolean
     users?: usersUpdateOneWithoutNetworksNestedInput
     token_networks?: token_networksUpdateManyWithoutNetworksNestedInput
     wallet_networks?: wallet_networksUpdateManyWithoutNetworksNestedInput
@@ -11944,6 +11966,7 @@ export namespace Prisma {
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     creator_id?: NullableStringFieldUpdateOperationsInput | string | null
+    isEVM?: BoolFieldUpdateOperationsInput | boolean
     token_networks?: token_networksUncheckedUpdateManyWithoutNetworksNestedInput
     wallet_networks?: wallet_networksUncheckedUpdateManyWithoutNetworksNestedInput
   }
@@ -11963,6 +11986,7 @@ export namespace Prisma {
     updated_at?: Date | string | null
     deleted_at?: Date | string | null
     creator_id?: string | null
+    isEVM?: boolean
   }
 
   export type networksUpdateManyMutationInput = {
@@ -11979,6 +12003,7 @@ export namespace Prisma {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isEVM?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type networksUncheckedUpdateManyInput = {
@@ -11996,6 +12021,7 @@ export namespace Prisma {
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     creator_id?: NullableStringFieldUpdateOperationsInput | string | null
+    isEVM?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type token_networksCreateInput = {
@@ -12668,6 +12694,7 @@ export namespace Prisma {
     updated_at?: SortOrder
     deleted_at?: SortOrder
     creator_id?: SortOrder
+    isEVM?: SortOrder
   }
 
   export type networksMaxOrderByAggregateInput = {
@@ -12685,6 +12712,7 @@ export namespace Prisma {
     updated_at?: SortOrder
     deleted_at?: SortOrder
     creator_id?: SortOrder
+    isEVM?: SortOrder
   }
 
   export type networksMinOrderByAggregateInput = {
@@ -12702,6 +12730,7 @@ export namespace Prisma {
     updated_at?: SortOrder
     deleted_at?: SortOrder
     creator_id?: SortOrder
+    isEVM?: SortOrder
   }
 
   export type BoolWithAggregatesFilter<$PrismaModel = never> = {
@@ -14090,6 +14119,7 @@ export namespace Prisma {
     created_at?: Date | string | null
     updated_at?: Date | string | null
     deleted_at?: Date | string | null
+    isEVM?: boolean
     users?: usersCreateNestedOneWithoutNetworksInput
     wallet_networks?: wallet_networksCreateNestedManyWithoutNetworksInput
   }
@@ -14109,6 +14139,7 @@ export namespace Prisma {
     updated_at?: Date | string | null
     deleted_at?: Date | string | null
     creator_id?: string | null
+    isEVM?: boolean
     wallet_networks?: wallet_networksUncheckedCreateNestedManyWithoutNetworksInput
   }
 
@@ -14197,6 +14228,7 @@ export namespace Prisma {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isEVM?: BoolFieldUpdateOperationsInput | boolean
     users?: usersUpdateOneWithoutNetworksNestedInput
     wallet_networks?: wallet_networksUpdateManyWithoutNetworksNestedInput
   }
@@ -14216,6 +14248,7 @@ export namespace Prisma {
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     creator_id?: NullableStringFieldUpdateOperationsInput | string | null
+    isEVM?: BoolFieldUpdateOperationsInput | boolean
     wallet_networks?: wallet_networksUncheckedUpdateManyWithoutNetworksNestedInput
   }
 
@@ -14363,6 +14396,7 @@ export namespace Prisma {
     created_at?: Date | string | null
     updated_at?: Date | string | null
     deleted_at?: Date | string | null
+    isEVM?: boolean
     token_networks?: token_networksCreateNestedManyWithoutNetworksInput
     wallet_networks?: wallet_networksCreateNestedManyWithoutNetworksInput
   }
@@ -14381,6 +14415,7 @@ export namespace Prisma {
     created_at?: Date | string | null
     updated_at?: Date | string | null
     deleted_at?: Date | string | null
+    isEVM?: boolean
     token_networks?: token_networksUncheckedCreateNestedManyWithoutNetworksInput
     wallet_networks?: wallet_networksUncheckedCreateNestedManyWithoutNetworksInput
   }
@@ -14493,6 +14528,7 @@ export namespace Prisma {
     updated_at?: DateTimeNullableFilter<"networks"> | Date | string | null
     deleted_at?: DateTimeNullableFilter<"networks"> | Date | string | null
     creator_id?: UuidNullableFilter<"networks"> | string | null
+    isEVM?: BoolFilter<"networks"> | boolean
   }
 
   export type walletsUpsertWithWhereUniqueWithoutUsersInput = {
@@ -14652,6 +14688,7 @@ export namespace Prisma {
     created_at?: Date | string | null
     updated_at?: Date | string | null
     deleted_at?: Date | string | null
+    isEVM?: boolean
     users?: usersCreateNestedOneWithoutNetworksInput
     token_networks?: token_networksCreateNestedManyWithoutNetworksInput
   }
@@ -14671,6 +14708,7 @@ export namespace Prisma {
     updated_at?: Date | string | null
     deleted_at?: Date | string | null
     creator_id?: string | null
+    isEVM?: boolean
     token_networks?: token_networksUncheckedCreateNestedManyWithoutNetworksInput
   }
 
@@ -14735,6 +14773,7 @@ export namespace Prisma {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isEVM?: BoolFieldUpdateOperationsInput | boolean
     users?: usersUpdateOneWithoutNetworksNestedInput
     token_networks?: token_networksUpdateManyWithoutNetworksNestedInput
   }
@@ -14754,6 +14793,7 @@ export namespace Prisma {
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     creator_id?: NullableStringFieldUpdateOperationsInput | string | null
+    isEVM?: BoolFieldUpdateOperationsInput | boolean
     token_networks?: token_networksUncheckedUpdateManyWithoutNetworksNestedInput
   }
 
@@ -15082,6 +15122,7 @@ export namespace Prisma {
     created_at?: Date | string | null
     updated_at?: Date | string | null
     deleted_at?: Date | string | null
+    isEVM?: boolean
   }
 
   export type walletsCreateManyUsersInput = {
@@ -15133,6 +15174,7 @@ export namespace Prisma {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isEVM?: BoolFieldUpdateOperationsInput | boolean
     token_networks?: token_networksUpdateManyWithoutNetworksNestedInput
     wallet_networks?: wallet_networksUpdateManyWithoutNetworksNestedInput
   }
@@ -15151,6 +15193,7 @@ export namespace Prisma {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isEVM?: BoolFieldUpdateOperationsInput | boolean
     token_networks?: token_networksUncheckedUpdateManyWithoutNetworksNestedInput
     wallet_networks?: wallet_networksUncheckedUpdateManyWithoutNetworksNestedInput
   }
@@ -15169,6 +15212,7 @@ export namespace Prisma {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isEVM?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type walletsUpdateWithoutUsersInput = {

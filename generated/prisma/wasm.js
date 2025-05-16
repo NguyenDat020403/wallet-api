@@ -140,7 +140,8 @@ exports.Prisma.NetworksScalarFieldEnum = {
   created_at: 'created_at',
   updated_at: 'updated_at',
   deleted_at: 'deleted_at',
-  creator_id: 'creator_id'
+  creator_id: 'creator_id',
+  isEVM: 'isEVM'
 };
 
 exports.Prisma.Token_networksScalarFieldEnum = {

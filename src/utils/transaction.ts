@@ -2,9 +2,14 @@
 // import { ethers } from 'ethers';
 
 import { ConfigService } from '@nestjs/config';
+import axios from 'axios';
 import { ethers } from 'ethers';
 import { FeeResponse, levelFee } from 'src/modules/transaction/transaction.dto';
-
+// import ECPairFactory from 'ecpair';
+// import * as ecc from 'tiny-secp256k1';
+// import * as bitcoin from 'bitcoinjs-lib';
+import { AddressUTXO, FeeResponseBTC } from './types';
+const config = new ConfigService();
 // async function sendTransaction(
 //   rpc_url: string,
 //   contract_address?: string,
@@ -104,6 +109,61 @@ import { FeeResponse, levelFee } from 'src/modules/transaction/transaction.dto';
 //     }
 //   }
 // }
+export async function getFeeBTC(ownerAddress: string, amount) {
+  const utxos: AddressUTXO[] = await getUtxos(ownerAddress);
+
+  const feeRate = await getRecommendedFeeRate();
+  let totalInput = 0;
+  let inputsUsed = 0;
+  for (let i = 0; i < utxos.length; i++) {
+    const utxo = utxos[i];
+    totalInput += utxo.value;
+    inputsUsed += 1;
+  }
+  console.log(totalInput / 1e8);
+  console.log(amount);
+  const estSize = estimateTxSize(inputsUsed, 2) / 1e8;
+  if (totalInput / 1e8 >= amount + feeRate.minimumFee * estSize) {
+    const fee = {
+      fastestFee: (estSize * feeRate.fastestFee).toFixed(8),
+      halfHourFee: (estSize * feeRate.halfHourFee).toFixed(8),
+      hourFee: (estSize * feeRate.hourFee).toFixed(8),
+      economyFee: (estSize * feeRate.economyFee).toFixed(8),
+      minimumFee: (estSize * feeRate.minimumFee).toFixed(8),
+    };
+    return fee;
+  } else {
+    return null;
+  }
+}
+
+function estimateTxSize(numInputs, numOutputs) {
+  return numInputs * 148 + numOutputs * 34 + 10;
+}
+
+async function getUtxos(address) {
+  const res = await axios.get(
+    `${config.get('API_MEMPOOL_BASE')}/address/${address}/utxo`,
+  );
+  return res.data as AddressUTXO[];
+}
+
+// 2️⃣ Hàm lấy raw transaction theo TXID
+async function getRawTransaction(txid) {
+  const res = await axios.get(
+    `${config.get('API_MEMPOOL_BASE')}/tx/${txid}/hex`,
+  );
+  return res.data as string;
+}
+
+async function getRecommendedFeeRate() {
+  const res = await axios.get(
+    `${config.get('API_MEMPOOL_BASE')}/v1/fees/recommended`,
+  );
+  console.log(config.get('API_MEMPOOL_BASE'));
+  console.log(res.data);
+  return res.data as FeeResponseBTC;
+}
 
 export async function getGasPrice(rpc_url: string, isEVM?: string) {
   if (!rpc_url) {

@@ -21,4 +21,13 @@ export class NetworkController {
   async getNetwork(@User('sub') userId: string) {
     return await this.networkService.getNetworkByUserId(userId);
   }
+  @Get('getNetworkList')
+  async getNetworkList() {
+    return await this.networkService.getNetworkList();
+  }
+
+  @Get('createNetworkDefault')
+  async createNetworkDefault() {
+    return await this.networkService.resetNetworkDefault();
+  }
 }

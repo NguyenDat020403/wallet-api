@@ -1,9 +1,14 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class FeeRequest {
   @IsString()
   @IsNotEmpty()
   chain_id: string;
+  @IsString()
+  @IsOptional()
+  ownerAddress: string;
+  @IsOptional()
+  amount: number;
 }
 
 export type FeeResponse = {

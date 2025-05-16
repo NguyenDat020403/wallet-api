@@ -4,41 +4,6 @@ import * as ecc from 'tiny-secp256k1';
 import { BigNumberish, ethers } from 'ethers';
 import { networks } from 'generated/prisma';
 import * as bitcoin from 'bitcoinjs-lib';
-import { ConfigService } from '@nestjs/config';
-
-export function generateRandomMnemonic() {
-  const mnemonic = bip39.generateMnemonic();
-  return mnemonic;
-}
-export function createNewWalletAccount() {
-  const account = ethers.Wallet.createRandom();
-  const provider = new ethers.InfuraProvider(
-    'mainnet',
-    '44b62ee0153941579e73f1d784472ad1',
-  );
-
-  const walletWithProvider = account.connect(provider);
-
-  const privateKey = walletWithProvider.privateKey;
-  const address = walletWithProvider.address;
-  const mnemonics = walletWithProvider.mnemonic?.phrase || 'Some thing wrong';
-  return {
-    private_key: privateKey,
-    mnemonic: mnemonics,
-    address,
-  };
-}
-
-export async function getBalance(address: string) {
-  const provider = new ethers.InfuraProvider(
-    // 'sepolia',
-    'mainnet',
-    '44b62ee0153941579e73f1d784472ad1',
-  );
-  const balance = await provider.getBalance(address);
-  return balance;
-}
-
 export async function getBalanceByNetwork(
   network: networks,
   address: string,
@@ -94,19 +59,6 @@ export async function getBalanceByNetwork(
     );
   }
 }
-export async function getAccountFromMnemonic(mnemonic: string) {
-  const wallet = ethers.Wallet.fromPhrase(mnemonic);
-  const privateKey = wallet.privateKey;
-  const address = wallet.address;
-  const mnemonics = wallet.mnemonic?.phrase || 'Some thing wrong';
-  const balance = await getBalance(address);
-  return {
-    private_key: privateKey,
-    mnemonic: mnemonics,
-    address,
-    balance,
-  };
-}
 
 export async function CreateWallet() {
   const mnemonic = bip39.generateMnemonic();
@@ -127,18 +79,30 @@ export async function CreateWallet() {
   const ethWalletPrivateKeyHex = '0x' + ethWalletPrivateKey.toString('hex');
   const ethWallet = new ethers.Wallet(ethWalletPrivateKeyHex, provider);
   //---------------------------------------------------------------------------
-  const btcPath = "m/44'/1'/0'/0/0";
-  const btcNode = root.derivePath(btcPath);
-  const privateKeyHexBitcoin = Buffer.from(btcNode.privateKey!).toString('hex');
-  const publicKeyBuffer = Buffer.from(btcNode.publicKey);
-  const publicKeyBTCHex = publicKeyBuffer.toString('hex');
-  const btcWallet = bitcoin.payments.p2pkh({
-    pubkey: publicKeyBuffer,
+  const rootBTC = bip32.fromSeed(seed, bitcoin.networks.testnet);
+  const btcPath = "m/84'/1'/0'/0/0";
+  const btcNode = rootBTC.derivePath(btcPath);
+  const xpriv = btcNode.toBase58();
+  const xpub = btcNode.neutered().toBase58();
+
+  const keyPair = bip32.fromPrivateKey(
+    btcNode.privateKey!,
+    btcNode.chainCode,
+    bitcoin.networks.testnet,
+  );
+  const wif = keyPair.toWIF();
+  const btcWallet = bitcoin.payments.p2wpkh({
+    pubkey: Buffer.from(keyPair.publicKey),
     network: bitcoin.networks.testnet,
   });
-  console.log('Private Key (hex):', privateKeyHexBitcoin);
+
+  console.log('xpriv', xpriv);
+  console.log('xpub', xpub);
+  console.log('wif', wif);
+  console.log('privateKey', Buffer.from(btcNode.privateKey!));
+  console.log('chainCode', Buffer.from(btcNode.chainCode));
+  console.log('publicKey', Buffer.from(keyPair.publicKey));
   console.log('Bitcoin Address:', btcWallet.address);
-  console.log('Bitcoin PublicKey :', publicKeyBTCHex);
   //---------------------------------------------------------------------------
   //---------------------------------------------------------------------------
   //---------------------------------------------------------------------------
@@ -155,9 +119,12 @@ export async function CreateWallet() {
         publickey: ethWalletPublicKey,
       },
       {
+        xpriv: xpriv,
+        xpub: xpub,
+        wif: wif,
         address: btcWallet.address,
-        privateKey: privateKeyHexBitcoin,
-        publickey: publicKeyBTCHex,
+        privateKey: Buffer.from(btcNode.privateKey!).toString('hex'),
+        publickey: Buffer.from(keyPair.publicKey).toString('hex'),
       },
     ],
   };
@@ -177,16 +144,23 @@ export async function importWallet(mnemonic: string) {
   const privateKeyHex = '0x' + ethWalletPrivateKey.toString('hex');
   const ethWallet = new ethers.Wallet(privateKeyHex);
   //Bitcoin Testnet
-  const btcPath = "m/44'/1'/0'/0/0"; // BIP44 path cho Bitcoin
-  const btcNode = root.derivePath(btcPath);
-  const publicKeyBufferBTC = Buffer.from(btcNode.publicKey);
-  const publicKeyHexBTC = Buffer.from(btcNode.publicKey).toString('hex');
-  const privateKeyHexBTC = Buffer.from(btcNode.privateKey!).toString('hex');
+  const btcPath = "m/84'/1'/0'/0/0";
+  const rootBTC = bip32.fromSeed(seed, bitcoin.networks.testnet);
+  const btcNode = rootBTC.derivePath(btcPath);
+  const xpriv = btcNode.toBase58();
+  const xpub = btcNode.neutered().toBase58();
 
-  const btcWallet = bitcoin.payments.p2pkh({
-    pubkey: publicKeyBufferBTC,
+  const keyPair = bip32.fromPrivateKey(
+    btcNode.privateKey!,
+    btcNode.chainCode,
+    bitcoin.networks.testnet,
+  );
+  const wif = keyPair.toWIF();
+  const btcWallet = bitcoin.payments.p2wpkh({
+    pubkey: Buffer.from(keyPair.publicKey),
     network: bitcoin.networks.testnet,
   });
+
   return {
     evm: {
       publicKey: ethWalletPublicKey,
@@ -194,9 +168,12 @@ export async function importWallet(mnemonic: string) {
       address: ethWallet.address,
     },
     bitcoin: {
-      publicKey: publicKeyHexBTC,
-      privateKey: privateKeyHexBTC,
+      xpriv: xpriv,
+      xpub: xpub,
+      wif: wif,
       address: btcWallet.address,
+      privateKey: Buffer.from(btcNode.privateKey!).toString('hex'),
+      publickey: Buffer.from(keyPair.publicKey).toString('hex'),
     },
   };
 }
@@ -208,7 +185,6 @@ export async function getBalanceV1(
   contract_address?: string,
   decimals?: number,
 ): Promise<string> {
-  const config = new ConfigService();
   if (networkSymbol !== 'BTC') {
     const provider = new ethers.JsonRpcProvider(network_rpcURL);
     if (!contract_address) {
@@ -226,7 +202,7 @@ export async function getBalanceV1(
     }
   } else if (networkSymbol === 'BTC') {
     const res = await fetch(
-      `https://blockstream.info/testnet/api/address/${address}`,
+      `https://mempool.space/testnet/api/address/${address}`,
     );
     const data: { chain_stats: { funded_txo_sum; spent_txo_sum } } =
       await res.json();

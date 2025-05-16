@@ -7,6 +7,7 @@ import { CreateNetworkDto } from './network.dto';
 import { ERROR_MAP } from 'src/constants/errorMap';
 import axios from 'axios';
 import { generateResponse } from 'src/utils/response';
+import { ListNetworkDefault } from './networkDefault';
 @UseGuards(JwtGuard)
 @Injectable()
 export class NetworkService {
@@ -42,6 +43,12 @@ export class NetworkService {
       },
     });
   }
+  async getNetworkList() {
+    const networks = await this.prisma.networks.findMany({
+      where: {},
+    });
+    return generateResponse('success', networks);
+  }
   async getNetworkByUserId(userId: string) {
     const networks = await this.prisma.networks.findMany({
       where: {
@@ -74,5 +81,16 @@ export class NetworkService {
       },
     });
     return network;
+  }
+
+  async resetNetworkDefault() {
+    const deleteNetwork = await this.prisma.networks.deleteMany({});
+
+    if (!deleteNetwork) {
+      const network = await this.prisma.networks.createMany({
+        data: ListNetworkDefault,
+      });
+      return network;
+    }
   }
 }
