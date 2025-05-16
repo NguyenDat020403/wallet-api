@@ -150,11 +150,17 @@ export class AuthService {
     };
   }
   async resetNetworkDefault() {
+    console.log('🟡 Bắt đầu xóa và thêm network mặc định');
     await this.prisma.networks.deleteMany({});
+    console.log('✅ Đã xóa xong');
 
     const network = await this.prisma.networks.createMany({
       data: ListNetworkDefault,
+      skipDuplicates: true,
     });
+
+    console.log('✅ Đã thêm xong', network);
+
     return {
       data: network,
       status: '200',

@@ -1,4 +1,6 @@
-export const ListNetworkDefault = [
+import { Prisma } from 'generated/prisma';
+
+export const ListNetworkDefault: Prisma.networksCreateManyInput[] = [
   {
     network_name: 'Bitcoin',
     symbol: 'BTC',
