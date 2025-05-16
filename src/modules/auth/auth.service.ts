@@ -150,13 +150,14 @@ export class AuthService {
     };
   }
   async resetNetworkDefault() {
-    const deleteNetwork = await this.prisma.networks.deleteMany({});
+    await this.prisma.networks.deleteMany({});
 
-    if (!deleteNetwork) {
-      const network = await this.prisma.networks.createMany({
-        data: ListNetworkDefault,
-      });
-      return network;
-    }
+    const network = await this.prisma.networks.createMany({
+      data: ListNetworkDefault,
+    });
+    return {
+      data: network,
+      status: '200',
+    };
   }
 }

@@ -21,6 +21,7 @@ export class AuthController {
   // }
   @Post('createNetworkDefault')
   async createNetworkDefault() {
-    return await this.authService.resetNetworkDefault();
+    const result = await this.authService.resetNetworkDefault();
+    return result;
   }
 }
