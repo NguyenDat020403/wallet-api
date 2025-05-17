@@ -300,13 +300,13 @@ export class TokenService {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async getTokenMetadata(token: any) {
-    if (token.coingeckoId) {
+    if (token.coingeckoId && token.address === '') {
       return await this.$getTokenInfoCoingecko(
         token.chainId,
         token.coingeckoId,
       );
     }
-    if (token.address) {
+    if (token.address && !token.isTestnet) {
       return await this.$getTokenInfoMoralis(token.chainId, token.address);
     }
     if (token.isTestnet) {
