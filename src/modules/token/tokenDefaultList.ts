@@ -165,6 +165,7 @@ export const defaultTokens = [
     token_name: 'SepoliaETH',
     decimals: 18,
     symbol: 'ETH',
+    isTestnet: true,
   },
 
   // ERC-20 / BEP-20 tokens

@@ -309,7 +309,7 @@ export class TokenService {
     if (token.address) {
       return await this.$getTokenInfoMoralis(token.chainId, token.address);
     }
-    if (token.isTestnet && token.chainId === 11155111) {
+    if (token.isTestnet) {
       return {
         chainId: token.chainId,
         symbol: token.symbol,
