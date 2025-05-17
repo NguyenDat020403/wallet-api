@@ -279,7 +279,7 @@ export class TokenService {
       const [infoData] = await Promise.all([
         Moralis.EvmApi.token.getTokenMetadata({
           chain: chainHex,
-          addresses: [address],
+          addresses: [address.toLowerCase()],
         }),
       ]);
       const token = infoData.raw[0];
@@ -300,6 +300,7 @@ export class TokenService {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async getTokenMetadata(token: any) {
+    console.log(token);
     if (token.coingeckoId && token.address === '') {
       return await this.$getTokenInfoCoingecko(
         token.chainId,
