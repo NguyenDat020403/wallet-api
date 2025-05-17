@@ -158,6 +158,14 @@ export const defaultTokens = [
   { chainId: 1, address: '', coingeckoId: 'ethereum' }, // ETH
   { chainId: 56, address: '', coingeckoId: 'binancecoin' }, // BNB
   { chainId: 137, address: '', coingeckoId: 'matic-network' }, // MATIC
+  {
+    chainId: 11155111,
+    address: '',
+    thumbnail: 'https://cryptologos.cc/logos/ethereum-eth-logo.png',
+    token_name: 'SepoliaETH',
+    decimals: 18,
+    symbol: 'ETH',
+  },
 
   // ERC-20 / BEP-20 tokens
   { chainId: 1, address: '0xdAC17F958D2ee523a2206206994597C13D831ec7' }, // USDT Ethereum

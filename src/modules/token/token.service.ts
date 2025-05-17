@@ -8,7 +8,6 @@ import { JwtGuard } from 'src/guards';
 import { PrismaService } from 'src/prisma/prisma.service';
 import {
   CreateTokenDto,
-  GetTokenDetailDTO,
   QueryTokenFromAddressDto,
   TokenMetadata,
 } from './token.dto';
@@ -78,7 +77,6 @@ export class TokenService {
     };
   }
 
-  async getTokenDetail(dto: GetTokenDetailDTO) {}
   async getTokens(wallet_id) {
     const walletNetwork = await this.prisma.wallet_networks.findMany({
       where: { wallet_id: wallet_id },
@@ -130,11 +128,7 @@ export class TokenService {
     for (const token of defaultTokens) {
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      const tokenMetadata = await this.$getTokenInfoMoralis(
-        token.chainId,
-        token.address.toLowerCase(),
-        token.coingeckoId,
-      );
+      const tokenMetadata = await this.getTokenMetadata(token);
       if (tokenMetadata) {
         tokenMetadataList.push(tokenMetadata);
       }
@@ -260,49 +254,70 @@ export class TokenService {
       return result;
     }
   }
-
-  async $getTokenInfoMoralis(
-    chainId: number,
-    address: string,
-    coingeckoId?: string,
-  ) {
+  async $getTokenInfoCoingecko(chainId: number, coingeckoId?: string) {
     try {
-      if (address === '') {
-        const res = await axios.get(
-          `https://api.coingecko.com/api/v3/coins/${coingeckoId}`,
-        );
-        const data = res.data;
+      const res = await axios.get(
+        `https://api.coingecko.com/api/v3/coins/${coingeckoId}`,
+      );
+      const data = res.data;
 
-        return {
-          chainId: chainId,
-          address: '',
-          token_name: data.name,
-          symbol: data.symbol.toUpperCase(),
-          decimals: 8,
-          thumbnail: data.image?.thumb || '',
-        };
-      } else {
-        const chainHex = '0x' + chainId.toString(16);
-        const [infoData] = await Promise.all([
-          Moralis.EvmApi.token.getTokenMetadata({
-            chain: chainHex,
-            addresses: [address],
-          }),
-        ]);
-        const token = infoData.raw[0];
-
-        if (!token) return null;
-        return {
-          chainId: chainId,
-          address: token.address,
-          token_name: token.name,
-          symbol: token.symbol,
-          decimals: Number(token.decimals),
-          thumbnail: token.thumbnail || token.logo || '',
-        };
-      }
+      return {
+        chainId: chainId,
+        address: '',
+        token_name: data.name,
+        symbol: data.symbol.toUpperCase(),
+        decimals: 8,
+        thumbnail: data.image?.thumb || '',
+      };
     } catch (error) {
       console.log(error);
+    }
+  }
+  async $getTokenInfoMoralis(chainId: number, address: string) {
+    try {
+      const chainHex = '0x' + chainId.toString(16);
+      const [infoData] = await Promise.all([
+        Moralis.EvmApi.token.getTokenMetadata({
+          chain: chainHex,
+          addresses: [address],
+        }),
+      ]);
+      const token = infoData.raw[0];
+
+      if (!token) return null;
+      return {
+        chainId: chainId,
+        address: token.address,
+        token_name: token.name,
+        symbol: token.symbol,
+        decimals: Number(token.decimals),
+        thumbnail: token.thumbnail || token.logo || '',
+      };
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  async getTokenMetadata(token: any) {
+    if (token.coingeckoId) {
+      return await this.$getTokenInfoCoingecko(
+        token.chainId,
+        token.coingeckoId,
+      );
+    }
+    if (token.address) {
+      return await this.$getTokenInfoMoralis(token.chainId, token.address);
+    }
+    if (token.isTestnet && token.chainId === 11155111) {
+      return {
+        chainId: token.chainId,
+        symbol: token.symbol,
+        address: token.address,
+        token_name: token.token_name,
+        decimals: Number(token.decimals),
+        thumbnail: token.thumbnail || token.logo || '',
+      };
     }
   }
 }
