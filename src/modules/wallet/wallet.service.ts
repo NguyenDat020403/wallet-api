@@ -52,16 +52,18 @@ export class WalletService {
     //CREATE WALLET_TOKEN_NETWORK
     // NETWORK_ID List -> list TOKEN_NETWORK
     // TOKEN_NETWORK List + wallet_ID -> WalletTokenNetwork
-    const tokenNetworks = await Promise.all(
-      network.map(async (n) => {
-        return await this.prisma.token_networks.findFirst({
-          where: {
-            network_id: n.network_id,
-          },
-        });
-      }),
-    );
-    console.log(tokenNetworks);
+    const networkIds = network.map((n) => n.network_id);
+
+    const tokenNetworks = await this.prisma.token_networks.findMany({
+      where: {
+        network_id: {
+          in: networkIds,
+        },
+      },
+    });
+
+    console.log('tokenNetworks: ', tokenNetworks);
+
     await Promise.all(
       tokenNetworks.map(async (tokenNetwork) => {
         return await this.prisma.wallet_network_tokens.create({
@@ -72,6 +74,7 @@ export class WalletService {
         });
       }),
     );
+
     return {
       wallet: wallet,
       walletSecret: {
