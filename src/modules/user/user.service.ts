@@ -40,7 +40,18 @@ export class UserService {
     }
     return user;
   }
-
+  async findUserByWalletId(walletId: string) {
+    const wallet = await this.prisma.wallets.findFirst({
+      where: { wallet_id: walletId },
+      include: {
+        users: true,
+      },
+    });
+    if (!wallet?.users) {
+      throw new BadRequestException(ERROR_MAP.USER_NOT_FOUND);
+    }
+    return wallet.users;
+  }
   // async addNetwork(userId: string, networkIds: string[]) {
   //   console.log(userId);
   //   const user = await this.prisma.user.findUnique({

@@ -173,7 +173,8 @@ exports.Prisma.UsersScalarFieldEnum = {
   password_hash: 'password_hash',
   created_at: 'created_at',
   updated_at: 'updated_at',
-  deleted_at: 'deleted_at'
+  deleted_at: 'deleted_at',
+  notiToken: 'notiToken'
 };
 
 exports.Prisma.Wallet_network_tokensScalarFieldEnum = {

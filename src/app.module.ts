@@ -7,6 +7,7 @@ import { WalletModule } from './modules/wallet/wallet.module';
 import { NetworkModule } from './modules/network/network.module';
 import { TokenModule } from './modules/token/token.module';
 import { TransactionModule } from './modules/transaction/transaction.module';
+import { NotificationModule } from './modules/notification/notification.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { TransactionModule } from './modules/transaction/transaction.module';
     TokenModule,
     PrismaModule,
     TransactionModule,
+    NotificationModule,
     NetworkModule,
     ConfigModule.forRoot({ isGlobal: true }),
   ],

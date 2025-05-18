@@ -217,4 +217,14 @@ export class WalletService {
     );
     return wallet;
   }
+
+  async findWalletIdByAddress(address: string) {
+    const wallet = await this.prisma.wallet_networks.findFirst({
+      where: { address: address },
+    });
+    if (!wallet) {
+      return null;
+    }
+    return wallet.wallet_id;
+  }
 }
