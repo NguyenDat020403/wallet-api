@@ -1,7 +1,12 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { JwtGuard } from 'src/guards';
 import { TransactionService } from './transaction.services';
-import { FeeRequest } from './transaction.dto';
+import {
+  FeeRequest,
+  TransactionConfirmBTC,
+  TransactionRequestBTC,
+  TransactionStatusRequestBTC,
+} from './transaction.dto';
 
 @UseGuards(JwtGuard)
 @Controller('transactions')
@@ -12,5 +17,18 @@ export class TransactionController {
   async getEstimateGas(@Body() rq: FeeRequest) {
     const response = await this.transactionService.getEstimateGas(rq);
     return response;
+  }
+
+  @Post('createTransactionBTC')
+  async createTransactionBTC(@Body() rq: TransactionRequestBTC) {
+    return await this.transactionService.createTransaction(rq);
+  }
+  @Post('confirmTransactionBTC')
+  async confirmTransactionBTC(@Body() rq: TransactionConfirmBTC) {
+    return await this.transactionService.confirmTransaction(rq.transactionHex);
+  }
+  @Get('getTransactionStatusBTC')
+  async getTransactionStatusBTC(@Body() rq: TransactionStatusRequestBTC) {
+    return await this.transactionService.getTransactionStatusBTC(rq);
   }
 }

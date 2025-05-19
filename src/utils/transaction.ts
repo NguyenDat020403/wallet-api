@@ -1,15 +1,20 @@
-// import { ConfigService } from '@nestjs/config';
-// import { ethers } from 'ethers';
-
 import { ConfigService } from '@nestjs/config';
 import axios from 'axios';
 import { ethers } from 'ethers';
-import { FeeResponse, levelFee } from 'src/modules/transaction/transaction.dto';
-// import ECPairFactory from 'ecpair';
-// import * as ecc from 'tiny-secp256k1';
-// import * as bitcoin from 'bitcoinjs-lib';
+import {
+  FeeResponse,
+  levelFee,
+  TransactionRequestBTC,
+  TransactionStatusRequestBTC,
+} from 'src/modules/transaction/transaction.dto';
 import { AddressUTXO, FeeResponseBTC } from './types';
+import * as ecc from 'tiny-secp256k1';
+import * as bitcoin from 'bitcoinjs-lib';
+import ECPairFactory from 'ecpair';
+
+const ECPair = ECPairFactory(ecc);
 const config = new ConfigService();
+
 // async function sendTransaction(
 //   rpc_url: string,
 //   contract_address?: string,
@@ -109,6 +114,9 @@ const config = new ConfigService();
 //     }
 //   }
 // }
+
+//SEND Transaction BTC
+const network = bitcoin.networks.testnet;
 export async function getFeeBTC(ownerAddress: string, amount) {
   const utxos: AddressUTXO[] = await getUtxos(ownerAddress);
 
@@ -164,7 +172,92 @@ async function getRecommendedFeeRate() {
   console.log(res.data);
   return res.data as FeeResponseBTC;
 }
+export async function broadcastTransaction(rawTxHex: string) {
+  const res = await axios.post(
+    `${config.get('API_MEMPOOL_BASE')}/tx`,
+    rawTxHex,
+    {
+      headers: { 'Content-Type': 'text/plain' },
+    },
+  );
+  console.log('broadcastTransaction', res.data);
+  return res.data;
+}
+export async function createTransactionBTC(rq: TransactionRequestBTC) {
+  const keyPair = ECPair.fromWIF(rq.privateKeyWIF, network);
+  const utxos = await getUtxos(rq.sendAddress);
+  const rawTxs = await Promise.all(utxos.map((u) => getRawTransaction(u.txid)));
 
+  const txb = new bitcoin.Psbt({ network: network });
+
+  let totalInput = 0;
+  const inputsUsed: { utxo: AddressUTXO; rawTx: string }[] = [];
+
+  for (let i = 0; i < utxos.length; i++) {
+    const utxo = utxos[i];
+    const rawTx = rawTxs[i];
+    totalInput += utxo.value;
+    inputsUsed.push({ utxo, rawTx });
+    if (totalInput >= rq.amount + rq.feeSelected) break;
+  }
+
+  if (totalInput < rq.amount + rq.feeSelected) {
+    throw new Error(
+      `Không đủ số dư. Tổng: ${totalInput}, Cần: ${
+        rq.amount + rq.feeSelected
+      } (bao gồm phí ${rq.feeSelected})`,
+    );
+  }
+  txb.setVersion(2);
+  txb.setLocktime(0);
+  for (let i = 0; i < inputsUsed.length; i++) {
+    const { utxo, rawTx } = inputsUsed[i];
+    txb.addInput({
+      hash: utxo.txid,
+      index: utxo.vout,
+      nonWitnessUtxo: Buffer.from(rawTx, 'hex'),
+    });
+  }
+
+  // Add outputs
+  txb.addOutput({
+    script: bitcoin.address.toOutputScript(rq.receiverAddress, network),
+    value: rq.amount,
+  });
+
+  // Handle change
+  const change = totalInput - rq.amount - rq.feeSelected;
+  if (change > 0) {
+    txb.addOutput({
+      script: bitcoin.address.toOutputScript(rq.sendAddress, network),
+      value: change,
+    });
+  }
+
+  // Sign all inputs
+  for (let i = 0; i < inputsUsed.length; i++) {
+    txb.signInput(i, {
+      publicKey: Buffer.from(keyPair.publicKey),
+      sign: (hash) => {
+        const sig = keyPair.sign(hash);
+        return Buffer.isBuffer(sig) ? sig : Buffer.from(sig);
+      },
+    });
+  }
+
+  txb.finalizeAllInputs();
+  const tx = txb.extractTransaction();
+  return tx.toHex();
+}
+export async function getTransactionStatusBTC(rq: TransactionStatusRequestBTC) {
+  const res = await axios.get(
+    `${config.get('API_MEMPOOL_BASE')}/tx/${rq.tx}/status`,
+  );
+  console.log('broadcastTransaction', res.data);
+  return res.data;
+}
+
+//SEND transaction EVM
 export async function getGasPrice(rpc_url: string, isEVM?: string) {
   if (!rpc_url) {
     throw new Error('rpc_url is undefined');
@@ -247,7 +340,6 @@ export async function isEIP1559Supported(
     return false;
   }
 }
-
 export async function getGasPriceInfuraAPI(chainId: string) {
   const config = new ConfigService();
   const url = `https://gas.api.infura.io/v3/${config.get('INFURA_KEY')}/networks/${chainId}/suggestedGasFees`;

@@ -51,3 +51,17 @@ export type levelFee = {
   minWaitTimeEstimate: number;
   maxWaitTimeEstimate: number;
 };
+
+export type TransactionRequestBTC = {
+  privateKeyWIF: string;
+  receiverAddress: string;
+  sendAddress: string;
+  amount: number;
+  feeSelected: number;
+};
+export type TransactionConfirmBTC = {
+  transactionHex: string;
+};
+export type TransactionStatusRequestBTC = {
+  tx: string;
+};
