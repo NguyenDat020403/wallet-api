@@ -9,7 +9,7 @@ datasource db {
 }
 
 model audit_logs {
-  log_id       String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  log_id       String    @id @default(uuid()) @db.Uuid
   user_id      String?   @db.Uuid
   action       String    @db.VarChar(255)
   target_table String?   @db.VarChar(255)
@@ -19,7 +19,7 @@ model audit_logs {
 }
 
 model networks {
-  network_id         String            @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  network_id         String            @id @default(uuid()) @db.Uuid
   network_name       String            @db.VarChar(255)
   symbol             String            @db.VarChar(255)
   thumbnail          String?           @db.VarChar(255)
@@ -40,7 +40,7 @@ model networks {
 }
 
 model token_networks {
-  token_network_id      String                  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  token_network_id      String                  @id @default(uuid()) @db.Uuid
   token_id              String?                 @db.Uuid
   network_id            String?                 @db.Uuid
   contract_address      String                  @db.VarChar(255)
@@ -54,7 +54,7 @@ model token_networks {
 }
 
 model tokens {
-  token_id           String           @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  token_id           String           @id @default(uuid()) @db.Uuid
   token_name         String           @db.VarChar(255)
   symbol             String           @db.VarChar(255)
   decimals           Int
@@ -68,7 +68,7 @@ model tokens {
 }
 
 model users {
-  user_id       String       @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  user_id       String       @id @default(uuid()) @db.Uuid
   username      String       @db.VarChar(255)
   avatar        String?      @db.VarChar(255)
   bio           String?      @db.VarChar(255)
@@ -84,7 +84,7 @@ model users {
 }
 
 model wallet_network_tokens {
-  wallet_network_token_id String          @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  wallet_network_token_id String          @id @default(uuid()) @db.Uuid
   token_network_id        String?         @db.Uuid
   wallet_id               String?         @db.Uuid
   balance                 Decimal         @default(0) @db.Decimal(20, 8)
@@ -97,7 +97,7 @@ model wallet_network_tokens {
 }
 
 model wallet_networks {
-  wallet_network_id String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  wallet_network_id String    @id @default(uuid()) @db.Uuid
   wallet_id         String?   @db.Uuid
   network_id        String?   @db.Uuid
   address           String    @db.VarChar(255)
@@ -110,7 +110,7 @@ model wallet_networks {
 }
 
 model wallets {
-  wallet_id             String                  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  wallet_id             String                  @id @default(uuid()) @db.Uuid
   user_id               String?                 @db.Uuid
   wallet_name           String                  @db.VarChar(255)
   wallet_balance        Decimal                 @default(0) @db.Decimal(20, 8)
