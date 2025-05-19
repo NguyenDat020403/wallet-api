@@ -61,6 +61,7 @@ export type TransactionRequestBTC = {
 };
 export type TransactionConfirmBTC = {
   transactionHex: string;
+  toAddress: string;
 };
 export type TransactionStatusRequestBTC = {
   tx: string;

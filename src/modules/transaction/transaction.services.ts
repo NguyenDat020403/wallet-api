@@ -12,6 +12,7 @@ import {
 } from 'src/utils/transaction';
 import {
   FeeRequest,
+  TransactionConfirmBTC,
   TransactionRequestBTC,
   TransactionStatusRequestBTC,
 } from './transaction.dto';
@@ -61,18 +62,13 @@ export class TransactionService {
         );
       });
   }
-  async confirmTransaction(transactionHex: string) {
-    console.log(transactionHex);
-
-    return await broadcastTransaction(transactionHex)
+  async confirmTransaction(rq: TransactionConfirmBTC) {
+    return await broadcastTransaction(rq.transactionHex)
       .then(async (txId) => {
-        await this.notificationService.sendNotification(
-          'tb1q8g65yrl95sl8kq5r9wq2kvuqyzq0fzrk0u3wvf',
-          {
-            title: 'Receive Token',
-            body: 'Receive tokennnnnnnnnnnnnnnnn',
-          },
-        );
+        await this.notificationService.sendNotification(rq.toAddress, {
+          title: 'Receive Token',
+          body: 'Receive tokennnnnnnnnnnnnnnnn',
+        });
         return generateResponse('success', txId, '200');
       })
       .catch((error) => {

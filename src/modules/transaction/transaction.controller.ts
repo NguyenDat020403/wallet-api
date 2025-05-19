@@ -25,7 +25,7 @@ export class TransactionController {
   }
   @Post('confirmTransactionBTC')
   async confirmTransactionBTC(@Body() rq: TransactionConfirmBTC) {
-    return await this.transactionService.confirmTransaction(rq.transactionHex);
+    return await this.transactionService.confirmTransaction(rq);
   }
   @Get('getTransactionStatusBTC')
   async getTransactionStatusBTC(@Body() rq: TransactionStatusRequestBTC) {

@@ -47,6 +47,8 @@ export class NotificationService {
 
     if (!user.notiToken)
       return generateResponse('please check permission', '', '400', 'fail');
+    console.log('user.notiToken', user.notiToken);
+    console.log('user.naame', user.username);
 
     await this.firebaseService.sendNotification(user.notiToken, notification);
   }
