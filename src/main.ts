@@ -14,8 +14,9 @@ async function bootstrap() {
       whitelist: true,
     }),
   );
-  const PORT = process.env.PORT || 3333;
+  const PORT = process.env.PORT || 8000;
   await app.listen(PORT, '0.0.0.0');
+  console.log(`✅ Server is listening on http://0.0.0.0:${PORT}`);
 }
 // eslint-disable-next-line @typescript-eslint/no-floating-promises
 bootstrap();
