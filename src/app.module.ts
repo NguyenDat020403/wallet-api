@@ -8,7 +8,11 @@ import { NetworkModule } from './modules/network/network.module';
 import { TokenModule } from './modules/token/token.module';
 import { TransactionModule } from './modules/transaction/transaction.module';
 import { NotificationModule } from './modules/notification/notification.module';
-
+import path from 'path';
+const envFile =
+  process.env.NODE_ENV && process.env.NODE_ENV !== 'local'
+    ? `.env.${process.env.NODE_ENV}`
+    : '.env'; // Nếu NODE_ENV là 'local' hoặc undefined, dùng .env
 @Module({
   imports: [
     AuthModule,
@@ -17,9 +21,12 @@ import { NotificationModule } from './modules/notification/notification.module';
     TokenModule,
     PrismaModule,
     TransactionModule,
+    ConfigModule.forRoot({
+      envFilePath: path.resolve(__dirname, '..', envFile),
+      isGlobal: true,
+    }),
     NotificationModule,
     NetworkModule,
-    ConfigModule.forRoot({ isGlobal: true }),
   ],
 })
 export class AppModule {}

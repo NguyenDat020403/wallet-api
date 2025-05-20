@@ -94,13 +94,27 @@ export class WalletService {
     return wallet;
   }
   async getWallet(userId: string, dto: GetWalletRequest) {
-    const wallet = await this.prisma.wallets.findFirst({
+    let wallet = await this.prisma.wallets.findFirst({
       where: {
         wallet_id: dto.wallet_id,
       },
     });
     const tokens = await this.tokenService.getTokens(dto.wallet_id);
-
+    const tokenAvailableBalance = tokens.filter(
+      (t) => t?.balance !== undefined && parseFloat(t?.balance) !== 0,
+    );
+    console.log('tokenAvailableBalance', tokenAvailableBalance);
+    const totalBalance = tokenAvailableBalance.reduce((sum, token) => {
+      return sum + parseFloat(token?.balance || '0');
+    }, 0);
+    if (totalBalance !== Number(wallet?.wallet_balance)) {
+      wallet = await this.prisma.wallets.update({
+        where: { wallet_id: wallet?.wallet_id },
+        data: {
+          wallet_balance: totalBalance,
+        },
+      });
+    }
     return {
       tokens,
       wallet,
