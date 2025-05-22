@@ -49,8 +49,11 @@ export class TransactionService {
 
   async createTransaction(rq: TransactionRequestBTC) {
     return await createTransactionBTC(rq)
-      .then((transactionHex) => {
-        return generateResponse('success', transactionHex, '200');
+      .then(async (transactionHex) => {
+        await this.confirmTransaction({
+          toAddress: rq.receiverAddress,
+          transactionHex: transactionHex,
+        });
       })
       .catch((error) => {
         return generateResponse(

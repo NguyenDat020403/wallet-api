@@ -1,7 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
-import { BadRequestException, Injectable, UseGuards } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  UseGuards,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { JwtGuard } from 'src/guards';
@@ -17,6 +22,8 @@ import { NetworkService } from '../network/network.services';
 import { getBalanceV1 } from 'src/utils/wallet';
 import { defaultTokens, TokenNetworkDefault } from './tokenDefaultList';
 import axios from 'axios';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
 @UseGuards(JwtGuard)
 @Injectable()
 export class TokenService {
@@ -25,7 +32,25 @@ export class TokenService {
     private networkService: NetworkService,
     private jwt: JwtService,
     private config: ConfigService,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
+  private async getSymbolToIdMap(): Promise<Record<string, string>> {
+    const cacheKey = 'coingecko:symbol_to_id';
+    const cached =
+      await this.cacheManager.get<Record<string, string>>(cacheKey);
+    if (cached) return cached;
+
+    const res = await axios.get('https://api.coingecko.com/api/v3/coins/list');
+    const data = res.data;
+
+    const map: Record<string, string> = {};
+    data.forEach((coin) => {
+      map[coin.symbol.toLowerCase()] = coin.id;
+    });
+
+    await this.cacheManager.set(cacheKey, map, 60 * 60 * 24); // 24h
+    return map;
+  }
 
   async createToken({
     wallet_id,
@@ -99,6 +124,11 @@ export class TokenService {
         networks: true,
       },
     });
+    const symbolToId = await this.getSymbolToIdMap();
+    const validCoins = tokenNetwork.filter(
+      (t) => symbolToId[t.tokens?.token_name.toLowerCase() || ''],
+    );
+    console.log('validCoins', validCoins);
 
     return await Promise.all(
       tokenNetwork.map(async (tn) => {
@@ -319,6 +349,25 @@ export class TokenService {
         decimals: Number(token.decimals),
         thumbnail: token.thumbnail || token.logo || '',
       };
+    }
+  }
+
+  async getPriceFeedId(symbol: string): Promise<string | null> {
+    try {
+      const query = `Crypto.${symbol.toLocaleUpperCase()}/USD`;
+      const res = await axios.get<PythPrice[]>(
+        `${HERMES_PYTH_ENDPOINT}/price_feeds`,
+        { params: { query, asset_type: 'crypto' } },
+      );
+
+      const priceFeedId = res.data?.[0]?.id;
+      return priceFeedId ? `0x${priceFeedId}` : null;
+    } catch (error) {
+      console.error(
+        `Failed to get price feed ID for ${symbol}:`,
+        error.message,
+      );
+      return null;
     }
   }
 }
