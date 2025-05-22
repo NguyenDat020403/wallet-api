@@ -9,6 +9,7 @@ import { FirebaseService } from 'src/firebase/firebase.service';
 import { UserService } from '../user/user.service';
 import { TokenService } from '../token/token.service';
 import { NetworkService } from '../network/network.services';
+import { DateService } from 'src/common/date.service';
 
 @Module({
   imports: [JwtModule.register({})],
@@ -22,6 +23,7 @@ import { NetworkService } from '../network/network.services';
     NetworkService,
     FirebaseService,
     UserService,
+    DateService,
   ],
 })
 export class TransactionModule {}

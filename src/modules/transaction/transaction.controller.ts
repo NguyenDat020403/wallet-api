@@ -4,6 +4,7 @@ import { TransactionService } from './transaction.services';
 import {
   FeeRequest,
   TransactionConfirmBTC,
+  TransactionHistoryRequest,
   TransactionRequestBTC,
   TransactionStatusRequestBTC,
 } from './transaction.dto';
@@ -30,5 +31,12 @@ export class TransactionController {
   @Get('getTransactionStatusBTC')
   async getTransactionStatusBTC(@Body() rq: TransactionStatusRequestBTC) {
     return await this.transactionService.getTransactionStatusBTC(rq);
+  }
+  @Post('getTransactionHistory')
+  async getTransactionHistory(@Body() rq: TransactionHistoryRequest) {
+    return await this.transactionService.getTransactionHistory(
+      rq.address,
+      rq.token_id,
+    );
   }
 }

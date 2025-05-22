@@ -8,16 +8,19 @@ import {
   createTransactionBTC,
   getFeeBTC,
   getGasPriceInfuraAPI,
+  getTransactionHistory,
   getTransactionStatusBTC,
 } from 'src/utils/transaction';
 import {
   FeeRequest,
   TransactionConfirmBTC,
+  TransactionHistory,
   TransactionRequestBTC,
   TransactionStatusRequestBTC,
 } from './transaction.dto';
 import { generateResponse } from 'src/utils/response';
 import { NotificationService } from '../notification/notification.services';
+import { DateService } from 'src/common/date.service';
 @UseGuards(JwtGuard)
 @Injectable()
 export class TransactionService {
@@ -25,6 +28,7 @@ export class TransactionService {
     private prisma: PrismaService,
     private jwt: JwtService,
     private config: ConfigService,
+    private dataService: DateService,
     private notificationService: NotificationService,
   ) {}
   async getEstimateGas(data: FeeRequest) {
@@ -100,5 +104,67 @@ export class TransactionService {
           'fail to load feeData',
         );
       });
+  }
+
+  async getTransactionHistory(address: string, token_id: string) {
+    const transactionHistory: TransactionHistory[] =
+      await getTransactionHistory(address);
+    if (!transactionHistory) {
+      return generateResponse('fail', '', '200', 'fail to load feeData');
+    }
+    const network = await this.prisma.token_networks.findFirst({
+      where: {
+        token_id: token_id,
+      },
+      include: {
+        networks: true,
+      },
+    });
+    const txs = transactionHistory.map((item) => {
+      const time_transaction = this.dataService.convertUnixToDate(
+        item.status.block_time,
+      );
+      const action_transaction =
+        item.vin[0].prevout.scriptpubkey_address === address ? 0 : 1;
+      const from_address = item.vin[0].prevout.scriptpubkey_address;
+
+      const to_address = (() => {
+        if (from_address === address) {
+          const vo = item.vout.find(
+            (vo) => vo.scriptpubkey_address !== address,
+          );
+          return vo?.scriptpubkey_address || address;
+        }
+        return address;
+      })();
+      const fee_network = item.fee;
+
+      const network_name = network?.networks
+        ? network?.networks.network_name
+        : 'no data';
+      const block_hash = item.status.block_hash;
+      const block_height = item.status.block_height;
+      return {
+        time_transaction: time_transaction,
+        action_transaction: action_transaction,
+        from_address: from_address,
+        to_address: to_address,
+        fee_network: fee_network,
+        network_name: network_name,
+        block_hash: block_hash,
+        block_height: block_height,
+      };
+    });
+    const grouped = {};
+
+    txs.forEach((tx) => {
+      const date = tx.time_transaction;
+      if (!grouped[date]) {
+        grouped[date] = [];
+      }
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+      grouped[date].push(tx);
+    });
+    return generateResponse('success', grouped, '200');
   }
 }

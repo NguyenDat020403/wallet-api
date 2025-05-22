@@ -352,22 +352,22 @@ export class TokenService {
     }
   }
 
-  async getPriceFeedId(symbol: string): Promise<string | null> {
-    try {
-      const query = `Crypto.${symbol.toLocaleUpperCase()}/USD`;
-      const res = await axios.get<PythPrice[]>(
-        `${HERMES_PYTH_ENDPOINT}/price_feeds`,
-        { params: { query, asset_type: 'crypto' } },
-      );
+  // async getPriceFeedId(symbol: string): Promise<string | null> {
+  //   try {
+  //     const query = `Crypto.${symbol.toLocaleUpperCase()}/USD`;
+  //     const res = await axios.get<PythPrice[]>(
+  //       `${HERMES_PYTH_ENDPOINT}/price_feeds`,
+  //       { params: { query, asset_type: 'crypto' } },
+  //     );
 
-      const priceFeedId = res.data?.[0]?.id;
-      return priceFeedId ? `0x${priceFeedId}` : null;
-    } catch (error) {
-      console.error(
-        `Failed to get price feed ID for ${symbol}:`,
-        error.message,
-      );
-      return null;
-    }
-  }
+  //     const priceFeedId = res.data?.[0]?.id;
+  //     return priceFeedId ? `0x${priceFeedId}` : null;
+  //   } catch (error) {
+  //     console.error(
+  //       `Failed to get price feed ID for ${symbol}:`,
+  //       error.message,
+  //     );
+  //     return null;
+  //   }
+  // }
 }

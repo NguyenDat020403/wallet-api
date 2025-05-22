@@ -256,7 +256,13 @@ export async function getTransactionStatusBTC(rq: TransactionStatusRequestBTC) {
   console.log('broadcastTransaction', res.data);
   return res.data;
 }
-
+export async function getTransactionHistory(address: string) {
+  const res = await axios.get(
+    `${config.get('API_MEMPOOL_BASE')}/address/${address}/txs`,
+  );
+  console.log('broadcastTransaction', res.data);
+  return res.data;
+}
 //SEND transaction EVM
 export async function getGasPrice(rpc_url: string, isEVM?: string) {
   if (!rpc_url) {
