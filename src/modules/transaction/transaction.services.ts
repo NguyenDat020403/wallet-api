@@ -10,12 +10,14 @@ import {
   getGasPriceInfuraAPI,
   getTransactionHistory,
   getTransactionStatusBTC,
+  sendTransactionEVM,
 } from 'src/utils/transaction';
 import {
   FeeRequest,
   TransactionConfirmBTC,
   TransactionHistory,
   TransactionRequestBTC,
+  TransactionRequestEVM,
   TransactionStatusRequestBTC,
 } from './transaction.dto';
 import { generateResponse } from 'src/utils/response';
@@ -51,42 +53,51 @@ export class TransactionService {
     return generateResponse('success', feeData, '200');
   }
 
-  async createTransaction(rq: TransactionRequestBTC) {
-    return await createTransactionBTC(rq)
-      .then(async (transactionHex) => {
-        await this.confirmTransaction({
-          toAddress: rq.receiverAddress,
-          transactionHex: transactionHex,
-        });
-      })
-      .catch((error) => {
-        return generateResponse(
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument
-          error.message,
-          '',
-          '200',
-          'fail to load feeData',
-        );
+  async sendTransactionBTC(rq: TransactionRequestBTC) {
+    try {
+      const transactionHex = await createTransactionBTC(rq);
+      const tx = await this.confirmTransactionBTC({
+        toAddress: rq.receiverAddress,
+        transactionHex: transactionHex,
       });
+      if (tx) {
+        return generateResponse('success', tx, '200');
+      }
+      console.log('tx', tx);
+      return generateResponse('fail', '', '200', 'something wrong');
+    } catch (error) {
+      return generateResponse('fail', '', '200', error.message);
+    }
   }
-  async confirmTransaction(rq: TransactionConfirmBTC) {
+  async confirmTransactionBTC(rq: TransactionConfirmBTC) {
     return await broadcastTransaction(rq.transactionHex)
-      .then(async (txId) => {
+      .then(async (txId: string) => {
         await this.notificationService.sendNotification(rq.toAddress, {
           title: 'Receive Token',
           body: 'Receive tokennnnnnnnnnnnnnnnn',
         });
-        return generateResponse('success', txId, '200');
+        return txId;
       })
-      .catch((error) => {
-        return generateResponse(
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument
-          error.message,
-          '',
-          '200',
-          'fail to broadcast Transaction',
-        );
+      .catch(() => {
+        return null;
       });
+  }
+  async sendTransactionEVM(rq: TransactionRequestEVM) {
+    const tx = await sendTransactionEVM(
+      rq.privateKey,
+      rq.from,
+      rq.to,
+      rq.amount,
+      rq.rpc_url,
+      rq.decimals,
+      rq.fee,
+      rq.asset,
+      rq.contract_address,
+    );
+    if (!tx) {
+      return generateResponse('fail', '', '200', 'something wrong');
+    }
+    return generateResponse('success', tx, '200');
   }
 
   async getTransactionStatusBTC(rq: TransactionStatusRequestBTC) {
@@ -166,5 +177,24 @@ export class TransactionService {
       grouped[date].push(tx);
     });
     return generateResponse('success', grouped, '200');
+  }
+  async getSendTransactionToAddressHistory(address: string) {
+    const transactionHistory: TransactionHistory[] =
+      await getTransactionHistory(address);
+    if (!transactionHistory) {
+      return generateResponse('fail', '', '200', 'fail to load feeData');
+    }
+    const listAddress = transactionHistory
+      .filter((item) => {
+        return item.vin.some(
+          (vin) => vin.prevout?.scriptpubkey_address === address,
+        );
+      })
+      .map((item) => {
+        const vo = item.vout.find((vo) => vo.scriptpubkey_address !== address);
+        return vo?.scriptpubkey_address;
+      })
+      .filter((address): address is string => !!address);
+    return generateResponse('success', listAddress, '200');
   }
 }

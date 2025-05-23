@@ -148,6 +148,7 @@ export class TokenService {
         return {
           token: tn.tokens,
           network: tn.networks,
+          contract_address: tn.contract_address || '',
           balance,
         };
       }),

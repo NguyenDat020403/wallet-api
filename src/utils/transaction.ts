@@ -7,7 +7,7 @@ import {
   TransactionRequestBTC,
   TransactionStatusRequestBTC,
 } from 'src/modules/transaction/transaction.dto';
-import { AddressUTXO, FeeResponseBTC } from './types';
+import { AddressUTXO, FeeDataEVM, FeeResponseBTC } from './types';
 import * as ecc from 'tiny-secp256k1';
 import * as bitcoin from 'bitcoinjs-lib';
 import ECPairFactory from 'ecpair';
@@ -15,65 +15,67 @@ import ECPairFactory from 'ecpair';
 const ECPair = ECPairFactory(ecc);
 const config = new ConfigService();
 
-// async function sendTransaction(
-//   rpc_url: string,
-//   contract_address?: string,
-//   isEVM?: boolean,
-//   privateKey?: string,
-//   asset?: string,
-//   to?: string,
-//   amount?: string,
-// ) {
-//   if (isEVM) {
-//     await sendTransactionEVM(
-//       privateKey,
-//       asset,
-//       to,
-//       amount,
-//       contract_address,
-//       rpc_url,
-//     );
-//   } else {
-//     console.log('BITCOIn');
-//     sendTransactionBitcoin(privateKey, asset, to, amount);
-//   }
-// }
-// async function sendTransactionEVM(
-//   privateKey?: string,
-//   asset?: string,
-//   to?: string,
-//   amount?: string,
-//   rpc_url?: string,
-//   contract_address?: string,
-// ) {
-//   const config = new ConfigService();
-//   if (contract_address) {
-//     console.log('send token');
-//   } else {
-//     console.log('send native ');
-//     const provider = new ethers.JsonRpcProvider(
-//       rpc_url! + config.get('INFURA_KEY'),
-//     );
-//     const wallet = new ethers.Wallet(privateKey!, provider);
-//     const tx = await wallet.sendTransaction({
-//       to: to,
-//       value: ethers.parseEther(amount!),
-//     });
-//     const receipt = await tx.wait();
-//     console.log('✅ Transaction confirmed:', receipt);
-//   }
-// }
-// function sendTransactionBitcoin(
-//   privateKey?: string,
-//   asset?: string,
-//   to?: string,
-//   amount?: string,
-// ) {
-//   console.log(privateKey);
-//   console.log(asset);
-//   console.log(to);
-//   console.log(amount);
-// }
+export async function sendTransactionEVM(
+  privateKey: string,
+  from: string,
+  to: string,
+  amount: string,
+  rpc_url: string,
+  decimals: number,
+  fee?: FeeDataEVM,
+  asset?: string,
+  contract_address?: string,
+) {
+  const provider = new ethers.JsonRpcProvider(rpc_url);
+  let tx: string;
+  console.log(fee);
+  const parseGasValue = (value: string): bigint => {
+    const numericValue = Math.floor(Number(value) * 1e9);
+    return ethers.parseUnits(numericValue.toString(), 'wei');
+  };
+  if (contract_address) {
+    console.log('send token');
+
+    const wallet = new ethers.Wallet(privateKey, provider);
+    const tokenContract = new ethers.Contract(
+      contract_address,
+      [
+        'function transfer(address to, uint256 amount) returns (bool)',
+        'function balanceOf(address) view returns (uint256)',
+        'function decimals() view returns (uint8)',
+      ],
+      wallet,
+    );
+    const ethBalance = await provider.getBalance(from);
+    const ethBalanceFormatted = ethers.formatEther(ethBalance);
+    if (ethBalance === 0n) {
+      return 'check your balance';
+    }
+    console.log(`Số dư ETH: ${ethBalanceFormatted}`);
+    const balance = await tokenContract.balanceOf(from);
+    const amountInUnits = ethers.parseUnits(amount, decimals);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    const tokenBalanceFormatted = ethers.formatUnits(balance, decimals);
+    if (balance < amountInUnits) {
+      return `check your balance - USDT balance: ${tokenBalanceFormatted}`;
+    }
+    tx = await tokenContract.transfer(to, amountInUnits);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return tx;
+  } else {
+    console.log('send native');
+    const wallet = new ethers.Wallet(privateKey, provider);
+    const tx = await wallet.sendTransaction({
+      to: to,
+      value: ethers.parseEther(amount),
+      maxPriorityFeePerGas: parseGasValue(fee!.suggestedMaxPriorityFeePerGas),
+      maxFeePerGas: parseGasValue(fee!.suggestedMaxFeePerGas),
+      gasLimit: 21000,
+    });
+    // const receipt = await tx.wait();
+    return tx.hash;
+  }
+}
 
 // async function isBalanceEVMEnough(
 //   requesterAddress: string,
@@ -383,4 +385,16 @@ export async function getGasPriceInfuraAPI(chainId: string) {
     console.error('Error fetching gas fees:', error);
     return null;
   }
+}
+export async function getTransactionHistoryEVM(rpc_url: string) {
+  const provider = new ethers.JsonRpcProvider(rpc_url.trim());
+  const endBlock = await provider.getBlockNumber();
+  const transactions: string[] = [];
+  for (let blockNumber = 0; blockNumber <= endBlock; blockNumber++) {
+    const block = await provider.getBlock(blockNumber, true);
+    if (block && block.transactions) {
+      transactions.push(block.transactions[0]);
+    }
+  }
+  console.log(transactions);
 }

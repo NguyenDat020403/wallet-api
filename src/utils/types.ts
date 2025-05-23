@@ -19,3 +19,8 @@ export interface FeeResponseBTC {
   economyFee: number;
   minimumFee: number;
 }
+
+export interface FeeDataEVM {
+  suggestedMaxPriorityFeePerGas: string;
+  suggestedMaxFeePerGas: string;
+}

@@ -5,9 +5,12 @@ import {
   FeeRequest,
   TransactionConfirmBTC,
   TransactionHistoryRequest,
+  TransactionRequest,
   TransactionRequestBTC,
+  TransactionRequestEVM,
   TransactionStatusRequestBTC,
 } from './transaction.dto';
+import { generateResponse } from 'src/utils/response';
 
 @UseGuards(JwtGuard)
 @Controller('transactions')
@@ -19,14 +22,17 @@ export class TransactionController {
     const response = await this.transactionService.getEstimateGas(rq);
     return response;
   }
-
-  @Post('createTransactionBTC')
-  async createTransactionBTC(@Body() rq: TransactionRequestBTC) {
-    return await this.transactionService.createTransaction(rq);
+  @Post('sendTransactionEVM')
+  async sendTransactionEVM(@Body() rq: TransactionRequestEVM) {
+    return await this.transactionService.sendTransactionEVM(rq);
+  }
+  @Post('sendTransactionBTC')
+  async sendTransactionBTC(@Body() rq: TransactionRequestBTC) {
+    return await this.transactionService.sendTransactionBTC(rq);
   }
   @Post('confirmTransactionBTC')
   async confirmTransactionBTC(@Body() rq: TransactionConfirmBTC) {
-    return await this.transactionService.confirmTransaction(rq);
+    return await this.transactionService.confirmTransactionBTC(rq);
   }
   @Get('getTransactionStatusBTC')
   async getTransactionStatusBTC(@Body() rq: TransactionStatusRequestBTC) {
@@ -37,6 +43,12 @@ export class TransactionController {
     return await this.transactionService.getTransactionHistory(
       rq.address,
       rq.token_id,
+    );
+  }
+  @Post('getSendTransactionToAddressHistory')
+  async getSendTransactionToAddressHistory(@Body() rq: TransactionRequest) {
+    return await this.transactionService.getSendTransactionToAddressHistory(
+      rq.address,
     );
   }
 }

@@ -1,4 +1,5 @@
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { FeeDataEVM } from 'src/utils/types';
 
 export class FeeRequest {
   @IsString()
@@ -59,6 +60,21 @@ export type TransactionRequestBTC = {
   amount: number;
   feeSelected: number;
 };
+export type TransactionRequestEVM = {
+  privateKey: string;
+  asset?: string;
+  from: string;
+  to: string;
+  amount: string;
+  rpc_url: string;
+  contract_address?: string;
+  decimals: number;
+  fee: {
+    suggestedMaxPriorityFeePerGas: string;
+    suggestedMaxFeePerGas: string;
+  };
+};
+
 export type TransactionConfirmBTC = {
   transactionHex: string;
   toAddress: string;
@@ -66,10 +82,12 @@ export type TransactionConfirmBTC = {
 export type TransactionStatusRequestBTC = {
   tx: string;
 };
-export type TransactionHistoryRequest = {
+export interface TransactionRequest {
   address: string;
+}
+export interface TransactionHistoryRequest extends TransactionRequest {
   token_id: string;
-};
+}
 export interface TransactionHistory {
   txid: string;
   version: number;
@@ -114,4 +132,32 @@ export interface Status {
   block_height: number;
   block_hash: string;
   block_time: number;
+}
+export interface TransactionEVM {
+  _type: string;
+  blockNumber: any;
+  blockHash: any;
+  blobVersionedHashes: any;
+  chainId: string;
+  data: string;
+  from: string;
+  gasLimit: string;
+  gasPrice: any;
+  hash: string;
+  maxFeePerGas: string;
+  maxPriorityFeePerGas: string;
+  maxFeePerBlobGas: any;
+  nonce: number;
+  signature: Signature;
+  to: string;
+  type: number;
+  value: string;
+}
+
+export interface Signature {
+  _type: string;
+  networkV: any;
+  r: string;
+  s: string;
+  v: number;
 }
