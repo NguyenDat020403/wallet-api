@@ -7,10 +7,18 @@ import {
   TransactionRequestBTC,
   TransactionStatusRequestBTC,
 } from 'src/modules/transaction/transaction.dto';
-import { AddressUTXO, FeeDataEVM, FeeResponseBTC } from './types';
+import {
+  AddressUTXO,
+  EtherscanTransaction,
+  FeeDataEVM,
+  FeeResponseBTC,
+  TransactionHistoryEVM,
+} from './types';
 import * as ecc from 'tiny-secp256k1';
 import * as bitcoin from 'bitcoinjs-lib';
 import ECPairFactory from 'ecpair';
+import { NetworkConfigService } from './networkConfig';
+import { generateResponse } from './response';
 
 const ECPair = ECPairFactory(ecc);
 const config = new ConfigService();
@@ -386,15 +394,48 @@ export async function getGasPriceInfuraAPI(chainId: string) {
     return null;
   }
 }
-export async function getTransactionHistoryEVM(rpc_url: string) {
-  const provider = new ethers.JsonRpcProvider(rpc_url.trim());
-  const endBlock = await provider.getBlockNumber();
-  const transactions: string[] = [];
-  for (let blockNumber = 0; blockNumber <= endBlock; blockNumber++) {
-    const block = await provider.getBlock(blockNumber, true);
-    if (block && block.transactions) {
-      transactions.push(block.transactions[0]);
+export async function getTransactionHistoryEVM(
+  address: string,
+  chain_id: string,
+  networkConfigService: NetworkConfigService,
+) {
+  try {
+    const config = networkConfigService.getNetworkConfig(chain_id);
+    console.log('config: ', config);
+    if (!config || !config.api_url || !config.api_key || config.status !== 1) {
+      return generateResponse('fail to load network config', [], '0', 'true');
     }
+    const url = `${config.api_url}&module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&sort=desc&apikey=${config.api_key}`;
+    const response = await axios.get<{
+      status: string;
+      message: string;
+      result: EtherscanTransaction[];
+    }>(url);
+
+    if (response.data.result.length === 0) {
+      return generateResponse(response.data.message, [], '1', 'false');
+    }
+    if (response.data.status !== '1') {
+      return generateResponse(response.data.message, [], '0', 'true');
+    }
+
+    // Map Etherscan transactions to TransactionHistoryEVM
+    const transactions: TransactionHistoryEVM[] = response.data.result.map(
+      (tx) => ({
+        hash: tx.hash,
+        from: tx.from,
+        to: tx.to || '',
+        value: tx.value,
+        gasUsed: tx.gasUsed,
+        gasPrice: tx.gasPrice,
+        blockHash: tx.blockHash,
+        blockNumber: parseInt(tx.blockNumber, 10),
+        timestamp: parseInt(tx.timeStamp, 10),
+      }),
+    );
+    console.log(transactions);
+    return generateResponse(response.data.message, transactions, '1', 'false');
+  } catch {
+    return null;
   }
-  console.log(transactions);
 }

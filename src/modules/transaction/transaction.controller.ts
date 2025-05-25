@@ -10,7 +10,6 @@ import {
   TransactionRequestEVM,
   TransactionStatusRequestBTC,
 } from './transaction.dto';
-import { generateResponse } from 'src/utils/response';
 
 @UseGuards(JwtGuard)
 @Controller('transactions')
@@ -42,7 +41,7 @@ export class TransactionController {
   async getTransactionHistory(@Body() rq: TransactionHistoryRequest) {
     return await this.transactionService.getTransactionHistory(
       rq.address,
-      rq.token_id,
+      rq.chain_id,
     );
   }
   @Post('getSendTransactionToAddressHistory')

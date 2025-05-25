@@ -86,7 +86,7 @@ export interface TransactionRequest {
   address: string;
 }
 export interface TransactionHistoryRequest extends TransactionRequest {
-  token_id: string;
+  chain_id: string;
 }
 export interface TransactionHistory {
   txid: string;
@@ -160,4 +160,15 @@ export interface Signature {
   r: string;
   s: string;
   v: number;
+}
+export interface TransactionHistoryEVM {
+  hash: string;
+  from: string;
+  to: string;
+  value: string;
+  gasUsed: string;
+  gasPrice: string;
+  blockHash: string;
+  blockNumber: number;
+  timestamp: number;
 }
