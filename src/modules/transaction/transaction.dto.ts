@@ -86,7 +86,11 @@ export interface TransactionRequest {
   address: string;
 }
 export interface TransactionHistoryRequest extends TransactionRequest {
+  token_id?: string;
   chain_id: string;
+}
+export interface CurrentTransactionRequest extends TransactionHistoryRequest {
+  tx: string;
 }
 export interface TransactionHistory {
   txid: string;
@@ -171,4 +175,23 @@ export interface TransactionHistoryEVM {
   blockHash: string;
   blockNumber: number;
   timestamp: number;
+  status?: string;
+  gasLimit?: string;
+  nonce?: number;
+}
+// Interface cho phản hồi từ Etherscan API
+export interface EtherscanTransaction {
+  hash: string;
+  from: string;
+  to: string;
+  value: string;
+  gasUsed: string;
+  gasPrice: string;
+  blockHash: string;
+  blockNumber: string;
+  timeStamp: string;
+  transactionIndex: string;
+  gas: string;
+  nonce: string;
+  isError: string; // "0" = success, "1" = failed
 }

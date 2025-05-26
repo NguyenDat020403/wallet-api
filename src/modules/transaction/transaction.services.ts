@@ -6,10 +6,12 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import {
   broadcastTransaction,
   createTransactionBTC,
+  getCurrentTransactionBTC,
   getFeeBTC,
   getGasPriceInfuraAPI,
-  getTransactionHistory,
-  getTransactionHistoryEVM,
+  getTransactionByHash,
+  getTransactionsHistory,
+  getTransactionsHistoryEVM,
   getTransactionStatusBTC,
   sendTransactionEVM,
 } from 'src/utils/transaction';
@@ -135,10 +137,14 @@ export class TransactionService {
       });
   }
 
-  async getTransactionHistory(address: string, chain_id: string) {
+  async getTransactionHistory(
+    address: string,
+    chain_id: string,
+    token_id?: string,
+  ) {
     if (chain_id === '0') {
       const transactionHistory: TransactionHistory[] =
-        await getTransactionHistory(address);
+        await getTransactionsHistory(address);
       if (!transactionHistory) {
         return generateResponse(
           'fail',
@@ -147,66 +153,30 @@ export class TransactionService {
           'fail to load transaction history',
         );
       }
-      const network = await this.prisma.networks.findFirst({
+      const txs = await this.$convertTransactionBTC(
+        transactionHistory,
+        address,
+        chain_id,
+        true,
+      );
+      return generateResponse('success', txs, '200');
+    } else {
+      const token = await this.prisma.tokens.findFirst({
         where: {
-          chain_id: chain_id,
+          token_id: token_id,
         },
       });
-      const txs = transactionHistory.map((item) => {
-        const time_transaction = this.dataService.convertUnixToDate(
-          item.status.block_time,
-        );
-        const action_transaction =
-          item.vin[0].prevout.scriptpubkey_address === address ? 0 : 1;
-        const from_address = item.vin[0].prevout.scriptpubkey_address;
-
-        const to_address = (() => {
-          if (from_address === address) {
-            const vo = item.vout.find(
-              (vo) => vo.scriptpubkey_address !== address,
-            );
-            return vo?.scriptpubkey_address || address;
-          }
-          return address;
-        })();
-        const fee_network = item.fee;
-
-        const network_name = network?.network_name || 'no data';
-        const block_hash = item.status.block_hash;
-        const block_height = item.status.block_height;
-        return {
-          time_transaction: time_transaction,
-          action_transaction: action_transaction,
-          from_address: from_address,
-          to_address: to_address,
-          fee_network: fee_network,
-          network_name: network_name,
-          block_hash: block_hash,
-          block_height: block_height,
-        };
-      });
-      const grouped = {};
-      txs.forEach((tx) => {
-        const date = tx.time_transaction;
-        if (!grouped[date]) {
-          grouped[date] = [];
-        }
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-        grouped[date].push(tx);
-      });
-      return generateResponse('success', grouped, '200');
-    } else {
-      console.log(chain_id + address);
       const network = await this.prisma.networks.findFirst({
         where: { chain_id: chain_id },
       });
       if (!network) {
         return generateResponse('fail', '', '200', 'fail to network data');
       }
-      const transactionHistory = await getTransactionHistoryEVM(
+      const transactionHistory = await getTransactionsHistoryEVM(
         address,
         chain_id,
         this.networkConfigService,
+        token?.decimals,
       );
       if (
         transactionHistory?.error === 'true' ||
@@ -216,6 +186,7 @@ export class TransactionService {
       }
       const data: TransactionHistoryEVM[] = transactionHistory?.data;
       const txs = data.map((item) => ({
+        transaction_hash: item.hash,
         time_transaction: this.dataService.convertUnixToDate(item.timestamp),
         action_transaction:
           item.from.toLowerCase() === address.toLowerCase() ? 0 : 1,
@@ -225,6 +196,7 @@ export class TransactionService {
         network_name: network.network_name,
         block_hash: item.blockHash,
         block_height: item.blockNumber,
+        value: item.value,
       }));
       const grouped = {};
       txs.forEach((tx) => {
@@ -240,7 +212,7 @@ export class TransactionService {
   }
   async getSendTransactionToAddressHistory(address: string) {
     const transactionHistory: TransactionHistory[] =
-      await getTransactionHistory(address);
+      await getTransactionsHistory(address);
     if (!transactionHistory) {
       return generateResponse('fail', '', '200', 'fail to load feeData');
     }
@@ -256,5 +228,141 @@ export class TransactionService {
       })
       .filter((address): address is string => !!address);
     return generateResponse('success', listAddress, '200');
+  }
+
+  async getCurrentTransaction(
+    tx: string,
+    address: string,
+    chain_id: string,
+    token_id?: string,
+  ) {
+    if (chain_id === '0') {
+      const transaction = await getCurrentTransactionBTC(tx);
+      if (!transaction) {
+        return generateResponse('fail to load transaction', '', '200', '1');
+      }
+      const tConverted = await this.$convertTransactionBTC(
+        [transaction],
+        address,
+        chain_id,
+      );
+      return generateResponse('success', tConverted[0], '200', '1');
+    } else {
+      const token = await this.prisma.tokens.findFirst({
+        where: {
+          token_id: token_id,
+        },
+      });
+      const transaction = await getTransactionByHash(
+        tx,
+        chain_id,
+        this.networkConfigService,
+        token?.decimals,
+      );
+      if (!transaction) {
+        return generateResponse('fail to load transaction', '', '200', '1');
+      }
+      const network = await this.prisma.networks.findFirst({
+        where: { chain_id: chain_id },
+      });
+      if (!network) {
+        return generateResponse('fail', '', '200', 'fail to network data');
+      }
+      const result = {
+        transaction_hash: transaction.hash,
+        time_transaction: this.dataService.convertUnixToDate(
+          transaction.timestamp,
+        ),
+        action_transaction:
+          transaction.from === address.toLowerCase() ? 'send' : 'receive',
+        from_address: transaction.from,
+        to_address: transaction.to,
+        fee_network: transaction.gasUsed,
+        network_name: network.network_name,
+        block_hash: transaction.blockHash,
+        block_height: transaction.blockNumber,
+        status: transaction.status,
+        gas_limit: transaction.gasLimit,
+        nonce: transaction.nonce,
+        value: transaction.value,
+      };
+      return generateResponse('success', result, '200');
+    }
+  }
+
+  async $convertTransactionBTC(
+    transactionsBTC: TransactionHistory[],
+    userAddress: string,
+    chain_id: string,
+    isOrderByDate: boolean = false,
+  ) {
+    const network = await this.prisma.networks.findFirst({
+      where: {
+        chain_id: chain_id,
+      },
+    });
+    const txs = transactionsBTC.map((item) => {
+      const transaction_hash = item.txid;
+      const time_transaction = this.dataService.convertUnixToDate(
+        item.status.block_time,
+      );
+      const action_transaction =
+        item.vin[0].prevout.scriptpubkey_address === userAddress ? 0 : 1;
+      const from_address = item.vin[0].prevout.scriptpubkey_address;
+
+      const to_address = (() => {
+        if (from_address === userAddress) {
+          const vo = item.vout.find(
+            (vo) => vo.scriptpubkey_address !== userAddress,
+          );
+          return vo?.scriptpubkey_address || userAddress;
+        }
+        return userAddress;
+      })();
+      const fee_network = item.fee;
+
+      const network_name = network?.network_name || 'no data';
+      const block_hash = item.status.block_hash;
+      const block_height = item.status.block_height;
+
+      const value = (() => {
+        if (from_address === userAddress) {
+          const vo = item.vout.find(
+            (vo) => vo.scriptpubkey_address !== userAddress,
+          );
+          return vo!.value / 1e8;
+        }
+        const vo = item.vout.find(
+          (vo) => vo.scriptpubkey_address === userAddress,
+        );
+        return vo!.value / 1e8;
+      })();
+      return {
+        transaction_hash: transaction_hash,
+        time_transaction: time_transaction,
+        action_transaction: action_transaction,
+        from_address: from_address,
+        to_address: to_address,
+        fee_network: fee_network,
+        network_name: network_name,
+        block_hash: block_hash,
+        block_height: block_height,
+        value: value,
+      };
+    });
+    if (isOrderByDate) {
+      const txsGrouped = {};
+      txs.forEach((tx) => {
+        const date = tx.time_transaction;
+        if (!txsGrouped[date]) {
+          txsGrouped[date] = [];
+        }
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+        txsGrouped[date].push(tx);
+      });
+      return txsGrouped;
+    } else {
+      return txs;
+    }
   }
 }

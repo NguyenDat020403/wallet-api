@@ -48,6 +48,9 @@ export interface TransactionHistoryEVM {
   blockHash: string;
   blockNumber: number;
   timestamp: number;
+  status?: string; // Thêm trạng thái giao dịch (success/failed)
+  gasLimit?: string; // Giới hạn gas
+  nonce?: number; // Nonce của giao dịch
 }
 
 export interface EtherscanTransaction {
@@ -60,4 +63,8 @@ export interface EtherscanTransaction {
   blockHash: string;
   blockNumber: string;
   timeStamp: string;
+  transactionIndex: string;
+  gas: string;
+  nonce: string;
+  isError: string; // "0" = success, "1" = failed
 }

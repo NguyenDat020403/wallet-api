@@ -2,6 +2,7 @@ import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { JwtGuard } from 'src/guards';
 import { TransactionService } from './transaction.services';
 import {
+  CurrentTransactionRequest,
   FeeRequest,
   TransactionConfirmBTC,
   TransactionHistoryRequest,
@@ -37,17 +38,27 @@ export class TransactionController {
   async getTransactionStatusBTC(@Body() rq: TransactionStatusRequestBTC) {
     return await this.transactionService.getTransactionStatusBTC(rq);
   }
-  @Post('getTransactionHistory')
-  async getTransactionHistory(@Body() rq: TransactionHistoryRequest) {
+  @Post('getTransactionsHistory')
+  async getTransactionsHistory(@Body() rq: TransactionHistoryRequest) {
     return await this.transactionService.getTransactionHistory(
       rq.address,
       rq.chain_id,
+      rq.token_id,
     );
   }
   @Post('getSendTransactionToAddressHistory')
   async getSendTransactionToAddressHistory(@Body() rq: TransactionRequest) {
     return await this.transactionService.getSendTransactionToAddressHistory(
       rq.address,
+    );
+  }
+  @Post('getCurrentTransactionHistory')
+  async getCurrentTransactionHistory(@Body() rq: CurrentTransactionRequest) {
+    return await this.transactionService.getCurrentTransaction(
+      rq.tx,
+      rq.address,
+      rq.chain_id,
+      rq.token_id,
     );
   }
 }
