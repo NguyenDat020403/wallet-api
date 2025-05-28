@@ -78,7 +78,7 @@ model users {
   updated_at         DateTime?    @default(now()) @db.Timestamp(6)
   deleted_at         DateTime?    @db.Timestamp(6)
   notiToken          String?      @db.VarChar
-  biometricPublicKey String?      @db.VarChar(255)
+  biometricPublicKey String?      @db.VarChar(512)
   audit_logs         audit_logs[]
   networks           networks[]
   wallets            wallets[]
