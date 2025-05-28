@@ -11,6 +11,7 @@ import { ListNetworkDefault } from '../network/networkDefault';
 import { importWallet } from 'src/utils/wallet';
 import { NetworkService } from '../network/network.services';
 import { users } from 'generated/prisma';
+import { BiometricService } from 'src/utils/biometricService';
 
 @Injectable()
 export class AuthService {
@@ -20,6 +21,7 @@ export class AuthService {
     private config: ConfigService,
     private walletService: WalletService,
     private networkService: NetworkService,
+    private biometricService: BiometricService,
   ) {}
 
   async signUp(dto: SignUpDto) {
@@ -59,10 +61,15 @@ export class AuthService {
       user = await this.prisma.users.findFirst({
         where: { user_id: dto.user_id },
       });
-      if (!user) {
+      if (!user || !user.biometricPublicKey) {
         return generateResponse('login failed', '', '200', '1');
       }
-      if (user.biometricPublicKey !== dto.biometricPublicKey) {
+      const verifyPublicKey = this.biometricService.verifySignature(
+        user.biometricPublicKey,
+        dto.payload!,
+        dto.signature!,
+      );
+      if (!verifyPublicKey) {
         return generateResponse(
           'The fingerprint does not match.',
           '',

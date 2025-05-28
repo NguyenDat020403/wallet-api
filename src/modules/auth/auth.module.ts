@@ -6,6 +6,7 @@ import { AuthController } from './auth.controller';
 import { WalletService } from '../wallet/wallet.service';
 import { NetworkService } from '../network/network.services';
 import { TokenService } from '../token/token.service';
+import { BiometricService } from 'src/utils/biometricService';
 
 @Module({
   imports: [JwtModule.register({})],
@@ -16,6 +17,7 @@ import { TokenService } from '../token/token.service';
     WalletService,
     NetworkService,
     TokenService,
+    BiometricService,
   ],
 })
 export class AuthModule {}

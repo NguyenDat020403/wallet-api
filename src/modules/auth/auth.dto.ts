@@ -15,6 +15,7 @@ export class SignUpDto {
   @IsString()
   @IsNotEmpty()
   password: string;
+
   @IsString()
   @IsOptional()
   avatar: string;
@@ -35,9 +36,14 @@ export class SignInDto {
   @IsString()
   @IsOptional()
   password: string;
+
   @IsString()
   @IsOptional()
-  biometricPublicKey?: string;
+  payload?: string;
+
+  @IsString()
+  @IsOptional()
+  signature?: string;
 
   @IsUUID()
   @IsOptional()
