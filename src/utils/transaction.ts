@@ -20,7 +20,7 @@ import * as bitcoin from 'bitcoinjs-lib';
 import ECPairFactory from 'ecpair';
 import { NetworkConfigService } from './networkConfig';
 import { generateResponse } from './response';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from 'src/modules/prisma/prisma.service';
 
 const ECPair = ECPairFactory(ecc);
 const config = new ConfigService();

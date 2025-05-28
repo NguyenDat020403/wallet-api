@@ -2,12 +2,15 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import * as argon from 'argon2';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { SignInDto, SignUpDto } from './auth.dto';
+import { ImportWalletDto, SignInDto, SignUpDto } from './auth.dto';
 import { generateResponse } from 'src/utils/response';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from 'src/modules/prisma/prisma.service';
 import { ERROR_MAP } from 'src/constants/errorMap';
 import { WalletService } from '../wallet/wallet.service';
 import { ListNetworkDefault } from '../network/networkDefault';
+import { importWallet } from 'src/utils/wallet';
+import { NetworkService } from '../network/network.services';
+import { users } from 'generated/prisma';
 
 @Injectable()
 export class AuthService {
@@ -16,6 +19,7 @@ export class AuthService {
     private jwt: JwtService,
     private config: ConfigService,
     private walletService: WalletService,
+    private networkService: NetworkService,
   ) {}
 
   async signUp(dto: SignUpDto) {
@@ -35,6 +39,7 @@ export class AuthService {
         email: dto.email,
         username: dto.username,
         avatar: dto.avatar,
+        biometricPublicKey: dto.biometricPublicKey,
       },
     });
 
@@ -48,20 +53,39 @@ export class AuthService {
     });
   }
   async login(dto: SignInDto) {
-    const user = await this.prisma.users.findUnique({
-      where: {
-        email: dto.email,
-      },
-    });
-    if (!user) {
-      return generateResponse('login failed', '', '400', 'EA01');
-    }
-    const pwMatches = await argon.verify(
-      user.password_hash || '',
-      dto.password,
-    );
-    if (!pwMatches) {
-      return generateResponse('login failed', '', '401', 'EA02');
+    let user: users | null;
+    if (dto.user_id) {
+      //Login by Biometric
+      user = await this.prisma.users.findFirst({
+        where: { user_id: dto.user_id },
+      });
+      if (!user) {
+        return generateResponse('login failed', '', '200', '1');
+      }
+      if (user.biometricPublicKey !== dto.biometricPublicKey) {
+        return generateResponse(
+          'The fingerprint does not match.',
+          '',
+          '200',
+          '1',
+        );
+      }
+    } else {
+      user = await this.prisma.users.findUnique({
+        where: {
+          email: dto.email,
+        },
+      });
+      if (!user) {
+        return generateResponse('login failed', '', '400', 'EA01');
+      }
+      const pwMatches = await argon.verify(
+        user.password_hash || '',
+        dto.password,
+      );
+      if (!pwMatches) {
+        return generateResponse('login failed', '', '401', 'EA02');
+      }
     }
     const wallet = await this.walletService.getWalletDefault(user.user_id);
     const token = await this.signToken(user.user_id, user.email || '');
@@ -75,58 +99,80 @@ export class AuthService {
       '200',
     );
   }
-  // async importWallet(dto: ImportWalletDto) {
-  //   const { mnemonic, password } = dto;
-  //   const existUserSecret = await this.prisma.user_secret.findUnique({
-  //     where: {
-  //       mnemonic,
-  //     },
-  //     include: {
-  //       user_user_secret_useridTouser: true,
-  //     },
-  //   });
-  //   console.log(existUserSecret?.user_user_secret_useridTouser?.email);
+  async importWallet(dto: ImportWalletDto) {
+    const { mnemonic, password } = dto;
+    const wallet = await importWallet(mnemonic);
+    if (!wallet) {
+      return generateResponse('import wallet failed', '', '200', '1');
+    }
+    const passwordHashed = await argon.hash(password);
+    const username = 'user_' + Date.now().toString(36);
 
-  //   if (existUserSecret) {
-  //     const newPasswordHash = await argon.hash(dto.password);
-  //     const userUpdate = await this.prisma.user.update({
-  //       where: {
-  //         email: existUserSecret.user_user_secret_useridTouser?.email || '',
-  //       },
-  //       data: {
-  //         password: newPasswordHash,
-  //       },
-  //     });
-  //     const token = await this.signToken(userUpdate.id, userUpdate.email || '');
-  //     return generateResponse('success', {
-  //       token: token,
-  //       userUpdate,
-  //     });
-  //   }
-  //   // Dont have secret -> create new user
-  //   const walletAccount = getAccountFromMnemonic(mnemonic);
-  //   const passwordHashed = await argon.hash(password);
-  //   const user = await this.prisma.user.create({
-  //     data: {
-  //       password: passwordHashed,
-  //       address: walletAccount.address,
-  //     },
-  //   });
-  //   await this.prisma.user_secret.create({
-  //     data: {
-  //       userid: user.id,
-  //       public_key: walletAccount.address,
-  //       private_key: walletAccount.private_key,
-  //       mnemonic: walletAccount.mnemonic,
-  //     },
-  //   });
-  //   const token = await this.signToken(user.id, user.email || '');
-  //   return generateResponse('success', {
-  //     token: token,
-  //     address: walletAccount.address,
-  //     mnemonic: mnemonic,
-  //   });
-  // }
+    const user = await this.prisma.users.create({
+      data: {
+        username: username,
+        password_hash: passwordHashed,
+      },
+    });
+    const walletNew = await this.prisma.wallets.create({
+      data: {
+        wallet_name: 'Default Wallet',
+        wallet_balance: 0,
+        wallet_address: '',
+        user_id: user.user_id,
+      },
+    });
+    const network = await this.networkService.findDefaultNetwork();
+
+    const walletNetworkList = network.map((n) => {
+      let address;
+      if (n.symbol === 'BTC') {
+        address = wallet.wallets[1].address;
+      } else {
+        address = wallet.wallets[0].address;
+      }
+      return {
+        address: address,
+        wallet_id: walletNew.wallet_id,
+        network_id: n.network_id,
+      };
+    });
+    await this.walletService.createManyWalletNetwork(walletNetworkList);
+
+    const networkIds = network.map((n) => n.network_id);
+
+    const tokenNetworks = await this.prisma.token_networks.findMany({
+      where: {
+        network_id: {
+          in: networkIds,
+        },
+      },
+    });
+
+    await Promise.all(
+      tokenNetworks.map(async (tokenNetwork) => {
+        return await this.prisma.wallet_network_tokens.create({
+          data: {
+            token_network_id: tokenNetwork?.token_network_id,
+            wallet_id: walletNew.wallet_id,
+          },
+        });
+      }),
+    );
+
+    const token = await this.signToken(user.user_id, user.email || '');
+    return generateResponse('success', {
+      token: token,
+      user,
+      walletDefault: {
+        wallet: walletNew,
+        walletSecret: {
+          mnemonic: wallet.mnemonic,
+          wallets: wallet.wallets,
+        },
+      },
+    });
+  }
   async signToken(
     userId: string,
     email: string,

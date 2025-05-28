@@ -6362,6 +6362,7 @@ export namespace Prisma {
     updated_at: Date | null
     deleted_at: Date | null
     notiToken: string | null
+    biometricPublicKey: string | null
   }
 
   export type UsersMaxAggregateOutputType = {
@@ -6375,6 +6376,7 @@ export namespace Prisma {
     updated_at: Date | null
     deleted_at: Date | null
     notiToken: string | null
+    biometricPublicKey: string | null
   }
 
   export type UsersCountAggregateOutputType = {
@@ -6388,6 +6390,7 @@ export namespace Prisma {
     updated_at: number
     deleted_at: number
     notiToken: number
+    biometricPublicKey: number
     _all: number
   }
 
@@ -6403,6 +6406,7 @@ export namespace Prisma {
     updated_at?: true
     deleted_at?: true
     notiToken?: true
+    biometricPublicKey?: true
   }
 
   export type UsersMaxAggregateInputType = {
@@ -6416,6 +6420,7 @@ export namespace Prisma {
     updated_at?: true
     deleted_at?: true
     notiToken?: true
+    biometricPublicKey?: true
   }
 
   export type UsersCountAggregateInputType = {
@@ -6429,6 +6434,7 @@ export namespace Prisma {
     updated_at?: true
     deleted_at?: true
     notiToken?: true
+    biometricPublicKey?: true
     _all?: true
   }
 
@@ -6509,12 +6515,13 @@ export namespace Prisma {
     username: string
     avatar: string | null
     bio: string | null
-    email: string
+    email: string | null
     password_hash: string
     created_at: Date | null
     updated_at: Date | null
     deleted_at: Date | null
     notiToken: string | null
+    biometricPublicKey: string | null
     _count: UsersCountAggregateOutputType | null
     _min: UsersMinAggregateOutputType | null
     _max: UsersMaxAggregateOutputType | null
@@ -6545,6 +6552,7 @@ export namespace Prisma {
     updated_at?: boolean
     deleted_at?: boolean
     notiToken?: boolean
+    biometricPublicKey?: boolean
     audit_logs?: boolean | users$audit_logsArgs<ExtArgs>
     networks?: boolean | users$networksArgs<ExtArgs>
     wallets?: boolean | users$walletsArgs<ExtArgs>
@@ -6562,6 +6570,7 @@ export namespace Prisma {
     updated_at?: boolean
     deleted_at?: boolean
     notiToken?: boolean
+    biometricPublicKey?: boolean
   }, ExtArgs["result"]["users"]>
 
   export type usersSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -6575,6 +6584,7 @@ export namespace Prisma {
     updated_at?: boolean
     deleted_at?: boolean
     notiToken?: boolean
+    biometricPublicKey?: boolean
   }, ExtArgs["result"]["users"]>
 
   export type usersSelectScalar = {
@@ -6588,9 +6598,10 @@ export namespace Prisma {
     updated_at?: boolean
     deleted_at?: boolean
     notiToken?: boolean
+    biometricPublicKey?: boolean
   }
 
-  export type usersOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"user_id" | "username" | "avatar" | "bio" | "email" | "password_hash" | "created_at" | "updated_at" | "deleted_at" | "notiToken", ExtArgs["result"]["users"]>
+  export type usersOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"user_id" | "username" | "avatar" | "bio" | "email" | "password_hash" | "created_at" | "updated_at" | "deleted_at" | "notiToken" | "biometricPublicKey", ExtArgs["result"]["users"]>
   export type usersInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     audit_logs?: boolean | users$audit_logsArgs<ExtArgs>
     networks?: boolean | users$networksArgs<ExtArgs>
@@ -6612,12 +6623,13 @@ export namespace Prisma {
       username: string
       avatar: string | null
       bio: string | null
-      email: string
+      email: string | null
       password_hash: string
       created_at: Date | null
       updated_at: Date | null
       deleted_at: Date | null
       notiToken: string | null
+      biometricPublicKey: string | null
     }, ExtArgs["result"]["users"]>
     composites: {}
   }
@@ -7054,6 +7066,7 @@ export namespace Prisma {
     readonly updated_at: FieldRef<"users", 'DateTime'>
     readonly deleted_at: FieldRef<"users", 'DateTime'>
     readonly notiToken: FieldRef<"users", 'String'>
+    readonly biometricPublicKey: FieldRef<"users", 'String'>
   }
     
 
@@ -11091,7 +11104,8 @@ export namespace Prisma {
     created_at: 'created_at',
     updated_at: 'updated_at',
     deleted_at: 'deleted_at',
-    notiToken: 'notiToken'
+    notiToken: 'notiToken',
+    biometricPublicKey: 'biometricPublicKey'
   };
 
   export type UsersScalarFieldEnum = (typeof UsersScalarFieldEnum)[keyof typeof UsersScalarFieldEnum]
@@ -11562,12 +11576,13 @@ export namespace Prisma {
     username?: StringFilter<"users"> | string
     avatar?: StringNullableFilter<"users"> | string | null
     bio?: StringNullableFilter<"users"> | string | null
-    email?: StringFilter<"users"> | string
+    email?: StringNullableFilter<"users"> | string | null
     password_hash?: StringFilter<"users"> | string
     created_at?: DateTimeNullableFilter<"users"> | Date | string | null
     updated_at?: DateTimeNullableFilter<"users"> | Date | string | null
     deleted_at?: DateTimeNullableFilter<"users"> | Date | string | null
     notiToken?: StringNullableFilter<"users"> | string | null
+    biometricPublicKey?: StringNullableFilter<"users"> | string | null
     audit_logs?: Audit_logsListRelationFilter
     networks?: NetworksListRelationFilter
     wallets?: WalletsListRelationFilter
@@ -11578,12 +11593,13 @@ export namespace Prisma {
     username?: SortOrder
     avatar?: SortOrderInput | SortOrder
     bio?: SortOrderInput | SortOrder
-    email?: SortOrder
+    email?: SortOrderInput | SortOrder
     password_hash?: SortOrder
     created_at?: SortOrderInput | SortOrder
     updated_at?: SortOrderInput | SortOrder
     deleted_at?: SortOrderInput | SortOrder
     notiToken?: SortOrderInput | SortOrder
+    biometricPublicKey?: SortOrderInput | SortOrder
     audit_logs?: audit_logsOrderByRelationAggregateInput
     networks?: networksOrderByRelationAggregateInput
     wallets?: walletsOrderByRelationAggregateInput
@@ -11603,6 +11619,7 @@ export namespace Prisma {
     updated_at?: DateTimeNullableFilter<"users"> | Date | string | null
     deleted_at?: DateTimeNullableFilter<"users"> | Date | string | null
     notiToken?: StringNullableFilter<"users"> | string | null
+    biometricPublicKey?: StringNullableFilter<"users"> | string | null
     audit_logs?: Audit_logsListRelationFilter
     networks?: NetworksListRelationFilter
     wallets?: WalletsListRelationFilter
@@ -11613,12 +11630,13 @@ export namespace Prisma {
     username?: SortOrder
     avatar?: SortOrderInput | SortOrder
     bio?: SortOrderInput | SortOrder
-    email?: SortOrder
+    email?: SortOrderInput | SortOrder
     password_hash?: SortOrder
     created_at?: SortOrderInput | SortOrder
     updated_at?: SortOrderInput | SortOrder
     deleted_at?: SortOrderInput | SortOrder
     notiToken?: SortOrderInput | SortOrder
+    biometricPublicKey?: SortOrderInput | SortOrder
     _count?: usersCountOrderByAggregateInput
     _max?: usersMaxOrderByAggregateInput
     _min?: usersMinOrderByAggregateInput
@@ -11632,12 +11650,13 @@ export namespace Prisma {
     username?: StringWithAggregatesFilter<"users"> | string
     avatar?: StringNullableWithAggregatesFilter<"users"> | string | null
     bio?: StringNullableWithAggregatesFilter<"users"> | string | null
-    email?: StringWithAggregatesFilter<"users"> | string
+    email?: StringNullableWithAggregatesFilter<"users"> | string | null
     password_hash?: StringWithAggregatesFilter<"users"> | string
     created_at?: DateTimeNullableWithAggregatesFilter<"users"> | Date | string | null
     updated_at?: DateTimeNullableWithAggregatesFilter<"users"> | Date | string | null
     deleted_at?: DateTimeNullableWithAggregatesFilter<"users"> | Date | string | null
     notiToken?: StringNullableWithAggregatesFilter<"users"> | string | null
+    biometricPublicKey?: StringNullableWithAggregatesFilter<"users"> | string | null
   }
 
   export type wallet_network_tokensWhereInput = {
@@ -12194,12 +12213,13 @@ export namespace Prisma {
     username: string
     avatar?: string | null
     bio?: string | null
-    email: string
+    email?: string | null
     password_hash: string
     created_at?: Date | string | null
     updated_at?: Date | string | null
     deleted_at?: Date | string | null
     notiToken?: string | null
+    biometricPublicKey?: string | null
     audit_logs?: audit_logsCreateNestedManyWithoutUsersInput
     networks?: networksCreateNestedManyWithoutUsersInput
     wallets?: walletsCreateNestedManyWithoutUsersInput
@@ -12210,12 +12230,13 @@ export namespace Prisma {
     username: string
     avatar?: string | null
     bio?: string | null
-    email: string
+    email?: string | null
     password_hash: string
     created_at?: Date | string | null
     updated_at?: Date | string | null
     deleted_at?: Date | string | null
     notiToken?: string | null
+    biometricPublicKey?: string | null
     audit_logs?: audit_logsUncheckedCreateNestedManyWithoutUsersInput
     networks?: networksUncheckedCreateNestedManyWithoutUsersInput
     wallets?: walletsUncheckedCreateNestedManyWithoutUsersInput
@@ -12226,12 +12247,13 @@ export namespace Prisma {
     username?: StringFieldUpdateOperationsInput | string
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     password_hash?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notiToken?: NullableStringFieldUpdateOperationsInput | string | null
+    biometricPublicKey?: NullableStringFieldUpdateOperationsInput | string | null
     audit_logs?: audit_logsUpdateManyWithoutUsersNestedInput
     networks?: networksUpdateManyWithoutUsersNestedInput
     wallets?: walletsUpdateManyWithoutUsersNestedInput
@@ -12242,12 +12264,13 @@ export namespace Prisma {
     username?: StringFieldUpdateOperationsInput | string
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     password_hash?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notiToken?: NullableStringFieldUpdateOperationsInput | string | null
+    biometricPublicKey?: NullableStringFieldUpdateOperationsInput | string | null
     audit_logs?: audit_logsUncheckedUpdateManyWithoutUsersNestedInput
     networks?: networksUncheckedUpdateManyWithoutUsersNestedInput
     wallets?: walletsUncheckedUpdateManyWithoutUsersNestedInput
@@ -12258,12 +12281,13 @@ export namespace Prisma {
     username: string
     avatar?: string | null
     bio?: string | null
-    email: string
+    email?: string | null
     password_hash: string
     created_at?: Date | string | null
     updated_at?: Date | string | null
     deleted_at?: Date | string | null
     notiToken?: string | null
+    biometricPublicKey?: string | null
   }
 
   export type usersUpdateManyMutationInput = {
@@ -12271,12 +12295,13 @@ export namespace Prisma {
     username?: StringFieldUpdateOperationsInput | string
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     password_hash?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notiToken?: NullableStringFieldUpdateOperationsInput | string | null
+    biometricPublicKey?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type usersUncheckedUpdateManyInput = {
@@ -12284,12 +12309,13 @@ export namespace Prisma {
     username?: StringFieldUpdateOperationsInput | string
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     password_hash?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notiToken?: NullableStringFieldUpdateOperationsInput | string | null
+    biometricPublicKey?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type wallet_network_tokensCreateInput = {
@@ -12928,6 +12954,7 @@ export namespace Prisma {
     updated_at?: SortOrder
     deleted_at?: SortOrder
     notiToken?: SortOrder
+    biometricPublicKey?: SortOrder
   }
 
   export type usersMaxOrderByAggregateInput = {
@@ -12941,6 +12968,7 @@ export namespace Prisma {
     updated_at?: SortOrder
     deleted_at?: SortOrder
     notiToken?: SortOrder
+    biometricPublicKey?: SortOrder
   }
 
   export type usersMinOrderByAggregateInput = {
@@ -12954,6 +12982,7 @@ export namespace Prisma {
     updated_at?: SortOrder
     deleted_at?: SortOrder
     notiToken?: SortOrder
+    biometricPublicKey?: SortOrder
   }
 
   export type DecimalFilter<$PrismaModel = never> = {
@@ -13891,12 +13920,13 @@ export namespace Prisma {
     username: string
     avatar?: string | null
     bio?: string | null
-    email: string
+    email?: string | null
     password_hash: string
     created_at?: Date | string | null
     updated_at?: Date | string | null
     deleted_at?: Date | string | null
     notiToken?: string | null
+    biometricPublicKey?: string | null
     networks?: networksCreateNestedManyWithoutUsersInput
     wallets?: walletsCreateNestedManyWithoutUsersInput
   }
@@ -13906,12 +13936,13 @@ export namespace Prisma {
     username: string
     avatar?: string | null
     bio?: string | null
-    email: string
+    email?: string | null
     password_hash: string
     created_at?: Date | string | null
     updated_at?: Date | string | null
     deleted_at?: Date | string | null
     notiToken?: string | null
+    biometricPublicKey?: string | null
     networks?: networksUncheckedCreateNestedManyWithoutUsersInput
     wallets?: walletsUncheckedCreateNestedManyWithoutUsersInput
   }
@@ -13937,12 +13968,13 @@ export namespace Prisma {
     username?: StringFieldUpdateOperationsInput | string
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     password_hash?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notiToken?: NullableStringFieldUpdateOperationsInput | string | null
+    biometricPublicKey?: NullableStringFieldUpdateOperationsInput | string | null
     networks?: networksUpdateManyWithoutUsersNestedInput
     wallets?: walletsUpdateManyWithoutUsersNestedInput
   }
@@ -13952,12 +13984,13 @@ export namespace Prisma {
     username?: StringFieldUpdateOperationsInput | string
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     password_hash?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notiToken?: NullableStringFieldUpdateOperationsInput | string | null
+    biometricPublicKey?: NullableStringFieldUpdateOperationsInput | string | null
     networks?: networksUncheckedUpdateManyWithoutUsersNestedInput
     wallets?: walletsUncheckedUpdateManyWithoutUsersNestedInput
   }
@@ -13967,12 +14000,13 @@ export namespace Prisma {
     username: string
     avatar?: string | null
     bio?: string | null
-    email: string
+    email?: string | null
     password_hash: string
     created_at?: Date | string | null
     updated_at?: Date | string | null
     deleted_at?: Date | string | null
     notiToken?: string | null
+    biometricPublicKey?: string | null
     audit_logs?: audit_logsCreateNestedManyWithoutUsersInput
     wallets?: walletsCreateNestedManyWithoutUsersInput
   }
@@ -13982,12 +14016,13 @@ export namespace Prisma {
     username: string
     avatar?: string | null
     bio?: string | null
-    email: string
+    email?: string | null
     password_hash: string
     created_at?: Date | string | null
     updated_at?: Date | string | null
     deleted_at?: Date | string | null
     notiToken?: string | null
+    biometricPublicKey?: string | null
     audit_logs?: audit_logsUncheckedCreateNestedManyWithoutUsersInput
     wallets?: walletsUncheckedCreateNestedManyWithoutUsersInput
   }
@@ -14063,12 +14098,13 @@ export namespace Prisma {
     username?: StringFieldUpdateOperationsInput | string
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     password_hash?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notiToken?: NullableStringFieldUpdateOperationsInput | string | null
+    biometricPublicKey?: NullableStringFieldUpdateOperationsInput | string | null
     audit_logs?: audit_logsUpdateManyWithoutUsersNestedInput
     wallets?: walletsUpdateManyWithoutUsersNestedInput
   }
@@ -14078,12 +14114,13 @@ export namespace Prisma {
     username?: StringFieldUpdateOperationsInput | string
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     password_hash?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notiToken?: NullableStringFieldUpdateOperationsInput | string | null
+    biometricPublicKey?: NullableStringFieldUpdateOperationsInput | string | null
     audit_logs?: audit_logsUncheckedUpdateManyWithoutUsersNestedInput
     wallets?: walletsUncheckedUpdateManyWithoutUsersNestedInput
   }
@@ -14926,12 +14963,13 @@ export namespace Prisma {
     username: string
     avatar?: string | null
     bio?: string | null
-    email: string
+    email?: string | null
     password_hash: string
     created_at?: Date | string | null
     updated_at?: Date | string | null
     deleted_at?: Date | string | null
     notiToken?: string | null
+    biometricPublicKey?: string | null
     audit_logs?: audit_logsCreateNestedManyWithoutUsersInput
     networks?: networksCreateNestedManyWithoutUsersInput
   }
@@ -14941,12 +14979,13 @@ export namespace Prisma {
     username: string
     avatar?: string | null
     bio?: string | null
-    email: string
+    email?: string | null
     password_hash: string
     created_at?: Date | string | null
     updated_at?: Date | string | null
     deleted_at?: Date | string | null
     notiToken?: string | null
+    biometricPublicKey?: string | null
     audit_logs?: audit_logsUncheckedCreateNestedManyWithoutUsersInput
     networks?: networksUncheckedCreateNestedManyWithoutUsersInput
   }
@@ -15004,12 +15043,13 @@ export namespace Prisma {
     username?: StringFieldUpdateOperationsInput | string
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     password_hash?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notiToken?: NullableStringFieldUpdateOperationsInput | string | null
+    biometricPublicKey?: NullableStringFieldUpdateOperationsInput | string | null
     audit_logs?: audit_logsUpdateManyWithoutUsersNestedInput
     networks?: networksUpdateManyWithoutUsersNestedInput
   }
@@ -15019,12 +15059,13 @@ export namespace Prisma {
     username?: StringFieldUpdateOperationsInput | string
     avatar?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
     password_hash?: StringFieldUpdateOperationsInput | string
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notiToken?: NullableStringFieldUpdateOperationsInput | string | null
+    biometricPublicKey?: NullableStringFieldUpdateOperationsInput | string | null
     audit_logs?: audit_logsUncheckedUpdateManyWithoutUsersNestedInput
     networks?: networksUncheckedUpdateManyWithoutUsersNestedInput
   }

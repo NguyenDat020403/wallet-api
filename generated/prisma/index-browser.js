@@ -174,7 +174,8 @@ exports.Prisma.UsersScalarFieldEnum = {
   created_at: 'created_at',
   updated_at: 'updated_at',
   deleted_at: 'deleted_at',
-  notiToken: 'notiToken'
+  notiToken: 'notiToken',
+  biometricPublicKey: 'biometricPublicKey'
 };
 
 exports.Prisma.Wallet_network_tokensScalarFieldEnum = {

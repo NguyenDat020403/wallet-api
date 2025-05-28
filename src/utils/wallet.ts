@@ -73,11 +73,9 @@ export async function CreateWallet() {
     ethNode.privateKey as Uint8Array,
   );
   const ethWalletPublicKey = Buffer.from(ethNode.publicKey).toString('hex');
-  const provider = new ethers.JsonRpcProvider(
-    'https://sepolia.infura.io/v3/44b62ee0153941579e73f1d784472ad1',
-  );
+
   const ethWalletPrivateKeyHex = '0x' + ethWalletPrivateKey.toString('hex');
-  const ethWallet = new ethers.Wallet(ethWalletPrivateKeyHex, provider);
+  const ethWallet = new ethers.Wallet(ethWalletPrivateKeyHex);
   //---------------------------------------------------------------------------
   const rootBTC = bip32.fromSeed(seed, bitcoin.networks.testnet);
   const btcPath = "m/84'/1'/0'/0/0";
@@ -140,7 +138,7 @@ export async function importWallet(mnemonic: string) {
   const ethWalletPrivateKey: Buffer<ArrayBuffer> = Buffer.from(
     ethNode.privateKey as Uint8Array,
   );
-  const ethWalletPublicKey = Buffer.from(ethNode.publicKey);
+  const ethWalletPublicKey = Buffer.from(ethNode.publicKey).toString('hex');
   const privateKeyHex = '0x' + ethWalletPrivateKey.toString('hex');
   const ethWallet = new ethers.Wallet(privateKeyHex);
   //Bitcoin Testnet
@@ -162,19 +160,22 @@ export async function importWallet(mnemonic: string) {
   });
 
   return {
-    evm: {
-      publicKey: ethWalletPublicKey,
-      privateKey: privateKeyHex,
-      address: ethWallet.address,
-    },
-    bitcoin: {
-      xpriv: xpriv,
-      xpub: xpub,
-      wif: wif,
-      address: btcWallet.address,
-      privateKey: Buffer.from(btcNode.privateKey!).toString('hex'),
-      publickey: Buffer.from(keyPair.publicKey).toString('hex'),
-    },
+    mnemonic: mnemonic,
+    wallets: [
+      {
+        address: ethWallet.address,
+        privateKey: privateKeyHex,
+        publickey: ethWalletPublicKey,
+      },
+      {
+        xpriv: xpriv,
+        xpub: xpub,
+        wif: wif,
+        address: btcWallet.address,
+        privateKey: Buffer.from(btcNode.privateKey!).toString('hex'),
+        publickey: Buffer.from(keyPair.publicKey).toString('hex'),
+      },
+    ],
   };
 }
 

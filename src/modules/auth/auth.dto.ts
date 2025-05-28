@@ -3,9 +3,10 @@ import {
   IsNotEmpty,
   IsOptional,
   IsString,
+  IsUUID,
   MinLength,
 } from 'class-validator';
-import { Match, Mnemonic } from 'src/common/validators';
+import { Mnemonic } from 'src/common/validators';
 
 export class SignUpDto {
   @IsEmail()
@@ -21,6 +22,10 @@ export class SignUpDto {
   @IsString()
   @IsNotEmpty()
   username: string;
+
+  @IsString()
+  @IsOptional()
+  biometricPublicKey?: string;
 }
 export class SignInDto {
   @IsEmail()
@@ -30,6 +35,13 @@ export class SignInDto {
   @IsString()
   @IsNotEmpty()
   password: string;
+  @IsString()
+  @IsOptional()
+  biometricPublicKey?: string;
+
+  @IsUUID()
+  @IsOptional()
+  user_id?: string;
 }
 
 export class ImportWalletDto {
@@ -40,14 +52,6 @@ export class ImportWalletDto {
   @IsNotEmpty()
   @MinLength(8)
   password: string;
-
-  @IsString()
-  @IsNotEmpty()
-  @MinLength(8)
-  @Match('password', {
-    message: 'Passwords do not match',
-  })
-  confirmPassword: string;
 
   @IsString()
   @IsOptional()

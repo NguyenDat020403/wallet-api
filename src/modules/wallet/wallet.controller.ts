@@ -3,11 +3,7 @@ import { JwtGuard } from 'src/guards';
 import { WalletService } from './wallet.service';
 import { User } from 'src/decorators/user.decorator';
 import { generateResponse } from 'src/utils/response';
-import {
-  GetWalletRequest,
-  ImportWalletRequest,
-  WalletNetworksRequest,
-} from './wallet.dto';
+import { GetWalletRequest, WalletNetworksRequest } from './wallet.dto';
 
 @UseGuards(JwtGuard)
 @Controller('wallets')
@@ -24,15 +20,6 @@ export class WalletController {
   async getWallet(@User('sub') userId: string, @Body() dto: GetWalletRequest) {
     const response = await this.walletService.getWallet(userId, dto);
     return generateResponse('success', response);
-  }
-
-  @Post('importWallet')
-  async importWallet(
-    @User('sub') userId: string,
-    @Body() dto: ImportWalletRequest,
-  ) {
-    const response = await this.walletService.importWallet(userId, dto);
-    return generateResponse('success', response, '200');
   }
 
   @Get('getUserWallets')

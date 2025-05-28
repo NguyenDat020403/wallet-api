@@ -2,7 +2,7 @@ import { BadRequestException, Injectable, UseGuards } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { JwtGuard } from 'src/guards';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from 'src/modules/prisma/prisma.service';
 import { CreateNetworkDto } from './network.dto';
 import { ERROR_MAP } from 'src/constants/errorMap';
 import axios from 'axios';

@@ -1,6 +1,6 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { SignInDto, SignUpDto } from './auth.dto';
+import { ImportWalletDto, SignInDto, SignUpDto } from './auth.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -15,10 +15,10 @@ export class AuthController {
     return this.authService.login(dto);
   }
 
-  // @Post('import')
-  // importWallet(@Body() dto: ImportWalletDto) {
-  //   return this.authService.importWallet(dto);
-  // }
+  @Post('importWallet')
+  async importWallet(@Body() dto: ImportWalletDto) {
+    return await this.authService.importWallet(dto);
+  }
   @Post('createNetworkDefault')
   async createNetworkDefault() {
     const result = await this.authService.resetNetworkDefault();

@@ -5,9 +5,9 @@ import { Injectable, UseGuards, BadRequestException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { JwtGuard } from 'src/guards';
-import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateWallet, importWallet } from 'src/utils/wallet';
-import { GetWalletRequest, ImportWalletRequest } from './wallet.dto';
+import { PrismaService } from 'src/modules/prisma/prisma.service';
+import { CreateWallet } from 'src/utils/wallet';
+import { GetWalletRequest } from './wallet.dto';
 import { NetworkService } from '../network/network.services';
 import { TokenService } from '../token/token.service';
 @UseGuards(JwtGuard)
@@ -46,7 +46,6 @@ export class WalletService {
         network_id: n.network_id,
       };
     });
-    console.log(walletNetworkList);
     await this.createManyWalletNetwork(walletNetworkList);
 
     //CREATE WALLET_TOKEN_NETWORK
@@ -119,40 +118,6 @@ export class WalletService {
       tokens,
       wallet,
     };
-  }
-  async importWallet(userId: string, dto: ImportWalletRequest) {
-    const walletAccount = await importWallet(dto.mnemonic);
-    const addresses = [
-      walletAccount.evm.address,
-      walletAccount.bitcoin.address,
-    ];
-    console.log(addresses);
-
-    const walletNetwork = await Promise.all(
-      addresses.map((ad) => {
-        return this.prisma.wallet_networks.findFirst({
-          where: {
-            address: ad,
-          },
-        });
-      }),
-    );
-    const hasValid = walletNetwork.some((item) => item != null);
-    if (hasValid) {
-      console.log('da vao dayyyyyyyyyyyyyyyyyyyyyy');
-      return this.getWallet(userId, {
-        wallet_id: walletNetwork[0]?.wallet_id || 'walletId',
-      });
-    } else {
-      const newWallet = await this.$createWallet(
-        userId,
-        walletAccount.bitcoin.address!,
-        walletAccount.evm.address,
-      );
-      return this.getWallet(userId, {
-        wallet_id: newWallet.wallet_id,
-      });
-    }
   }
   async getUserWallets(userId: string) {
     const wallet = await this.prisma.wallets.findMany({
