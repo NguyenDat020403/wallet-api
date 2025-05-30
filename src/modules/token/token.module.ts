@@ -1,13 +1,18 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { TokenController } from './token.controller';
 import { TokenService } from './token.service';
-import { JwtStrategy } from 'src/auth/strategy';
-import { NetworkService } from '../network/network.services';
+import { NetworkModule } from '../network/network.module';
+import { CoinModule } from '../coinpaprika/coinpaprika.module';
 
 @Module({
-  imports: [JwtModule.register({})],
+  imports: [
+    JwtModule.register({}),
+    forwardRef(() => NetworkModule),
+    CoinModule,
+  ],
   controllers: [TokenController],
-  providers: [TokenService, NetworkService, JwtStrategy],
+  providers: [TokenService],
+  exports: [TokenService],
 })
 export class TokenModule {}

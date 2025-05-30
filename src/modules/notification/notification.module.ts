@@ -3,23 +3,14 @@ import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from 'src/auth/strategy';
 import { NotificationController } from './notification.controller';
 import { NotificationService } from './notification.services';
-import { WalletService } from '../wallet/wallet.service';
-import { UserService } from '../user/user.service';
-import { TokenService } from '../token/token.service';
-import { NetworkService } from '../network/network.services';
 import { FirebaseService } from 'src/firebase/firebase.service';
+import { WalletModule } from '../wallet/wallet.module';
+import { UserModule } from '../user/user.module';
 
 @Module({
-  imports: [JwtModule.register({})],
+  imports: [JwtModule.register({}), WalletModule, UserModule],
   controllers: [NotificationController],
-  providers: [
-    NotificationService,
-    JwtStrategy,
-    WalletService,
-    UserService,
-    TokenService,
-    NetworkService,
-    FirebaseService,
-  ],
+  providers: [NotificationService, JwtStrategy, FirebaseService],
+  exports: [NotificationService],
 })
 export class NotificationModule {}

@@ -94,6 +94,14 @@ export class GetTokenDetailDTO {
   @IsUUID('4')
   token_id: string;
 }
+export class GetTokenMarketDataDTO {
+  @IsString()
+  @IsNotEmpty()
+  symbol: string;
+  @IsString()
+  @IsNotEmpty()
+  name: string;
+}
 export type TokenMetadata = {
   chainId: number;
   address: string;

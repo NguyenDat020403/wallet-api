@@ -90,4 +90,23 @@ export class NetworkConfigService {
     };
     return networkMap[chain_id] || chain_id;
   }
+  async getTokenBalance(
+    chain_id: string,
+    walletAddress: string,
+    tokenAddress: string,
+  ): Promise<string> {
+    const network = this.getNetworkConfig(chain_id);
+    if (!network) {
+      throw new Error(`Không tìm thấy config của chain_id ${chain_id}`);
+    }
+
+    const url =
+      `${network.api_url}?module=account&action=tokenbalance` +
+      `&contractaddress=${tokenAddress}` +
+      `&address=${walletAddress}` +
+      `&tag=latest&apikey=${network.api_key}`;
+
+    const response = await axios.get(url);
+    return response.data.result; // chuỗi số (sử dụng BigNumber để format nếu cần)
+  }
 }

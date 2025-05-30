@@ -9,6 +9,9 @@ import {
 export class CreateNetworkDto {
   @IsString()
   @IsNotEmpty()
+  wallet_network_address: string;
+  @IsString()
+  @IsNotEmpty()
   network_name: string;
 
   @IsUrl()

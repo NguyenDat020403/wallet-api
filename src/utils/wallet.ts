@@ -2,63 +2,7 @@ import BIP32Factory from 'bip32';
 import * as bip39 from 'bip39';
 import * as ecc from 'tiny-secp256k1';
 import { BigNumberish, ethers } from 'ethers';
-import { networks } from 'generated/prisma';
 import * as bitcoin from 'bitcoinjs-lib';
-export async function getBalanceByNetwork(
-  network: networks,
-  address: string,
-  contract_address?: string,
-  decimals?: number,
-) {
-  const provider = new ethers.JsonRpcProvider(network.rpc_url);
-
-  if (contract_address) {
-    try {
-      const erc20Abi = ['function balanceOf(address) view returns (uint256)'];
-
-      const tokenContract = new ethers.Contract(
-        contract_address,
-        erc20Abi,
-        provider,
-      );
-      try {
-        const balance = await tokenContract.balanceOf(address);
-        if (balance === undefined) {
-          throw new Error('Failed to get token balance');
-        }
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-        const formattedBalance = ethers.formatUnits(balance, decimals);
-        return formattedBalance;
-      } catch (error) {
-        console.error(
-          `Error getting balance for token ${contract_address}:`,
-          error,
-        );
-        throw new Error(
-          `Failed to get token balance: ${error instanceof Error ? error.message : 'Unknown error'}`,
-        );
-      }
-    } catch (error) {
-      console.error(
-        `Error getting ERC20 balance for ${contract_address}:`,
-        error,
-      );
-      throw new Error(
-        `Failed to get ERC20 balance: ${error instanceof Error ? error.message : 'Unknown error'}`,
-      );
-    }
-  }
-
-  try {
-    const balance = await provider.getBalance(address);
-    return ethers.formatEther(balance);
-  } catch (error) {
-    console.error(`Error getting native balance for ${address}:`, error);
-    throw new Error(
-      `Failed to get native balance: ${error instanceof Error ? error.message : 'Unknown error'}`,
-    );
-  }
-}
 
 export async function CreateWallet() {
   const mnemonic = bip39.generateMnemonic();

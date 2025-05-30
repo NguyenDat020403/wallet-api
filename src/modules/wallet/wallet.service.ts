@@ -206,4 +206,15 @@ export class WalletService {
     }
     return wallet.wallet_id;
   }
+  async findWalletIdByUserId(userId: string) {
+    const wallet = await this.prisma.wallets.findFirst({
+      where: {
+        user_id: userId,
+      },
+    });
+    if (!wallet) {
+      return null;
+    }
+    return wallet.wallet_id;
+  }
 }

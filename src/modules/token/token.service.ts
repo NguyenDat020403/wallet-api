@@ -13,6 +13,7 @@ import { JwtGuard } from 'src/guards';
 import { PrismaService } from 'src/modules/prisma/prisma.service';
 import {
   CreateTokenDto,
+  GetTokenMarketDataDTO,
   QueryTokenFromAddressDto,
   TokenMetadata,
 } from './token.dto';
@@ -24,6 +25,8 @@ import { defaultTokens, TokenNetworkDefault } from './tokenDefaultList';
 import axios from 'axios';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
+import { generateResponse } from 'src/utils/response';
+import { CoinService } from '../coinpaprika/coinpaprika.service';
 @UseGuards(JwtGuard)
 @Injectable()
 export class TokenService {
@@ -32,6 +35,7 @@ export class TokenService {
     private networkService: NetworkService,
     private jwt: JwtService,
     private config: ConfigService,
+    private readonly coinService: CoinService,
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
   private async getSymbolToIdMap(): Promise<Record<string, string>> {
@@ -58,101 +62,131 @@ export class TokenService {
     contract_address,
     ...body
   }: CreateTokenDto) {
-    const network = await this.prisma.networks.findUnique({
-      where: { network_id },
-    });
-    if (!network) throw new BadRequestException(ERROR_MAP.NETWORK_NOT_FOUND);
+    try {
+      const token = await this.prisma.tokens.create({
+        data: {
+          ...body,
+        },
+      });
 
-    const token = await this.prisma.tokens.create({
-      data: {
-        ...body,
-      },
-    });
-    const tokenNetwork = await this.prisma.token_networks.create({
-      data: {
-        contract_address: contract_address,
-        network_id: network.network_id,
-        token_id: token.token_id,
-      },
-    });
-    const walletNetwork = await this.prisma.wallet_networks.findFirst({
-      where: {
-        wallet_id: wallet_id,
-      },
-    });
+      const tokenNetwork = await this.prisma.token_networks.create({
+        data: {
+          contract_address: contract_address.toLowerCase(),
+          network_id: network_id,
+          token_id: token.token_id,
+        },
+      });
 
-    const balanceToken = await getBalanceV1(
-      walletNetwork?.address || '123123',
-      network.symbol,
-      network.rpc_url,
-    );
-
-    const walletTokenNetwork = await this.prisma.wallet_network_tokens.create({
-      data: {
-        wallet_id: wallet_id,
-        token_network_id: tokenNetwork.token_network_id,
-        balance: balanceToken,
-      },
-    });
-    return {
-      token,
-      network,
-      tokenNetwork,
-      walletTokenNetwork,
-    };
+      await this.prisma.wallet_networks.findFirst({
+        where: {
+          wallet_id: wallet_id,
+          network_id: tokenNetwork.network_id,
+        },
+      });
+      await this.prisma.wallet_network_tokens.create({
+        data: {
+          wallet_id: wallet_id,
+          token_network_id: tokenNetwork.token_network_id,
+        },
+      });
+      return true;
+    } catch {
+      return false;
+    }
   }
 
   async getTokens(wallet_id) {
-    const walletNetwork = await this.prisma.wallet_networks.findMany({
-      where: { wallet_id: wallet_id },
-      include: {
-        networks: true,
-      },
-    });
-    const netWorkIds = walletNetwork
-      .map((wn) => wn.networks?.network_id)
-      .filter((id): id is string => id !== undefined);
-
-    const tokenNetwork = await this.prisma.token_networks.findMany({
-      where: {
-        network_id: {
-          in: netWorkIds,
+    const walletTokenNetwork = await this.prisma.wallet_network_tokens.findMany(
+      {
+        where: {
+          wallet_id: wallet_id,
         },
       },
-      include: {
-        tokens: true,
-        networks: true,
-      },
-    });
-    const symbolToId = await this.getSymbolToIdMap();
-    const validCoins = tokenNetwork.filter(
-      (t) => symbolToId[t.tokens?.token_name.toLowerCase() || ''],
     );
-    console.log('validCoins', validCoins);
-
+    const token_networkList = await Promise.all(
+      walletTokenNetwork.map(async (item) => {
+        return await this.prisma.token_networks.findFirst({
+          where: { token_network_id: item.token_network_id! },
+        });
+      }),
+    );
     return await Promise.all(
-      tokenNetwork.map(async (tn) => {
-        const walletAddress = walletNetwork.find(
-          (wn) => wn.networks?.network_id === tn.network_id,
-        )?.address;
-
-        if (!walletAddress || !tn.networks?.rpc_url) return null;
+      token_networkList.map(async (item) => {
+        const token = await this.prisma.tokens.findFirst({
+          where: { token_id: item?.token_id || '' },
+        });
+        const network = await this.prisma.networks.findFirst({
+          where: { network_id: item?.network_id || '' },
+        });
+        const wallet_network = await this.prisma.wallet_networks.findFirst({
+          where: { wallet_id: wallet_id, network_id: item?.network_id },
+        });
         const balance = await getBalanceV1(
-          walletAddress,
-          tn.networks.symbol,
-          tn.networks.rpc_url,
-          tn.contract_address,
-          tn.tokens?.decimals,
+          wallet_network!.address.toLowerCase(),
+          network?.symbol,
+          network?.rpc_url,
+          item?.contract_address,
+          token?.decimals,
         );
 
         return {
-          token: tn.tokens,
-          network: tn.networks,
-          contract_address: tn.contract_address || '',
+          token: token,
+          network: network,
+          contract_address: item?.contract_address,
           balance,
         };
       }),
     );
+    // const walletNetwork = await this.prisma.wallet_networks.findMany({
+    //   where: { wallet_id: wallet_id },
+    //   include: {
+    //     networks: true,
+    //   },
+    // });
+    // const netWorkIds = walletNetwork
+    //   .map((wn) => wn.networks?.network_id)
+    //   .filter((id): id is string => id !== undefined);
+
+    // const tokenNetwork = await this.prisma.token_networks.findMany({
+    //   where: {
+    //     network_id: {
+    //       in: netWorkIds,
+    //     },
+    //   },
+    //   include: {
+    //     tokens: true,
+    //     networks: true,
+    //   },
+    // });
+    // const symbolToId = await this.getSymbolToIdMap();
+    // const validCoins = tokenNetwork.filter(
+    //   (t) => symbolToId[t.tokens?.token_name.toLowerCase() || ''],
+    // );
+    // console.log('validCoins', validCoins);
+
+    // return await Promise.all(
+    //   tokenNetwork.map(async (tn) => {
+    //     const walletAddress = walletNetwork.find(
+    //       (wn) => wn.networks?.network_id === tn.network_id,
+    //     )?.address;
+
+    //     if (!walletAddress || !tn.networks?.rpc_url) return null;
+    //     const balance = await getBalanceV1(
+    //       walletAddress,
+    //       tn.networks.symbol,
+    //       tn.networks.rpc_url,
+    //       tn.contract_address,
+    //       tn.tokens?.decimals,
+    //     );
+
+    //     return {
+    //       token: tn.tokens,
+    //       network: tn.networks,
+    //       contract_address: tn.contract_address || '',
+    //       balance,
+    //     };
+    //   }),
+    // );
   }
   async createDefaultToken() {
     const tokenMetadataList: TokenMetadata[] = [];
@@ -227,23 +261,36 @@ export class TokenService {
       );
     }
   }
-
   async findOrCreateIfNotExist(query: QueryTokenFromAddressDto) {
     const tokenNetwork = await this.prisma.token_networks.findFirst({
       where: {
-        contract_address: query.contract_address,
-        networks: {
-          network_id: query.network_id,
-        },
-      },
-      include: {
-        tokens: true,
-        networks: true,
+        network_id: query.network_id,
+        contract_address: query.contract_address.toLowerCase(),
       },
     });
-    if (tokenNetwork) return tokenNetwork;
+    if (tokenNetwork) {
+      const walletTokenNetwork =
+        await this.prisma.wallet_network_tokens.findFirst({
+          where: {
+            token_network_id: tokenNetwork.token_network_id,
+            wallet_id: query.wallet_id,
+          },
+        });
+      if (walletTokenNetwork) {
+        return generateResponse('token existed', '', '200', '1');
+      }
+      await this.prisma.wallet_network_tokens.create({
+        data: {
+          token_network_id: tokenNetwork.token_network_id,
+          wallet_id: query.wallet_id,
+        },
+      });
+      return generateResponse('add token success', '', '200', '0');
+    }
     const network = await this.networkService.findById(query.network_id);
-
+    if (!network) {
+      return generateResponse('not found any network', '', '200', '1');
+    }
     const tokenInfo = await this.$getTokenInfoMoralis(
       Number(network?.chain_id),
       query.contract_address,
@@ -259,30 +306,35 @@ export class TokenService {
         data: {
           contract_address: query.contract_address,
           token_id: existToken.token_id,
-          network_id: network?.network_id,
-        },
-        include: {
-          tokens: true,
-          networks: true,
+          network_id: query.network_id,
         },
       });
-
-      return tokenNetwork;
+      await this.prisma.wallet_network_tokens.create({
+        data: {
+          wallet_id: query.wallet_id,
+          token_network_id: tokenNetwork.token_network_id,
+        },
+      });
+      return generateResponse('create token success', '', '200', '0');
     }
     if (tokenInfo) {
       const priceFeedId = await this.networkService.getPriceFeedId(
         tokenInfo.symbol,
       );
-      const result = await this.createToken({
+      const { chainId, ...body } = tokenInfo;
+      console.log(chainId);
+      const isCreated = await this.createToken({
         wallet_id: query.wallet_id,
-        ...tokenInfo,
+        ...body,
         contract_address: query.contract_address,
         network_id: query.network_id,
         price_feed_id: priceFeedId || '',
         percent_change_24h: '',
       });
-
-      return result;
+      if (!isCreated) {
+        return generateResponse('create token failed', '', '200', '1');
+      }
+      return generateResponse('create token success', '', '200', '0');
     }
   }
   async $getTokenInfoCoingecko(chainId: number, coingeckoId?: string) {
@@ -328,7 +380,6 @@ export class TokenService {
       console.log(error);
     }
   }
-
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async getTokenMetadata(token: any) {
     console.log(token);
@@ -352,7 +403,17 @@ export class TokenService {
       };
     }
   }
-
+  async getTokenMarketData(rq: GetTokenMarketDataDTO) {
+    const marketData = await this.coinService.getCoinMarketDataBySymbolName(
+      rq.symbol,
+      rq.name,
+    );
+    console.log('token_coingecko_id,', marketData);
+    if (!marketData) {
+      return null;
+    }
+    return marketData;
+  }
   // async getPriceFeedId(symbol: string): Promise<string | null> {
   //   try {
   //     const query = `Crypto.${symbol.toLocaleUpperCase()}/USD`;

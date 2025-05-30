@@ -10,6 +10,7 @@ import { TransactionModule } from './modules/transaction/transaction.module';
 import { NotificationModule } from './modules/notification/notification.module';
 import path from 'path';
 import { CacheModule } from '@nestjs/cache-manager';
+import { CoinModule } from './modules/coinpaprika/coinpaprika.module';
 
 const envFile =
   process.env.NODE_ENV && process.env.NODE_ENV !== 'local'
@@ -19,6 +20,7 @@ const envFile =
   imports: [
     AuthModule,
     UserModule,
+    CoinModule,
     WalletModule,
     TokenModule,
     PrismaModule,

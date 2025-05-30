@@ -8,5 +8,6 @@ import { UserService } from './user.service';
   imports: [JwtModule.register({})],
   controllers: [UserController],
   providers: [UserService, JwtStrategy],
+  exports: [UserService],
 })
 export class UserModule {}

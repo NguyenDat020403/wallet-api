@@ -3,21 +3,14 @@ import { AuthService } from './auth.service';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from 'src/auth/strategy';
 import { AuthController } from './auth.controller';
-import { WalletService } from '../wallet/wallet.service';
-import { NetworkService } from '../network/network.services';
-import { TokenService } from '../token/token.service';
 import { BiometricService } from 'src/utils/biometricService';
+import { WalletModule } from '../wallet/wallet.module';
+import { NetworkModule } from '../network/network.module';
+import { TokenModule } from '../token/token.module';
 
 @Module({
-  imports: [JwtModule.register({})],
+  imports: [JwtModule.register({}), WalletModule, NetworkModule, TokenModule],
   controllers: [AuthController],
-  providers: [
-    AuthService,
-    JwtStrategy,
-    WalletService,
-    NetworkService,
-    TokenService,
-    BiometricService,
-  ],
+  providers: [AuthService, JwtStrategy, BiometricService],
 })
 export class AuthModule {}

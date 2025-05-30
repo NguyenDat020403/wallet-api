@@ -2,7 +2,8 @@ import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { JwtGuard } from 'src/guards';
 import { TokenService } from './token.service';
 import {
-  CreateTokenDto,
+  GetTokenMarketDataDTO,
+  QueryTokenFromAddressDto,
   //   QueryTokenFromAddressDto,
   //   QueryTokensDto,
 } from './token.dto';
@@ -13,9 +14,8 @@ import { generateResponse } from 'src/utils/response';
 export class TokenController {
   constructor(private tokenService: TokenService) {}
   @Post('create')
-  async createToken(@Body() body: CreateTokenDto) {
-    const data = await this.tokenService.createToken(body);
-    return generateResponse('success', data);
+  async createToken(@Body() body: QueryTokenFromAddressDto) {
+    return await this.tokenService.findOrCreateIfNotExist(body);
   }
 
   @Get('createTokenDefault')
@@ -29,5 +29,16 @@ export class TokenController {
   @Post('resetDatabase')
   async resetDatabase() {
     return await this.tokenService.resetDatabase();
+  }
+
+  // API: GET /tokens/market?symbol=usdt
+  @Post('market')
+  async getCoinMarket(@Body() body: GetTokenMarketDataDTO) {
+    const response = await this.tokenService.getTokenMarketData(body);
+    if (response === null) {
+      generateResponse('fail to load market data', '', '200', '1');
+    }
+
+    return generateResponse('success', response, '200', '0');
   }
 }
