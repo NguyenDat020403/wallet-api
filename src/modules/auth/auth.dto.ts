@@ -17,10 +17,6 @@ export class SignUpDto {
   password: string;
 
   @IsString()
-  @IsOptional()
-  avatar: string;
-
-  @IsString()
   @IsNotEmpty()
   username: string;
 

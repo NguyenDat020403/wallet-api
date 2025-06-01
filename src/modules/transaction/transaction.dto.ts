@@ -84,6 +84,7 @@ export type TransactionStatusRequestBTC = {
 };
 export interface TransactionRequest {
   address: string;
+  decimals?: string;
 }
 export interface TransactionHistoryRequest extends TransactionRequest {
   token_id?: string;

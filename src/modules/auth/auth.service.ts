@@ -1,11 +1,10 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import * as argon from 'argon2';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { ImportWalletDto, SignInDto, SignUpDto } from './auth.dto';
 import { generateResponse } from 'src/utils/response';
 import { PrismaService } from 'src/modules/prisma/prisma.service';
-import { ERROR_MAP } from 'src/constants/errorMap';
 import { WalletService } from '../wallet/wallet.service';
 import { ListNetworkDefault } from '../network/networkDefault';
 import { importWallet } from 'src/utils/wallet';
@@ -31,7 +30,7 @@ export class AuthService {
       },
     });
     if (isEmailExist) {
-      throw new BadRequestException(ERROR_MAP.EMAIL_ALREADY_EXIST);
+      return generateResponse('Email is existed', '', '200', '1');
     }
     const hash = await argon.hash(dto.password);
 
@@ -40,11 +39,9 @@ export class AuthService {
         password_hash: hash,
         email: dto.email,
         username: dto.username,
-        avatar: dto.avatar,
         biometricPublicKey: dto.biometricPublicKey,
       },
     });
-
     const walletDefault = await this.walletService.createWallet(user.user_id);
 
     const token = await this.signToken(user.user_id, user.email || '');

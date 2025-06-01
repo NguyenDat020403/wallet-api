@@ -97,11 +97,19 @@ export class NetworkService {
       },
     });
   }
-  async getNetworkList() {
-    const networks = await this.prisma.networks.findMany({
-      where: {},
+  async getNetworkList(wallet_id: string) {
+    const wallet_network = await this.prisma.wallet_networks.findMany({
+      where: {
+        wallet_id: wallet_id,
+      },
+      include: {
+        networks: true,
+      },
     });
-    return generateResponse('success', networks);
+    if (!wallet_network) {
+      return generateResponse('fail to load networks', '', '200', '1');
+    }
+    return generateResponse('success', wallet_network, '200', '0');
   }
   async getNetworkByUserId(userId: string) {
     const networks = await this.prisma.networks.findMany({

@@ -11,6 +11,8 @@ import { NotificationModule } from './modules/notification/notification.module';
 import path from 'path';
 import { CacheModule } from '@nestjs/cache-manager';
 import { CoinModule } from './modules/coinpaprika/coinpaprika.module';
+import { PostModule } from './modules/post/post.module';
+import { SupabaseModule } from './modules/supabase/supabase.module';
 
 const envFile =
   process.env.NODE_ENV && process.env.NODE_ENV !== 'local'
@@ -21,6 +23,8 @@ const envFile =
     AuthModule,
     UserModule,
     CoinModule,
+    PostModule,
+    SupabaseModule,
     WalletModule,
     TokenModule,
     PrismaModule,

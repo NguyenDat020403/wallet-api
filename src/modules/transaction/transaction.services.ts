@@ -210,24 +210,48 @@ export class TransactionService {
       return generateResponse('success', grouped, '200');
     }
   }
-  async getSendTransactionToAddressHistory(address: string) {
-    const transactionHistory: TransactionHistory[] =
-      await getTransactionsHistory(address);
-    if (!transactionHistory) {
-      return generateResponse('fail', '', '200', 'fail to load feeData');
+  async getSendTransactionToAddressHistory(
+    address: string,
+    chain_id: string,
+    decimals?: string,
+  ) {
+    if (chain_id === '0') {
+      const transactionHistory: TransactionHistory[] =
+        await getTransactionsHistory(address);
+      if (!transactionHistory) {
+        return generateResponse('fail', '', '200', 'fail to load feeData');
+      }
+      const listAddress = transactionHistory
+        .filter((item) => {
+          return item.vin.some(
+            (vin) => vin.prevout?.scriptpubkey_address === address,
+          );
+        })
+        .map((item) => {
+          const vo = item.vout.find(
+            (vo) => vo.scriptpubkey_address !== address,
+          );
+          return vo?.scriptpubkey_address;
+        })
+        .filter((address): address is string => !!address);
+      return generateResponse('success', listAddress, '200');
+    } else {
+      const transactionHistory = await getTransactionsHistoryEVM(
+        address,
+        chain_id,
+        this.networkConfigService,
+        Number(decimals),
+      );
+      if (transactionHistory?.data.length === 0) {
+        return generateResponse('success', '', '200', '0');
+      }
+      const data: TransactionHistoryEVM[] = transactionHistory?.data;
+      const txs = data.filter((item) => item.from === address);
+      if (!txs) {
+        return generateResponse('success', '', '200', '0');
+      }
+      return generateResponse('success', txs, '200', '0');
     }
-    const listAddress = transactionHistory
-      .filter((item) => {
-        return item.vin.some(
-          (vin) => vin.prevout?.scriptpubkey_address === address,
-        );
-      })
-      .map((item) => {
-        const vo = item.vout.find((vo) => vo.scriptpubkey_address !== address);
-        return vo?.scriptpubkey_address;
-      })
-      .filter((address): address is string => !!address);
-    return generateResponse('success', listAddress, '200');
   }
 
   async getCurrentTransaction(

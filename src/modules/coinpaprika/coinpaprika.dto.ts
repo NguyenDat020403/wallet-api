@@ -18,7 +18,7 @@ export interface Quotes {
 export interface Usd {
   price: number;
   volume_24h: number;
-  market_cap: number;
+  market_cap_change_24h: number;
   percent_change_1h: number;
   percent_change_24h: number;
   percent_change_7d: number;
@@ -26,4 +26,5 @@ export interface Usd {
   percent_change_1y: number;
   ath_price: number;
   ath_date: string;
+  volume_24h_change_24h: string;
 }

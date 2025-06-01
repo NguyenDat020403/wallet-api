@@ -47,9 +47,13 @@ export class TransactionController {
     );
   }
   @Post('getSendTransactionToAddressHistory')
-  async getSendTransactionToAddressHistory(@Body() rq: TransactionRequest) {
+  async getSendTransactionToAddressHistory(
+    @Body() rq: TransactionHistoryRequest,
+  ) {
     return await this.transactionService.getSendTransactionToAddressHistory(
       rq.address,
+      rq.chain_id,
+      rq.decimals,
     );
   }
   @Post('getCurrentTransactionHistory')

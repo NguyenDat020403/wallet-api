@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { JwtGuard } from 'src/guards';
 import { NetworkService } from './network.services';
 import { User } from 'src/decorators/user.decorator';
@@ -14,15 +14,15 @@ export class NetworkController {
     @User('sub') userId: string,
     @Body() dto: CreateNetworkDto,
   ) {
-    return this.networkService.createNetwork(userId, dto);
+    return await this.networkService.createNetwork(userId, dto);
   }
 
   @Get('getNetwork')
   async getNetwork(@User('sub') userId: string) {
     return await this.networkService.getNetworkByUserId(userId);
   }
-  @Get('getNetworkList')
-  async getNetworkList() {
-    return await this.networkService.getNetworkList();
+  @Get('getNetworkList/:wallet_id')
+  async getNetworkList(@Param('wallet_id') wallet_id: string) {
+    return await this.networkService.getNetworkList(wallet_id);
   }
 }

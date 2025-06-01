@@ -4,6 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 import { JwtGuard } from 'src/guards';
 import { ERROR_MAP } from 'src/constants/errorMap';
 import { PrismaService } from 'src/modules/prisma/prisma.service';
+import { UpdateUserDto } from './user.dto';
 @UseGuards(JwtGuard)
 @Injectable()
 export class UserService {
@@ -13,6 +14,31 @@ export class UserService {
     private config: ConfigService,
   ) {}
 
+  async update(userId: string, dto: UpdateUserDto) {
+    const updatedUser = await this.prisma.users.update({
+      where: { user_id: userId },
+      data: {
+        username: dto.username,
+      },
+    });
+    return updatedUser;
+  }
+  async updateAvatar(
+    userId: string,
+
+    avatar_url?: string,
+  ) {
+    if (!avatar_url) {
+      return null;
+    }
+    const updatedUser = await this.prisma.users.update({
+      where: { user_id: userId },
+      data: {
+        avatar: avatar_url,
+      },
+    });
+    return updatedUser;
+  }
   async findById(id: string) {
     const user = await this.prisma.users.findFirst({
       where: { user_id: id },

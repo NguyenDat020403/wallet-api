@@ -98,7 +98,9 @@ export class WalletService {
         wallet_id: dto.wallet_id,
       },
     });
-    const tokens = await this.tokenService.getTokens(dto.wallet_id);
+    const tokens = (await this.tokenService.getTokens(dto.wallet_id)).sort(
+      (a, b) => Number(b.balance) - Number(a.balance),
+    );
     const tokenAvailableBalance = tokens.filter(
       (t) => t?.balance !== undefined && parseFloat(t?.balance) !== 0,
     );
