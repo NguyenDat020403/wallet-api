@@ -34,6 +34,7 @@ model networks {
   deleted_at         DateTime?         @db.Timestamp(6)
   creator_id         String?           @db.Uuid
   isEVM              Boolean           @default(false)
+  coingecko_id       String?           @db.VarChar(255)
   users              users?            @relation(fields: [creator_id], references: [user_id], onUpdate: NoAction)
   token_networks     token_networks[]
   wallet_networks    wallet_networks[]
@@ -68,20 +69,24 @@ model tokens {
 }
 
 model users {
-  user_id            String       @id @default(uuid()) @db.Uuid
-  username           String       @db.VarChar(255)
-  avatar             String?      @db.VarChar(255)
-  bio                String?      @db.VarChar(255)
-  email              String?      @unique @db.VarChar(255)
-  password_hash      String       @db.VarChar(255)
-  created_at         DateTime?    @default(now()) @db.Timestamp(6)
-  updated_at         DateTime?    @default(now()) @db.Timestamp(6)
-  deleted_at         DateTime?    @db.Timestamp(6)
-  notiToken          String?      @db.VarChar
-  biometricPublicKey String?      @db.VarChar(512)
+  user_id            String          @id @default(uuid()) @db.Uuid
+  username           String          @db.VarChar(255)
+  avatar             String?         @db.VarChar(255)
+  bio                String?         @db.VarChar(255)
+  email              String?         @unique @db.VarChar(255)
+  password_hash      String          @db.VarChar(255)
+  created_at         DateTime?       @default(now()) @db.Timestamp(6)
+  updated_at         DateTime?       @default(now()) @db.Timestamp(6)
+  deleted_at         DateTime?       @db.Timestamp(6)
+  notiToken          String?         @db.VarChar
+  biometricPublicKey String?         @db.VarChar(512)
   audit_logs         audit_logs[]
   networks           networks[]
   wallets            wallets[]
+  comments           comments[]
+  posts              posts[]
+  post_likes         post_likes[]
+  comment_likes      comment_likes[]
 }
 
 model wallet_network_tokens {
@@ -125,4 +130,65 @@ model wallets {
   users                 users?                  @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction)
 
   @@index([user_id], map: "idx_wallets_user_id")
+}
+
+model posts {
+  post_id    String    @id @default(uuid()) @db.Uuid
+  user_id    String    @db.Uuid
+  title      String    @db.VarChar(255)
+  content    String    @db.Text
+  created_at DateTime  @default(now()) @db.Timestamp(6)
+  updated_at DateTime  @default(now()) @db.Timestamp(6)
+  deleted_at DateTime? @db.Timestamp(6)
+
+  user     users        @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+  comments comments[]
+  likes    post_likes[]
+  images   post_images[]
+}
+model post_images {
+  image_id String  @id @default(uuid()) @db.Uuid
+  post_id  String  @db.Uuid
+  imageUrl String  @db.Text
+  created_at DateTime @default(now()) @db.Timestamp(6)
+
+  post posts @relation(fields: [post_id], references: [post_id], onDelete: Cascade)
+}
+
+model comments {
+  comment_id String    @id @default(uuid()) @db.Uuid
+  post_id    String    @db.Uuid
+  user_id    String    @db.Uuid
+  content    String    @db.Text
+  created_at DateTime  @default(now()) @db.Timestamp(6)
+  updated_at DateTime  @default(now()) @db.Timestamp(6)
+  deleted_at DateTime? @db.Timestamp(6)
+
+  post  posts           @relation(fields: [post_id], references: [post_id], onDelete: Cascade)
+  user  users           @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+  likes comment_likes[]
+}
+
+model post_likes {
+  post_like_id String   @id @default(uuid()) @db.Uuid
+  post_id      String   @db.Uuid
+  user_id      String   @db.Uuid
+  created_at   DateTime @default(now()) @db.Timestamp(6)
+
+  post posts @relation(fields: [post_id], references: [post_id], onDelete: Cascade)
+  user users @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+
+  @@unique([post_id, user_id])
+}
+
+model comment_likes {
+  comment_like_id String   @id @default(uuid()) @db.Uuid
+  comment_id      String   @db.Uuid
+  user_id         String   @db.Uuid
+  created_at      DateTime @default(now()) @db.Timestamp(6)
+
+  comment comments @relation(fields: [comment_id], references: [comment_id], onDelete: Cascade)
+  user    users    @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+
+  @@unique([comment_id, user_id])
 }

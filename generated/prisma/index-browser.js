@@ -141,7 +141,8 @@ exports.Prisma.NetworksScalarFieldEnum = {
   updated_at: 'updated_at',
   deleted_at: 'deleted_at',
   creator_id: 'creator_id',
-  isEVM: 'isEVM'
+  isEVM: 'isEVM',
+  coingecko_id: 'coingecko_id'
 };
 
 exports.Prisma.Token_networksScalarFieldEnum = {
@@ -207,6 +208,47 @@ exports.Prisma.WalletsScalarFieldEnum = {
   deleted_at: 'deleted_at'
 };
 
+exports.Prisma.PostsScalarFieldEnum = {
+  post_id: 'post_id',
+  user_id: 'user_id',
+  title: 'title',
+  content: 'content',
+  created_at: 'created_at',
+  updated_at: 'updated_at',
+  deleted_at: 'deleted_at'
+};
+
+exports.Prisma.Post_imagesScalarFieldEnum = {
+  image_id: 'image_id',
+  post_id: 'post_id',
+  imageUrl: 'imageUrl',
+  created_at: 'created_at'
+};
+
+exports.Prisma.CommentsScalarFieldEnum = {
+  comment_id: 'comment_id',
+  post_id: 'post_id',
+  user_id: 'user_id',
+  content: 'content',
+  created_at: 'created_at',
+  updated_at: 'updated_at',
+  deleted_at: 'deleted_at'
+};
+
+exports.Prisma.Post_likesScalarFieldEnum = {
+  post_like_id: 'post_like_id',
+  post_id: 'post_id',
+  user_id: 'user_id',
+  created_at: 'created_at'
+};
+
+exports.Prisma.Comment_likesScalarFieldEnum = {
+  comment_like_id: 'comment_like_id',
+  comment_id: 'comment_id',
+  user_id: 'user_id',
+  created_at: 'created_at'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -231,7 +273,12 @@ exports.Prisma.ModelName = {
   users: 'users',
   wallet_network_tokens: 'wallet_network_tokens',
   wallet_networks: 'wallet_networks',
-  wallets: 'wallets'
+  wallets: 'wallets',
+  posts: 'posts',
+  post_images: 'post_images',
+  comments: 'comments',
+  post_likes: 'post_likes',
+  comment_likes: 'comment_likes'
 };
 
 /**
