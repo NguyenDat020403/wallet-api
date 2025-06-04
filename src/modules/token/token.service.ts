@@ -1,12 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
-import {
-  BadRequestException,
-  Inject,
-  Injectable,
-  UseGuards,
-} from '@nestjs/common';
+import { Inject, Injectable, UseGuards } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { JwtGuard } from 'src/guards';
@@ -63,37 +58,38 @@ export class TokenService {
     contract_address,
     ...body
   }: CreateTokenDto) {
-    try {
-      const token = await this.prisma.tokens.create({
-        data: {
-          ...body,
-        },
-      });
-
-      const tokenNetwork = await this.prisma.token_networks.create({
-        data: {
-          contract_address: contract_address.toLowerCase(),
-          network_id: network_id,
-          token_id: token.token_id,
-        },
-      });
-
-      await this.prisma.wallet_networks.findFirst({
-        where: {
-          wallet_id: wallet_id,
-          network_id: tokenNetwork.network_id,
-        },
-      });
-      await this.prisma.wallet_network_tokens.create({
-        data: {
-          wallet_id: wallet_id,
-          token_network_id: tokenNetwork.token_network_id,
-        },
-      });
-      return true;
-    } catch {
-      return false;
-    }
+    // try {
+    console.log(body);
+    const token = await this.prisma.tokens.create({
+      data: {
+        ...body,
+      },
+    });
+    console.log('token', token);
+    const tokenNetwork = await this.prisma.token_networks.create({
+      data: {
+        contract_address: contract_address.toLowerCase(),
+        network_id: network_id,
+        token_id: token.token_id,
+      },
+    });
+    console.log('tokenNetwork', tokenNetwork);
+    await this.prisma.wallet_networks.findFirst({
+      where: {
+        wallet_id: wallet_id,
+        network_id: tokenNetwork.network_id,
+      },
+    });
+    await this.prisma.wallet_network_tokens.create({
+      data: {
+        wallet_id: wallet_id,
+        token_network_id: tokenNetwork.token_network_id,
+      },
+    });
+    return true;
+    // } catch {
+    //   return false;
+    // }
   }
 
   async getTokens(wallet_id) {
@@ -191,7 +187,7 @@ export class TokenService {
     );
     console.log('networkIds', networkIds);
     const tokenNetworkData = tokenMetadataList.map((token, index) => ({
-      token_id: tokenListResponse[index].token_id, // ID của token vừa tạo
+      token_id: tokenListResponse[index].token_id,
       network_id: networkIds[index],
       contract_address: token.address,
     }));
@@ -258,9 +254,9 @@ export class TokenService {
     }
     const tokenInfo = await this.$getTokenInfoMoralis(
       Number(network?.chain_id),
-      query.contract_address,
+      query.contract_address.toLowerCase(),
     );
-
+    console.log(tokenInfo);
     const existToken = await this.prisma.tokens.findFirst({
       where: {
         token_name: tokenInfo?.token_name || ' ',
@@ -269,7 +265,7 @@ export class TokenService {
     if (existToken) {
       const tokenNetwork = await this.prisma.token_networks.create({
         data: {
-          contract_address: query.contract_address,
+          contract_address: query.contract_address.toLowerCase(),
           token_id: existToken.token_id,
           network_id: query.network_id,
         },
@@ -286,15 +282,15 @@ export class TokenService {
       const priceFeedId = await this.networkService.getPriceFeedId(
         tokenInfo.symbol,
       );
-      const { chainId, ...body } = tokenInfo;
-      console.log(chainId);
+      const { chainId, address, ...body } = tokenInfo;
+      console.log(body);
       const isCreated = await this.createToken({
         wallet_id: query.wallet_id,
-        ...body,
-        contract_address: query.contract_address,
+        contract_address: query.contract_address.toLowerCase(),
         network_id: query.network_id,
         price_feed_id: priceFeedId || '',
         percent_change_24h: '',
+        ...body,
       });
       if (!isCreated) {
         return generateResponse('create token failed', '', '200', '1');

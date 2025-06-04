@@ -29,14 +29,10 @@ export class SupabaseController {
     @User('sub') userId: string,
     @UploadedFile() file: Express.Multer.File,
   ) {
-    if (!file) {
-      return generateResponse('no data to uploaded', '', '200', '1');
-    }
-
     const user_updated = await this.supabaseService.uploadAvatar(
       userId,
-      file.buffer,
-      file.originalname,
+      file ? file.buffer : null,
+      file ? file.originalname : '',
     );
     if (!user_updated) {
       return generateResponse('fail to upload avatar', '', '200', '1');

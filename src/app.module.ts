@@ -13,6 +13,8 @@ import { CacheModule } from '@nestjs/cache-manager';
 import { CoinModule } from './modules/coinpaprika/coinpaprika.module';
 import { PostModule } from './modules/post/post.module';
 import { SupabaseModule } from './modules/supabase/supabase.module';
+import { FirebaseModule } from './modules/firebase/firebase.module';
+import { SwapModule } from './modules/swap/swap.module';
 
 const envFile =
   process.env.NODE_ENV && process.env.NODE_ENV !== 'local'
@@ -25,6 +27,8 @@ const envFile =
     CoinModule,
     PostModule,
     SupabaseModule,
+    FirebaseModule,
+    SwapModule,
     WalletModule,
     TokenModule,
     PrismaModule,

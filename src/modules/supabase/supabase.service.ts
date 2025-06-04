@@ -3,7 +3,9 @@ import { ConfigService } from '@nestjs/config';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { UserService } from '../user/user.service';
 import { users } from 'generated/prisma';
-
+import jdenticon from 'jdenticon';
+import { createAvatar } from '@dicebear/avatars';
+import * as style from '@dicebear/pixel-art';
 @Injectable()
 export class SupabaseService {
   private supabase: SupabaseClient;
@@ -23,9 +25,19 @@ export class SupabaseService {
 
   async uploadAvatar(
     userId: string,
-    fileBuffer: Buffer,
+    fileBuffer: Buffer | null,
     originalName: string,
   ): Promise<users | null> {
+    if (fileBuffer === null) {
+      const update_user_avatar = await this.userService.updateAvatar(
+        userId,
+        `https://api.dicebear.com/7.x/identicon/png?seed=${userId}`,
+      );
+      if (!update_user_avatar) {
+        return null;
+      }
+      return update_user_avatar;
+    }
     const ext = originalName.split('.').pop();
     const fileName = `user${userId}.${ext}`;
     const path = `${fileName}`;

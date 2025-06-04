@@ -3,7 +3,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from 'src/auth/strategy';
 import { NotificationController } from './notification.controller';
 import { NotificationService } from './notification.services';
-import { FirebaseService } from 'src/firebase/firebase.service';
+import { FirebaseService } from 'src/modules/firebase/firebase.service';
 import { WalletModule } from '../wallet/wallet.module';
 import { UserModule } from '../user/user.module';
 

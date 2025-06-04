@@ -7,7 +7,7 @@ import { FCMTokenDto } from './notification.dto';
 import { generateResponse } from 'src/utils/response';
 import { WalletService } from '../wallet/wallet.service';
 import { UserService } from '../user/user.service';
-import { FirebaseService } from 'src/firebase/firebase.service';
+import { FirebaseService } from 'src/modules/firebase/firebase.service';
 
 @UseGuards(JwtGuard)
 @Injectable()

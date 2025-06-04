@@ -59,3 +59,12 @@ export class ImportWalletDto {
   @IsOptional()
   biometricPublicKey?: string;
 }
+export class RestoreWalletDto {
+  @Mnemonic()
+  mnemonic: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @MinLength(8)
+  password: string;
+}

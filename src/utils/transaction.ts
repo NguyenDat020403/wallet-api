@@ -20,7 +20,6 @@ import * as bitcoin from 'bitcoinjs-lib';
 import ECPairFactory from 'ecpair';
 import { NetworkConfigService } from './networkConfig';
 import { generateResponse } from './response';
-import { PrismaService } from 'src/modules/prisma/prisma.service';
 
 const ECPair = ECPairFactory(ecc);
 const config = new ConfigService();
@@ -168,7 +167,6 @@ async function getUtxos(address) {
   return res.data as AddressUTXO[];
 }
 
-// 2️⃣ Hàm lấy raw transaction theo TXID
 async function getRawTransaction(txid) {
   const res = await axios.get(
     `${config.get('API_MEMPOOL_BASE')}/tx/${txid}/hex`,

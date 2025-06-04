@@ -124,6 +124,7 @@ export class AuthService {
         wallet_balance: 0,
         wallet_address: '',
         user_id: user.user_id,
+        thumbnail: `https://api.dicebear.com/7.x/shapes/png?seed=ImportWallet`,
       },
     });
     const network = await this.networkService.findDefaultNetwork();

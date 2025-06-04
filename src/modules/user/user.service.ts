@@ -13,7 +13,6 @@ export class UserService {
     private jwt: JwtService,
     private config: ConfigService,
   ) {}
-
   async update(userId: string, dto: UpdateUserDto) {
     const updatedUser = await this.prisma.users.update({
       where: { user_id: userId },
@@ -23,11 +22,7 @@ export class UserService {
     });
     return updatedUser;
   }
-  async updateAvatar(
-    userId: string,
-
-    avatar_url?: string,
-  ) {
+  async updateAvatar(userId: string, avatar_url?: string) {
     if (!avatar_url) {
       return null;
     }

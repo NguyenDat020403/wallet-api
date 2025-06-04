@@ -11,14 +11,13 @@ export class CoinService {
   constructor(@Inject(CACHE_MANAGER) private cacheManager: Cache) {}
 
   async getCoinList(): Promise<CoinMarketResponse[]> {
-    // // Kiểm tra cache trước
-    // const cached = await this.cacheManager.get<CoinMarketResponse[]>(
-    //   this.COIN_LIST_CACHE_KEY,
-    // );
-    // if (cached) {
-    //   console.log('Return cached coin list');
-    //   return cached;
-    // }
+    const cached = await this.cacheManager.get<CoinMarketResponse[]>(
+      this.COIN_LIST_CACHE_KEY,
+    );
+    if (cached) {
+      console.log('Return cached coin list');
+      return cached;
+    }
     const response = await axios.get<CoinMarketResponse[]>(
       'https://api.coinpaprika.com/v1/tickers',
     );
@@ -34,12 +33,9 @@ export class CoinService {
   ): Promise<CoinMarketResponse | null> {
     try {
       const coins = await this.getCoinList();
-      console.log(coins);
-      console.log(symbol + '-' + name);
       const coin = coins.find(
         (c) => c.symbol.toLowerCase() === symbol.toLowerCase(),
       );
-      console.log('coin: ', coin);
       if (!coin) {
         const id = symbol.toLowerCase() + '-' + name.toLowerCase();
         const response: AxiosResponse<CoinMarketResponse> = await axios.get(

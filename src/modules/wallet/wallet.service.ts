@@ -10,6 +10,7 @@ import { CreateWallet } from 'src/utils/wallet';
 import { GetWalletRequest } from './wallet.dto';
 import { NetworkService } from '../network/network.services';
 import { TokenService } from '../token/token.service';
+import { Decimal } from 'generated/prisma/runtime/library';
 @UseGuards(JwtGuard)
 @Injectable()
 export class WalletService {
@@ -22,12 +23,14 @@ export class WalletService {
   ) {}
   async createWallet(userId: string) {
     const walletMulti = await CreateWallet();
+    const wallet_name = this.$generateRandomWalletName();
     const wallet = await this.prisma.wallets.create({
       data: {
-        wallet_name: 'Default Wallet',
+        wallet_name: wallet_name,
         wallet_balance: 0,
         wallet_address: '',
         user_id: userId,
+        thumbnail: `https://api.dicebear.com/7.x/shapes/png?seed=${wallet_name}`,
       },
     });
 
@@ -61,8 +64,6 @@ export class WalletService {
       },
     });
 
-    console.log('tokenNetworks: ', tokenNetworks);
-
     await Promise.all(
       tokenNetworks.map(async (tokenNetwork) => {
         return await this.prisma.wallet_network_tokens.create({
@@ -80,7 +81,6 @@ export class WalletService {
         mnemonic: walletMulti.mnemonic,
         wallets: walletMulti.wallets,
       },
-      // walletTokenNetwork: walletTokenNetwork,
     };
   }
   async getWalletDefault(userId: string) {
@@ -93,7 +93,7 @@ export class WalletService {
     return wallet;
   }
   async getWallet(userId: string, dto: GetWalletRequest) {
-    let wallet = await this.prisma.wallets.findFirst({
+    const wallet = await this.prisma.wallets.findFirst({
       where: {
         wallet_id: dto.wallet_id,
       },
@@ -102,23 +102,33 @@ export class WalletService {
       (a, b) => Number(b.balance) - Number(a.balance),
     );
     const tokenAvailableBalance = tokens.filter(
-      (t) => t?.balance !== undefined && parseFloat(t?.balance) !== 0,
+      (t) =>
+        t?.balance !== undefined &&
+        parseFloat(t?.balance) !== 0 &&
+        t.network?.is_testnet === false,
     );
     console.log('tokenAvailableBalance', tokenAvailableBalance);
     const totalBalance = tokenAvailableBalance.reduce((sum, token) => {
-      return sum + parseFloat(token?.balance || '0');
+      return (
+        sum +
+        Number(token?.balance) *
+          (token.market_data ? Number(token.market_data.price) : 0)
+      );
     }, 0);
-    if (totalBalance !== Number(wallet?.wallet_balance)) {
-      wallet = await this.prisma.wallets.update({
-        where: { wallet_id: wallet?.wallet_id },
-        data: {
-          wallet_balance: totalBalance,
-        },
-      });
-    }
+    // if (Decimal(totalBalance) !== wallet?.wallet_balance) {
+    //   wallet = await this.prisma.wallets.update({
+    //     where: { wallet_id: wallet?.wallet_id },
+    //     data: {
+    //       wallet_balance: totalBalance,
+    //     },
+    //   });
+    // }
     return {
       tokens,
-      wallet,
+      wallet: {
+        ...wallet,
+        wallet_balance: totalBalance,
+      },
     };
   }
   async getUserWallets(userId: string) {
@@ -207,6 +217,11 @@ export class WalletService {
       return null;
     }
     return wallet.wallet_id;
+  }
+  $generateRandomWalletName() {
+    const prefix = 'Wallet';
+    const randomNumber = Math.floor(100 + Math.random() * 900); // 100–999
+    return `${prefix} ${randomNumber}`;
   }
   async findWalletIdByUserId(userId: string) {
     const wallet = await this.prisma.wallets.findFirst({

@@ -78,6 +78,14 @@ export class QueryTokenFromAddressDto {
   @IsUUID('4')
   @IsNotEmpty()
   wallet_id: string;
+
+  @IsString()
+  @IsNotEmpty()
+  symbol: string;
+
+  @IsNumber()
+  @IsNotEmpty()
+  decimal: number;
 }
 
 export class QueryTokensDto extends PaginationDto {

@@ -3,13 +3,13 @@ import { ConfigService } from '@nestjs/config';
 import * as admin from 'firebase-admin';
 import path from 'path';
 const config = new ConfigService();
-
 @Injectable()
 export class FirebaseService implements OnModuleInit {
   onModuleInit() {
     const firebaseCredPath =
       config.get<string>('FIREBASE_CREDENTIALS_PATH') ||
       'src/config/firebase-adminsdk.json';
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     const serviceAccount = require(path.resolve(firebaseCredPath));
 
     if (!admin.apps.length) {
