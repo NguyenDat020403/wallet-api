@@ -6,11 +6,13 @@ import { TransactionController } from './transaction.controller';
 import { DateService } from 'src/common/date.service';
 import { NetworkConfigService } from 'src/utils/networkConfig';
 import { NotificationModule } from '../notification/notification.module';
+import { SocketGateway } from './socket.gateway';
 
 @Module({
   imports: [JwtModule.register({}), NotificationModule],
   controllers: [TransactionController],
   providers: [
+    SocketGateway,
     TransactionService,
     JwtStrategy,
     DateService,

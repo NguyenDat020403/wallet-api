@@ -28,6 +28,9 @@ import { generateResponse } from 'src/utils/response';
 import { NotificationService } from '../notification/notification.services';
 import { DateService } from 'src/common/date.service';
 import { NetworkConfig, NetworkConfigService } from 'src/utils/networkConfig';
+import { ethers } from 'ethers';
+import { SocketGateway } from './socket.gateway';
+import mempoolJS from '@mempool/mempool.js';
 
 @UseGuards(JwtGuard)
 @Injectable()
@@ -40,6 +43,7 @@ export class TransactionService {
     private dataService: DateService,
     private notificationService: NotificationService,
     private networkConfigService: NetworkConfigService,
+    private socketGateWay: SocketGateway,
   ) {
     this.networks = {};
   }
@@ -48,11 +52,41 @@ export class TransactionService {
     await this.networkConfigService.fetchNetworkConfigs();
     this.networks = this.networkConfigService.getNetworkConfigCache();
   }
-  /**
-   * Estimates gas or fee for a transaction based on chain ID.
-   * @param data Fee request data including chain_id, ownerAddress, and amount.
-   * @returns Standardized response with fee data or error message.
-   */
+  trackTxStatusBTC(tx: string) {
+    const {
+      bitcoin: { websocket },
+    } = mempoolJS();
+
+    const ws = websocket.wsInit();
+
+    ws.addEventListener('open', () => {
+      console.log('WebSocket connected ✅');
+
+      // ✅ Gọi track sau khi WebSocket mở
+      websocket.wsTrackTransaction(ws, tx);
+    });
+
+    // Vẫn có thể add listener message từ đầu
+    ws.addEventListener('message', (event) => {
+      const data = JSON.parse(event.data.toString());
+      if (data.txid === tx) {
+        const confirms = data.status?.confirmed ? data.status.confirmations : 0;
+        if (confirms >= 6) {
+          this.socketGateWay.emitTxStatusBTC(tx, 'success');
+          websocket.wsStopTrackingTransaction(ws);
+          ws.close();
+        } else {
+          this.socketGateWay.emitTxStatusBTC(tx, 'pending');
+        }
+      }
+    });
+
+    // ⏱ Stop sau 60s nếu muốn
+    setTimeout(() => {
+      websocket.wsStopTrackingTransaction(ws);
+      ws.close();
+    }, 60000);
+  }
   async getEstimateGas(data: FeeRequest) {
     console.log(data);
     if (data.chain_id === '0') {
@@ -80,11 +114,14 @@ export class TransactionService {
         toAddress: rq.receiverAddress,
         transactionHex: transactionHex,
       });
-      if (tx) {
-        return generateResponse('success', tx, '200');
+      if (!tx) {
+        return generateResponse('failed', '', '200', '1');
       }
-      console.log('tx', tx);
-      return generateResponse('fail', '', '200', 'something wrong');
+
+      // 🔥 Gọi hàm tracking chạy song song
+      this.trackTxStatusBTC(tx);
+
+      return generateResponse('success', tx, '200');
     } catch (error) {
       return generateResponse('fail', '', '200', error.message);
     }
@@ -117,6 +154,18 @@ export class TransactionService {
     if (!tx) {
       return generateResponse('fail', '', '200', 'something wrong');
     }
+    const provider = new ethers.JsonRpcProvider(rq.rpc_url);
+    this.socketGateWay.emitTxStatusEVM(tx, 'pending');
+
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    provider.once(tx, (receipt) => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      if (receipt.status === 1) {
+        this.socketGateWay.emitTxStatusEVM(tx, 'success');
+      } else {
+        this.socketGateWay.emitTxStatusEVM(tx, 'fail');
+      }
+    });
     return generateResponse('success', tx, '200');
   }
 
@@ -298,7 +347,7 @@ export class TransactionService {
           transaction.timestamp,
         ),
         action_transaction:
-          transaction.from === address.toLowerCase() ? 'send' : 'receive',
+          transaction.from === address.toLowerCase() ? '0' : '1',
         from_address: transaction.from,
         to_address: transaction.to,
         fee_network: transaction.gasUsed,
@@ -327,9 +376,9 @@ export class TransactionService {
     });
     const txs = transactionsBTC.map((item) => {
       const transaction_hash = item.txid;
-      const time_transaction = this.dataService.convertUnixToDate(
-        item.status.block_time,
-      );
+      const time_transaction = item.status.block_time
+        ? this.dataService.convertUnixToDate(item.status.block_time)
+        : this.dataService.convertUnixToDate(Math.floor(Date.now() / 1000));
       const action_transaction =
         item.vin[0].prevout.scriptpubkey_address === userAddress ? 0 : 1;
       const from_address = item.vin[0].prevout.scriptpubkey_address;

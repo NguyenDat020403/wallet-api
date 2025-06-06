@@ -375,6 +375,17 @@ export class TokenService {
     }
     return marketData;
   }
+  async getListTokenByWalletId(wallet_id: string) {
+    const wallet_token_network = await this.prisma.wallet_networks.findMany({
+      where: {
+        wallet_id: wallet_id,
+      },
+      include: {
+        networks: true,
+      },
+    });
+    return wallet_token_network;
+  }
   // async getPriceFeedId(symbol: string): Promise<string | null> {
   //   try {
   //     const query = `Crypto.${symbol.toLocaleUpperCase()}/USD`;

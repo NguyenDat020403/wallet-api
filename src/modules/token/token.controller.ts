@@ -30,6 +30,16 @@ export class TokenController {
   async resetDatabase() {
     return await this.tokenService.resetDatabase();
   }
+  @Post('listWalletToken')
+  async getListTokenByWalletId(@Body() dto: { wallet_id: string }) {
+    const response = await this.tokenService.getListTokenByWalletId(
+      dto.wallet_id,
+    );
+    if (!response) {
+      return generateResponse('fail to load tokens', '', '200', '1');
+    }
+    return generateResponse('success', response, '200', '0');
+  }
 
   // API: GET /tokens/market?symbol=usdt
   @Post('market')

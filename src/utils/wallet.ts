@@ -3,6 +3,9 @@ import * as bip39 from 'bip39';
 import * as ecc from 'tiny-secp256k1';
 import { BigNumberish, ethers } from 'ethers';
 import * as bitcoin from 'bitcoinjs-lib';
+import axios, { AxiosResponse } from 'axios';
+import { BalanceBTC } from './types';
+import { ConfigService } from '@nestjs/config';
 
 export async function CreateWallet() {
   const mnemonic = bip39.generateMnemonic();
@@ -130,6 +133,7 @@ export async function getBalanceV1(
   contract_address?: string,
   decimals?: number,
 ): Promise<string> {
+  const config = new ConfigService();
   if (networkSymbol !== 'BTC') {
     const provider = new ethers.JsonRpcProvider(network_rpcURL);
     if (!contract_address) {
@@ -146,15 +150,19 @@ export async function getBalanceV1(
       return ethers.formatUnits(balance as BigNumberish, decimals);
     }
   } else if (networkSymbol === 'BTC') {
-    const res = await fetch(
-      `https://mempool.space/testnet/api/address/${address}`,
+    const res: AxiosResponse<BalanceBTC> = await axios.get(
+      `${config.get('API_MEMPOOL_BASE')}/address/${address}`,
     );
-    const data: { chain_stats: { funded_txo_sum; spent_txo_sum } } =
-      await res.json();
-    const balance =
-      data.chain_stats.funded_txo_sum - data.chain_stats.spent_txo_sum;
-    console.log((balance / 1e8).toFixed(8));
-    return (balance / 1e8).toFixed(8);
+
+    if (res.data) {
+      const balance =
+        res.data.chain_stats.funded_txo_sum -
+        res.data.chain_stats.spent_txo_sum;
+      console.log((balance / 1e8).toFixed(8));
+      return (balance / 1e8).toFixed(8);
+    } else {
+      return '0';
+    }
   }
 
   throw new Error('Unsupported network');

@@ -493,9 +493,13 @@ export async function getTransactionByHash(
     const provider = new ethers.JsonRpcProvider(config.rpc_url);
     const blockData = await provider.getBlock(tx.blockNumber, false);
     const convertValue = (value: string) => {
+      console.log(value);
       const valueBigInt = BigInt(value);
-      return (Number(valueBigInt) / Math.pow(10, token_decimals!)).toString();
+      const decimalValue = Number(valueBigInt) / Math.pow(10, token_decimals!);
+
+      return decimalValue.toString();
     };
+
     const gasUsed = receipt ? BigInt(receipt.gasUsed) : BigInt(0);
     const gasPrice = BigInt(tx.gasPrice);
     const feeNetworkBigInt = gasUsed * gasPrice;
