@@ -1,8 +1,8 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { JwtGuard } from 'src/guards';
 import { SwapService } from './swap.service';
 import { generateResponse } from 'src/utils/response';
-import { SwapTokenDto } from './swap.dto';
+import { SwapInfoDto, SwapTokenDto } from './swap.dto';
 
 @UseGuards(JwtGuard)
 @Controller('swaps')
@@ -10,18 +10,29 @@ export class SwapController {
   constructor(private swapService: SwapService) {}
   @Post('swap')
   async swap(@Body() body: SwapTokenDto) {
-    const receipt = await this.swapService.swapTokens({
-      chain_id: body.chain_id, // 'bscTestnet' hoặc 'polygonMumbai'
+    const response = await this.swapService.swapTokens({
+      rpc_url: body.rpc_url,
       privateKey: body.privateKey,
       tokenIn: body.tokenIn,
-      tokenOut: body.tokenOut,
       amountInDecimal: body.amountInDecimal,
-      slippagePercent: body.slippagePercent,
-      recipientAddress: body.recipientAddress,
+      isSwapAtoB: body.isSwapAtoB,
     });
-    if (!receipt) {
+    if (!response) {
       return generateResponse('swap failed', '', '200', '1');
     }
-    return generateResponse('success', { receipt: receipt }, '200', '0');
+    return generateResponse('success', response, '200', '0');
+  }
+  // @Get('info') https
+  @Post('info')
+  async swapInfo(@Body() body: SwapInfoDto) {
+    console.log(body);
+    const response = await this.swapService.getSwapInfo({
+      rpc_url: body.rpc_url,
+      contract_address: body.contract_address,
+    });
+    if (!response) {
+      return generateResponse('swap failed', '', '200', '1');
+    }
+    return generateResponse('success', response, '200', '0');
   }
 }

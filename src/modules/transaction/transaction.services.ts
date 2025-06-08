@@ -308,6 +308,7 @@ export class TransactionService {
     address: string,
     chain_id: string,
     token_id?: string,
+    rpc_url?: string,
   ) {
     if (chain_id === '0') {
       const transaction = await getCurrentTransactionBTC(tx);
@@ -331,6 +332,7 @@ export class TransactionService {
         chain_id,
         this.networkConfigService,
         token?.decimals,
+        rpc_url,
       );
       if (!transaction) {
         return generateResponse('fail to load transaction', '', '200', '1');

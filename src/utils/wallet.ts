@@ -150,8 +150,11 @@ export async function getBalanceV1(
       return ethers.formatUnits(balance as BigNumberish, decimals);
     }
   } else if (networkSymbol === 'BTC') {
+    // const res: AxiosResponse<BalanceBTC> = await axios.get(
+    //   `${config.get('API_MEMPOOL_BASE')}/address/${address}`,
+    // );
     const res: AxiosResponse<BalanceBTC> = await axios.get(
-      `${config.get('API_MEMPOOL_BASE')}/address/${address}`,
+      `https://blockstream.info/testnet/api/address/${address}`,
     );
 
     if (res.data) {

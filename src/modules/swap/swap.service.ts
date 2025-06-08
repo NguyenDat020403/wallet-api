@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { JwtGuard } from 'src/guards';
 import { PrismaService } from 'src/modules/prisma/prisma.service';
-import { swapTokenToToken } from 'src/utils/swap';
+import { getSwapInfo, swapTokenToToken } from 'src/utils/swap';
 
 @UseGuards(JwtGuard)
 @Injectable()
@@ -14,43 +14,32 @@ export class SwapService {
     private config: ConfigService,
   ) {}
   async swapTokens(params: {
-    chain_id: string;
+    rpc_url: string;
     privateKey: string;
     tokenIn: string;
-    tokenOut: string;
-    amountInDecimal: string; // vd: '0.1'
-    slippagePercent?: number;
-    recipientAddress: string;
+    amountInDecimal: string;
+    isSwapAtoB?: boolean;
   }) {
-    const {
-      chain_id,
-      privateKey,
-      tokenIn,
-      tokenOut,
-      amountInDecimal,
-      slippagePercent = 1,
-      recipientAddress,
-    } = params;
-
-    const network = await this.prisma.networks.findFirst({
-      where: { chain_id: chain_id },
-    });
-    if (!network) {
-      return null;
-    }
+    const { rpc_url, privateKey, tokenIn, amountInDecimal, isSwapAtoB } =
+      params;
     const swapResult = await swapTokenToToken(
-      network.rpc_url,
+      rpc_url,
       privateKey,
-      chain_id,
       tokenIn,
-      tokenOut,
       amountInDecimal,
-      slippagePercent,
-      recipientAddress,
+      isSwapAtoB,
     );
-    if (!swapResult) {
-      return null;
-    }
     return swapResult;
+  }
+  async getSwapInfo(params: { rpc_url: string; contract_address: string }) {
+    const data = await getSwapInfo(params.rpc_url, params.contract_address);
+    const tokens = await this.prisma.tokens.findMany({
+      where: {
+        token_name: {
+          in: ['TokenA', 'TokenVND'],
+        },
+      },
+    });
+    return { data, tokens };
   }
 }

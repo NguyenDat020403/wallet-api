@@ -92,6 +92,7 @@ export interface TransactionHistoryRequest extends TransactionRequest {
 }
 export interface CurrentTransactionRequest extends TransactionHistoryRequest {
   tx: string;
+  rpc_url?: string;
 }
 export interface TransactionHistory {
   txid: string;

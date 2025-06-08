@@ -10,7 +10,10 @@ import { CreateWallet, importWallet } from 'src/utils/wallet';
 import { GetWalletRequest, ImportWalletDto } from './wallet.dto';
 import { NetworkService } from '../network/network.services';
 import { TokenService } from '../token/token.service';
-import { Decimal } from 'generated/prisma/runtime/library';
+
+import pLimit from 'p-limit';
+const limit = pLimit(2);
+
 @UseGuards(JwtGuard)
 @Injectable()
 export class WalletService {
@@ -199,7 +202,7 @@ export class WalletService {
         wallet_id: wallet?.wallet_id,
       },
       data: {
-        wallet_balance: totalBalance,
+        wallet_balance: totalBalance ? totalBalance : 0,
       },
     });
     // if (Decimal(totalBalance) !== wallet?.wallet_balance) {

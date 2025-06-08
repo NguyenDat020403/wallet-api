@@ -8,11 +8,20 @@ import {
   //   QueryTokensDto,
 } from './token.dto';
 import { generateResponse } from 'src/utils/response';
+import { SwapService } from '../swap/swap.service';
+import {
+  GetTokenByNetworkIdDto,
+  SwapInfoDto,
+  SwapTokenDto,
+} from '../swap/swap.dto';
 
 @UseGuards(JwtGuard)
 @Controller('tokens')
 export class TokenController {
-  constructor(private tokenService: TokenService) {}
+  constructor(
+    private tokenService: TokenService,
+    private swapService: SwapService,
+  ) {}
   @Post('create')
   async createToken(@Body() body: QueryTokenFromAddressDto) {
     return await this.tokenService.findOrCreateIfNotExist(body);
@@ -49,6 +58,45 @@ export class TokenController {
       generateResponse('fail to load market data', '', '200', '1');
     }
 
+    return generateResponse('success', response, '200', '0');
+  }
+  @Post('swap')
+  async swap(@Body() body: SwapTokenDto) {
+    const response = await this.swapService.swapTokens({
+      rpc_url: body.rpc_url,
+      privateKey: body.privateKey,
+      tokenIn: body.tokenIn,
+      amountInDecimal: body.amountInDecimal,
+      isSwapAtoB: body.isSwapAtoB,
+    });
+    if (!response) {
+      return generateResponse('swap failed', '', '200', '1');
+    }
+    return generateResponse('success', response, '200', '0');
+  }
+  // @Get('info') https
+  @Post('info')
+  async swapInfo(@Body() body: SwapInfoDto) {
+    console.log(body);
+    const response = await this.swapService.getSwapInfo({
+      rpc_url: body.rpc_url,
+      contract_address: body.contract_address,
+    });
+    if (!response) {
+      return generateResponse('swap failed', '', '200', '1');
+    }
+    return generateResponse('success', response, '200', '0');
+  }
+  @Post('tokenByNetwork')
+  async getTokenByNetwork(@Body() body: GetTokenByNetworkIdDto) {
+    console.log(body);
+    const response = await this.tokenService.getTokenByNetworkId(
+      body.network_id,
+      body.wallet_id,
+    );
+    if (!response) {
+      return generateResponse('load failed', '', '200', '1');
+    }
     return generateResponse('success', response, '200', '0');
   }
 }

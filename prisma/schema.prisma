@@ -81,12 +81,12 @@ model users {
   notiToken          String?         @db.VarChar
   biometricPublicKey String?         @db.VarChar(512)
   audit_logs         audit_logs[]
-  networks           networks[]
-  wallets            wallets[]
-  comments           comments[]
-  posts              posts[]
-  post_likes         post_likes[]
   comment_likes      comment_likes[]
+  comments           comments[]
+  networks           networks[]
+  post_likes         post_likes[]
+  posts              posts[]
+  wallets            wallets[]
 }
 
 model wallet_network_tokens {
@@ -125,6 +125,7 @@ model wallets {
   created_at            DateTime?               @default(now()) @db.Timestamp(6)
   updated_at            DateTime?               @default(now()) @db.Timestamp(6)
   deleted_at            DateTime?               @db.Timestamp(6)
+  thumbnail             String?                 @db.VarChar
   wallet_network_tokens wallet_network_tokens[]
   wallet_networks       wallet_networks[]
   users                 users?                  @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction)
@@ -133,40 +134,38 @@ model wallets {
 }
 
 model posts {
-  post_id    String    @id @default(uuid()) @db.Uuid
-  user_id    String    @db.Uuid
-  title      String    @db.VarChar(255)
-  content    String    @db.Text
-  created_at DateTime  @default(now()) @db.Timestamp(6)
-  updated_at DateTime  @default(now()) @db.Timestamp(6)
-  deleted_at DateTime? @db.Timestamp(6)
-
-  user     users        @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
-  comments comments[]
-  likes    post_likes[]
-  images   post_images[]
+  post_id    String        @id @default(uuid()) @db.Uuid
+  user_id    String        @db.Uuid
+  title      String        @db.VarChar(255)
+  content    String
+  created_at DateTime      @default(now()) @db.Timestamp(6)
+  updated_at DateTime      @default(now()) @db.Timestamp(6)
+  deleted_at DateTime?     @db.Timestamp(6)
+  comments   comments[]
+  images     post_images[]
+  likes      post_likes[]
+  user       users         @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
 }
-model post_images {
-  image_id String  @id @default(uuid()) @db.Uuid
-  post_id  String  @db.Uuid
-  imageUrl String  @db.Text
-  created_at DateTime @default(now()) @db.Timestamp(6)
 
-  post posts @relation(fields: [post_id], references: [post_id], onDelete: Cascade)
+model post_images {
+  image_id   String   @id @default(uuid()) @db.Uuid
+  post_id    String   @db.Uuid
+  imageUrl   String
+  created_at DateTime @default(now()) @db.Timestamp(6)
+  post       posts    @relation(fields: [post_id], references: [post_id], onDelete: Cascade)
 }
 
 model comments {
-  comment_id String    @id @default(uuid()) @db.Uuid
-  post_id    String    @db.Uuid
-  user_id    String    @db.Uuid
-  content    String    @db.Text
-  created_at DateTime  @default(now()) @db.Timestamp(6)
-  updated_at DateTime  @default(now()) @db.Timestamp(6)
-  deleted_at DateTime? @db.Timestamp(6)
-
-  post  posts           @relation(fields: [post_id], references: [post_id], onDelete: Cascade)
-  user  users           @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
-  likes comment_likes[]
+  comment_id String          @id @default(uuid()) @db.Uuid
+  post_id    String          @db.Uuid
+  user_id    String          @db.Uuid
+  content    String
+  created_at DateTime        @default(now()) @db.Timestamp(6)
+  updated_at DateTime        @default(now()) @db.Timestamp(6)
+  deleted_at DateTime?       @db.Timestamp(6)
+  likes      comment_likes[]
+  post       posts           @relation(fields: [post_id], references: [post_id], onDelete: Cascade)
+  user       users           @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
 }
 
 model post_likes {
@@ -174,9 +173,8 @@ model post_likes {
   post_id      String   @db.Uuid
   user_id      String   @db.Uuid
   created_at   DateTime @default(now()) @db.Timestamp(6)
-
-  post posts @relation(fields: [post_id], references: [post_id], onDelete: Cascade)
-  user users @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+  post         posts    @relation(fields: [post_id], references: [post_id], onDelete: Cascade)
+  user         users    @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
 
   @@unique([post_id, user_id])
 }
@@ -186,9 +184,8 @@ model comment_likes {
   comment_id      String   @db.Uuid
   user_id         String   @db.Uuid
   created_at      DateTime @default(now()) @db.Timestamp(6)
-
-  comment comments @relation(fields: [comment_id], references: [comment_id], onDelete: Cascade)
-  user    users    @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+  comment         comments @relation(fields: [comment_id], references: [comment_id], onDelete: Cascade)
+  user            users    @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
 
   @@unique([comment_id, user_id])
 }

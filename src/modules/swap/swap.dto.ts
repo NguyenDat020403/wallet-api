@@ -1,12 +1,36 @@
-import { IsString } from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsString, IsUUID } from 'class-validator';
 
 export class SwapTokenDto {
   @IsString()
-  chain_id: string;
+  @IsNotEmpty()
+  rpc_url: string;
+  @IsString()
+  @IsNotEmpty()
   privateKey: string;
+  @IsString()
+  @IsNotEmpty()
   tokenIn: string;
-  tokenOut: string;
+  @IsString()
+  @IsNotEmpty()
   amountInDecimal: string;
-  slippagePercent?: number;
-  recipientAddress: string;
+  @IsBoolean()
+  isSwapAtoB: boolean;
+}
+export class SwapInfoDto {
+  @IsString()
+  @IsNotEmpty()
+  rpc_url: string;
+  @IsString()
+  @IsNotEmpty()
+  contract_address: string;
+}
+export class GetTokenByNetworkIdDto {
+  @IsString()
+  @IsNotEmpty()
+  @IsUUID()
+  network_id: string;
+  @IsString()
+  @IsNotEmpty()
+  @IsUUID()
+  wallet_id: string;
 }

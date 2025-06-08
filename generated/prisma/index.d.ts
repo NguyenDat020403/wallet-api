@@ -2064,22 +2064,22 @@ export namespace Prisma {
 
   export type UsersCountOutputType = {
     audit_logs: number
-    networks: number
-    wallets: number
-    comments: number
-    posts: number
-    post_likes: number
     comment_likes: number
+    comments: number
+    networks: number
+    post_likes: number
+    posts: number
+    wallets: number
   }
 
   export type UsersCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     audit_logs?: boolean | UsersCountOutputTypeCountAudit_logsArgs
-    networks?: boolean | UsersCountOutputTypeCountNetworksArgs
-    wallets?: boolean | UsersCountOutputTypeCountWalletsArgs
-    comments?: boolean | UsersCountOutputTypeCountCommentsArgs
-    posts?: boolean | UsersCountOutputTypeCountPostsArgs
-    post_likes?: boolean | UsersCountOutputTypeCountPost_likesArgs
     comment_likes?: boolean | UsersCountOutputTypeCountComment_likesArgs
+    comments?: boolean | UsersCountOutputTypeCountCommentsArgs
+    networks?: boolean | UsersCountOutputTypeCountNetworksArgs
+    post_likes?: boolean | UsersCountOutputTypeCountPost_likesArgs
+    posts?: boolean | UsersCountOutputTypeCountPostsArgs
+    wallets?: boolean | UsersCountOutputTypeCountWalletsArgs
   }
 
   // Custom InputTypes
@@ -2103,15 +2103,8 @@ export namespace Prisma {
   /**
    * UsersCountOutputType without action
    */
-  export type UsersCountOutputTypeCountNetworksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: networksWhereInput
-  }
-
-  /**
-   * UsersCountOutputType without action
-   */
-  export type UsersCountOutputTypeCountWalletsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: walletsWhereInput
+  export type UsersCountOutputTypeCountComment_likesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: comment_likesWhereInput
   }
 
   /**
@@ -2124,8 +2117,8 @@ export namespace Prisma {
   /**
    * UsersCountOutputType without action
    */
-  export type UsersCountOutputTypeCountPostsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: postsWhereInput
+  export type UsersCountOutputTypeCountNetworksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: networksWhereInput
   }
 
   /**
@@ -2138,8 +2131,15 @@ export namespace Prisma {
   /**
    * UsersCountOutputType without action
    */
-  export type UsersCountOutputTypeCountComment_likesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: comment_likesWhereInput
+  export type UsersCountOutputTypeCountPostsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: postsWhereInput
+  }
+
+  /**
+   * UsersCountOutputType without action
+   */
+  export type UsersCountOutputTypeCountWalletsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: walletsWhereInput
   }
 
 
@@ -2189,14 +2189,14 @@ export namespace Prisma {
 
   export type PostsCountOutputType = {
     comments: number
-    likes: number
     images: number
+    likes: number
   }
 
   export type PostsCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     comments?: boolean | PostsCountOutputTypeCountCommentsArgs
-    likes?: boolean | PostsCountOutputTypeCountLikesArgs
     images?: boolean | PostsCountOutputTypeCountImagesArgs
+    likes?: boolean | PostsCountOutputTypeCountLikesArgs
   }
 
   // Custom InputTypes
@@ -2220,15 +2220,15 @@ export namespace Prisma {
   /**
    * PostsCountOutputType without action
    */
-  export type PostsCountOutputTypeCountLikesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: post_likesWhereInput
+  export type PostsCountOutputTypeCountImagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: post_imagesWhereInput
   }
 
   /**
    * PostsCountOutputType without action
    */
-  export type PostsCountOutputTypeCountImagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: post_imagesWhereInput
+  export type PostsCountOutputTypeCountLikesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: post_likesWhereInput
   }
 
 
@@ -7138,12 +7138,12 @@ export namespace Prisma {
     notiToken?: boolean
     biometricPublicKey?: boolean
     audit_logs?: boolean | users$audit_logsArgs<ExtArgs>
-    networks?: boolean | users$networksArgs<ExtArgs>
-    wallets?: boolean | users$walletsArgs<ExtArgs>
-    comments?: boolean | users$commentsArgs<ExtArgs>
-    posts?: boolean | users$postsArgs<ExtArgs>
-    post_likes?: boolean | users$post_likesArgs<ExtArgs>
     comment_likes?: boolean | users$comment_likesArgs<ExtArgs>
+    comments?: boolean | users$commentsArgs<ExtArgs>
+    networks?: boolean | users$networksArgs<ExtArgs>
+    post_likes?: boolean | users$post_likesArgs<ExtArgs>
+    posts?: boolean | users$postsArgs<ExtArgs>
+    wallets?: boolean | users$walletsArgs<ExtArgs>
     _count?: boolean | UsersCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["users"]>
 
@@ -7192,12 +7192,12 @@ export namespace Prisma {
   export type usersOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"user_id" | "username" | "avatar" | "bio" | "email" | "password_hash" | "created_at" | "updated_at" | "deleted_at" | "notiToken" | "biometricPublicKey", ExtArgs["result"]["users"]>
   export type usersInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     audit_logs?: boolean | users$audit_logsArgs<ExtArgs>
-    networks?: boolean | users$networksArgs<ExtArgs>
-    wallets?: boolean | users$walletsArgs<ExtArgs>
-    comments?: boolean | users$commentsArgs<ExtArgs>
-    posts?: boolean | users$postsArgs<ExtArgs>
-    post_likes?: boolean | users$post_likesArgs<ExtArgs>
     comment_likes?: boolean | users$comment_likesArgs<ExtArgs>
+    comments?: boolean | users$commentsArgs<ExtArgs>
+    networks?: boolean | users$networksArgs<ExtArgs>
+    post_likes?: boolean | users$post_likesArgs<ExtArgs>
+    posts?: boolean | users$postsArgs<ExtArgs>
+    wallets?: boolean | users$walletsArgs<ExtArgs>
     _count?: boolean | UsersCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type usersIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -7207,12 +7207,12 @@ export namespace Prisma {
     name: "users"
     objects: {
       audit_logs: Prisma.$audit_logsPayload<ExtArgs>[]
-      networks: Prisma.$networksPayload<ExtArgs>[]
-      wallets: Prisma.$walletsPayload<ExtArgs>[]
-      comments: Prisma.$commentsPayload<ExtArgs>[]
-      posts: Prisma.$postsPayload<ExtArgs>[]
-      post_likes: Prisma.$post_likesPayload<ExtArgs>[]
       comment_likes: Prisma.$comment_likesPayload<ExtArgs>[]
+      comments: Prisma.$commentsPayload<ExtArgs>[]
+      networks: Prisma.$networksPayload<ExtArgs>[]
+      post_likes: Prisma.$post_likesPayload<ExtArgs>[]
+      posts: Prisma.$postsPayload<ExtArgs>[]
+      wallets: Prisma.$walletsPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       user_id: string
@@ -7621,12 +7621,12 @@ export namespace Prisma {
   export interface Prisma__usersClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     audit_logs<T extends users$audit_logsArgs<ExtArgs> = {}>(args?: Subset<T, users$audit_logsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$audit_logsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    networks<T extends users$networksArgs<ExtArgs> = {}>(args?: Subset<T, users$networksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$networksPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    wallets<T extends users$walletsArgs<ExtArgs> = {}>(args?: Subset<T, users$walletsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$walletsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    comments<T extends users$commentsArgs<ExtArgs> = {}>(args?: Subset<T, users$commentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$commentsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    posts<T extends users$postsArgs<ExtArgs> = {}>(args?: Subset<T, users$postsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$postsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    post_likes<T extends users$post_likesArgs<ExtArgs> = {}>(args?: Subset<T, users$post_likesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$post_likesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     comment_likes<T extends users$comment_likesArgs<ExtArgs> = {}>(args?: Subset<T, users$comment_likesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$comment_likesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    comments<T extends users$commentsArgs<ExtArgs> = {}>(args?: Subset<T, users$commentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$commentsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    networks<T extends users$networksArgs<ExtArgs> = {}>(args?: Subset<T, users$networksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$networksPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    post_likes<T extends users$post_likesArgs<ExtArgs> = {}>(args?: Subset<T, users$post_likesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$post_likesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    posts<T extends users$postsArgs<ExtArgs> = {}>(args?: Subset<T, users$postsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$postsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    wallets<T extends users$walletsArgs<ExtArgs> = {}>(args?: Subset<T, users$walletsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$walletsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -8079,51 +8079,27 @@ export namespace Prisma {
   }
 
   /**
-   * users.networks
+   * users.comment_likes
    */
-  export type users$networksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type users$comment_likesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the networks
+     * Select specific fields to fetch from the comment_likes
      */
-    select?: networksSelect<ExtArgs> | null
+    select?: comment_likesSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the networks
+     * Omit specific fields from the comment_likes
      */
-    omit?: networksOmit<ExtArgs> | null
+    omit?: comment_likesOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: networksInclude<ExtArgs> | null
-    where?: networksWhereInput
-    orderBy?: networksOrderByWithRelationInput | networksOrderByWithRelationInput[]
-    cursor?: networksWhereUniqueInput
+    include?: comment_likesInclude<ExtArgs> | null
+    where?: comment_likesWhereInput
+    orderBy?: comment_likesOrderByWithRelationInput | comment_likesOrderByWithRelationInput[]
+    cursor?: comment_likesWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: NetworksScalarFieldEnum | NetworksScalarFieldEnum[]
-  }
-
-  /**
-   * users.wallets
-   */
-  export type users$walletsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the wallets
-     */
-    select?: walletsSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the wallets
-     */
-    omit?: walletsOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: walletsInclude<ExtArgs> | null
-    where?: walletsWhereInput
-    orderBy?: walletsOrderByWithRelationInput | walletsOrderByWithRelationInput[]
-    cursor?: walletsWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: WalletsScalarFieldEnum | WalletsScalarFieldEnum[]
+    distinct?: Comment_likesScalarFieldEnum | Comment_likesScalarFieldEnum[]
   }
 
   /**
@@ -8151,27 +8127,27 @@ export namespace Prisma {
   }
 
   /**
-   * users.posts
+   * users.networks
    */
-  export type users$postsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type users$networksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the posts
+     * Select specific fields to fetch from the networks
      */
-    select?: postsSelect<ExtArgs> | null
+    select?: networksSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the posts
+     * Omit specific fields from the networks
      */
-    omit?: postsOmit<ExtArgs> | null
+    omit?: networksOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: postsInclude<ExtArgs> | null
-    where?: postsWhereInput
-    orderBy?: postsOrderByWithRelationInput | postsOrderByWithRelationInput[]
-    cursor?: postsWhereUniqueInput
+    include?: networksInclude<ExtArgs> | null
+    where?: networksWhereInput
+    orderBy?: networksOrderByWithRelationInput | networksOrderByWithRelationInput[]
+    cursor?: networksWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: PostsScalarFieldEnum | PostsScalarFieldEnum[]
+    distinct?: NetworksScalarFieldEnum | NetworksScalarFieldEnum[]
   }
 
   /**
@@ -8199,27 +8175,51 @@ export namespace Prisma {
   }
 
   /**
-   * users.comment_likes
+   * users.posts
    */
-  export type users$comment_likesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type users$postsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the comment_likes
+     * Select specific fields to fetch from the posts
      */
-    select?: comment_likesSelect<ExtArgs> | null
+    select?: postsSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the comment_likes
+     * Omit specific fields from the posts
      */
-    omit?: comment_likesOmit<ExtArgs> | null
+    omit?: postsOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: comment_likesInclude<ExtArgs> | null
-    where?: comment_likesWhereInput
-    orderBy?: comment_likesOrderByWithRelationInput | comment_likesOrderByWithRelationInput[]
-    cursor?: comment_likesWhereUniqueInput
+    include?: postsInclude<ExtArgs> | null
+    where?: postsWhereInput
+    orderBy?: postsOrderByWithRelationInput | postsOrderByWithRelationInput[]
+    cursor?: postsWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: Comment_likesScalarFieldEnum | Comment_likesScalarFieldEnum[]
+    distinct?: PostsScalarFieldEnum | PostsScalarFieldEnum[]
+  }
+
+  /**
+   * users.wallets
+   */
+  export type users$walletsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the wallets
+     */
+    select?: walletsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the wallets
+     */
+    omit?: walletsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: walletsInclude<ExtArgs> | null
+    where?: walletsWhereInput
+    orderBy?: walletsOrderByWithRelationInput | walletsOrderByWithRelationInput[]
+    cursor?: walletsWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: WalletsScalarFieldEnum | WalletsScalarFieldEnum[]
   }
 
   /**
@@ -10526,6 +10526,7 @@ export namespace Prisma {
     created_at: Date | null
     updated_at: Date | null
     deleted_at: Date | null
+    thumbnail: string | null
   }
 
   export type WalletsMaxAggregateOutputType = {
@@ -10538,6 +10539,7 @@ export namespace Prisma {
     created_at: Date | null
     updated_at: Date | null
     deleted_at: Date | null
+    thumbnail: string | null
   }
 
   export type WalletsCountAggregateOutputType = {
@@ -10550,6 +10552,7 @@ export namespace Prisma {
     created_at: number
     updated_at: number
     deleted_at: number
+    thumbnail: number
     _all: number
   }
 
@@ -10572,6 +10575,7 @@ export namespace Prisma {
     created_at?: true
     updated_at?: true
     deleted_at?: true
+    thumbnail?: true
   }
 
   export type WalletsMaxAggregateInputType = {
@@ -10584,6 +10588,7 @@ export namespace Prisma {
     created_at?: true
     updated_at?: true
     deleted_at?: true
+    thumbnail?: true
   }
 
   export type WalletsCountAggregateInputType = {
@@ -10596,6 +10601,7 @@ export namespace Prisma {
     created_at?: true
     updated_at?: true
     deleted_at?: true
+    thumbnail?: true
     _all?: true
   }
 
@@ -10695,6 +10701,7 @@ export namespace Prisma {
     created_at: Date | null
     updated_at: Date | null
     deleted_at: Date | null
+    thumbnail: string | null
     _count: WalletsCountAggregateOutputType | null
     _avg: WalletsAvgAggregateOutputType | null
     _sum: WalletsSumAggregateOutputType | null
@@ -10726,6 +10733,7 @@ export namespace Prisma {
     created_at?: boolean
     updated_at?: boolean
     deleted_at?: boolean
+    thumbnail?: boolean
     wallet_network_tokens?: boolean | wallets$wallet_network_tokensArgs<ExtArgs>
     wallet_networks?: boolean | wallets$wallet_networksArgs<ExtArgs>
     users?: boolean | wallets$usersArgs<ExtArgs>
@@ -10742,6 +10750,7 @@ export namespace Prisma {
     created_at?: boolean
     updated_at?: boolean
     deleted_at?: boolean
+    thumbnail?: boolean
     users?: boolean | wallets$usersArgs<ExtArgs>
   }, ExtArgs["result"]["wallets"]>
 
@@ -10755,6 +10764,7 @@ export namespace Prisma {
     created_at?: boolean
     updated_at?: boolean
     deleted_at?: boolean
+    thumbnail?: boolean
     users?: boolean | wallets$usersArgs<ExtArgs>
   }, ExtArgs["result"]["wallets"]>
 
@@ -10768,9 +10778,10 @@ export namespace Prisma {
     created_at?: boolean
     updated_at?: boolean
     deleted_at?: boolean
+    thumbnail?: boolean
   }
 
-  export type walletsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"wallet_id" | "user_id" | "wallet_name" | "wallet_balance" | "wallet_address" | "wallet_phrase" | "created_at" | "updated_at" | "deleted_at", ExtArgs["result"]["wallets"]>
+  export type walletsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"wallet_id" | "user_id" | "wallet_name" | "wallet_balance" | "wallet_address" | "wallet_phrase" | "created_at" | "updated_at" | "deleted_at" | "thumbnail", ExtArgs["result"]["wallets"]>
   export type walletsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     wallet_network_tokens?: boolean | wallets$wallet_network_tokensArgs<ExtArgs>
     wallet_networks?: boolean | wallets$wallet_networksArgs<ExtArgs>
@@ -10801,6 +10812,7 @@ export namespace Prisma {
       created_at: Date | null
       updated_at: Date | null
       deleted_at: Date | null
+      thumbnail: string | null
     }, ExtArgs["result"]["wallets"]>
     composites: {}
   }
@@ -11236,6 +11248,7 @@ export namespace Prisma {
     readonly created_at: FieldRef<"wallets", 'DateTime'>
     readonly updated_at: FieldRef<"wallets", 'DateTime'>
     readonly deleted_at: FieldRef<"wallets", 'DateTime'>
+    readonly thumbnail: FieldRef<"wallets", 'String'>
   }
     
 
@@ -11897,10 +11910,10 @@ export namespace Prisma {
     created_at?: boolean
     updated_at?: boolean
     deleted_at?: boolean
-    user?: boolean | usersDefaultArgs<ExtArgs>
     comments?: boolean | posts$commentsArgs<ExtArgs>
-    likes?: boolean | posts$likesArgs<ExtArgs>
     images?: boolean | posts$imagesArgs<ExtArgs>
+    likes?: boolean | posts$likesArgs<ExtArgs>
+    user?: boolean | usersDefaultArgs<ExtArgs>
     _count?: boolean | PostsCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["posts"]>
 
@@ -11938,10 +11951,10 @@ export namespace Prisma {
 
   export type postsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"post_id" | "user_id" | "title" | "content" | "created_at" | "updated_at" | "deleted_at", ExtArgs["result"]["posts"]>
   export type postsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | usersDefaultArgs<ExtArgs>
     comments?: boolean | posts$commentsArgs<ExtArgs>
-    likes?: boolean | posts$likesArgs<ExtArgs>
     images?: boolean | posts$imagesArgs<ExtArgs>
+    likes?: boolean | posts$likesArgs<ExtArgs>
+    user?: boolean | usersDefaultArgs<ExtArgs>
     _count?: boolean | PostsCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type postsIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -11954,10 +11967,10 @@ export namespace Prisma {
   export type $postsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "posts"
     objects: {
-      user: Prisma.$usersPayload<ExtArgs>
       comments: Prisma.$commentsPayload<ExtArgs>[]
-      likes: Prisma.$post_likesPayload<ExtArgs>[]
       images: Prisma.$post_imagesPayload<ExtArgs>[]
+      likes: Prisma.$post_likesPayload<ExtArgs>[]
+      user: Prisma.$usersPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       post_id: string
@@ -12361,10 +12374,10 @@ export namespace Prisma {
    */
   export interface Prisma__postsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    user<T extends usersDefaultArgs<ExtArgs> = {}>(args?: Subset<T, usersDefaultArgs<ExtArgs>>): Prisma__usersClient<$Result.GetResult<Prisma.$usersPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     comments<T extends posts$commentsArgs<ExtArgs> = {}>(args?: Subset<T, posts$commentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$commentsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    likes<T extends posts$likesArgs<ExtArgs> = {}>(args?: Subset<T, posts$likesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$post_likesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     images<T extends posts$imagesArgs<ExtArgs> = {}>(args?: Subset<T, posts$imagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$post_imagesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    likes<T extends posts$likesArgs<ExtArgs> = {}>(args?: Subset<T, posts$likesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$post_likesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    user<T extends usersDefaultArgs<ExtArgs> = {}>(args?: Subset<T, usersDefaultArgs<ExtArgs>>): Prisma__usersClient<$Result.GetResult<Prisma.$usersPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -12821,30 +12834,6 @@ export namespace Prisma {
   }
 
   /**
-   * posts.likes
-   */
-  export type posts$likesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the post_likes
-     */
-    select?: post_likesSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the post_likes
-     */
-    omit?: post_likesOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: post_likesInclude<ExtArgs> | null
-    where?: post_likesWhereInput
-    orderBy?: post_likesOrderByWithRelationInput | post_likesOrderByWithRelationInput[]
-    cursor?: post_likesWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: Post_likesScalarFieldEnum | Post_likesScalarFieldEnum[]
-  }
-
-  /**
    * posts.images
    */
   export type posts$imagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -12866,6 +12855,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: Post_imagesScalarFieldEnum | Post_imagesScalarFieldEnum[]
+  }
+
+  /**
+   * posts.likes
+   */
+  export type posts$likesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the post_likes
+     */
+    select?: post_likesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the post_likes
+     */
+    omit?: post_likesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: post_likesInclude<ExtArgs> | null
+    where?: post_likesWhereInput
+    orderBy?: post_likesOrderByWithRelationInput | post_likesOrderByWithRelationInput[]
+    cursor?: post_likesWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Post_likesScalarFieldEnum | Post_likesScalarFieldEnum[]
   }
 
   /**
@@ -14112,9 +14125,9 @@ export namespace Prisma {
     created_at?: boolean
     updated_at?: boolean
     deleted_at?: boolean
+    likes?: boolean | comments$likesArgs<ExtArgs>
     post?: boolean | postsDefaultArgs<ExtArgs>
     user?: boolean | usersDefaultArgs<ExtArgs>
-    likes?: boolean | comments$likesArgs<ExtArgs>
     _count?: boolean | CommentsCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["comments"]>
 
@@ -14154,9 +14167,9 @@ export namespace Prisma {
 
   export type commentsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"comment_id" | "post_id" | "user_id" | "content" | "created_at" | "updated_at" | "deleted_at", ExtArgs["result"]["comments"]>
   export type commentsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    likes?: boolean | comments$likesArgs<ExtArgs>
     post?: boolean | postsDefaultArgs<ExtArgs>
     user?: boolean | usersDefaultArgs<ExtArgs>
-    likes?: boolean | comments$likesArgs<ExtArgs>
     _count?: boolean | CommentsCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type commentsIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -14171,9 +14184,9 @@ export namespace Prisma {
   export type $commentsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "comments"
     objects: {
+      likes: Prisma.$comment_likesPayload<ExtArgs>[]
       post: Prisma.$postsPayload<ExtArgs>
       user: Prisma.$usersPayload<ExtArgs>
-      likes: Prisma.$comment_likesPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       comment_id: string
@@ -14577,9 +14590,9 @@ export namespace Prisma {
    */
   export interface Prisma__commentsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    likes<T extends comments$likesArgs<ExtArgs> = {}>(args?: Subset<T, comments$likesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$comment_likesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     post<T extends postsDefaultArgs<ExtArgs> = {}>(args?: Subset<T, postsDefaultArgs<ExtArgs>>): Prisma__postsClient<$Result.GetResult<Prisma.$postsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     user<T extends usersDefaultArgs<ExtArgs> = {}>(args?: Subset<T, usersDefaultArgs<ExtArgs>>): Prisma__usersClient<$Result.GetResult<Prisma.$usersPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    likes<T extends comments$likesArgs<ExtArgs> = {}>(args?: Subset<T, comments$likesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$comment_likesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -17283,7 +17296,8 @@ export namespace Prisma {
     wallet_phrase: 'wallet_phrase',
     created_at: 'created_at',
     updated_at: 'updated_at',
-    deleted_at: 'deleted_at'
+    deleted_at: 'deleted_at',
+    thumbnail: 'thumbnail'
   };
 
   export type WalletsScalarFieldEnum = (typeof WalletsScalarFieldEnum)[keyof typeof WalletsScalarFieldEnum]
@@ -17785,12 +17799,12 @@ export namespace Prisma {
     notiToken?: StringNullableFilter<"users"> | string | null
     biometricPublicKey?: StringNullableFilter<"users"> | string | null
     audit_logs?: Audit_logsListRelationFilter
-    networks?: NetworksListRelationFilter
-    wallets?: WalletsListRelationFilter
-    comments?: CommentsListRelationFilter
-    posts?: PostsListRelationFilter
-    post_likes?: Post_likesListRelationFilter
     comment_likes?: Comment_likesListRelationFilter
+    comments?: CommentsListRelationFilter
+    networks?: NetworksListRelationFilter
+    post_likes?: Post_likesListRelationFilter
+    posts?: PostsListRelationFilter
+    wallets?: WalletsListRelationFilter
   }
 
   export type usersOrderByWithRelationInput = {
@@ -17806,12 +17820,12 @@ export namespace Prisma {
     notiToken?: SortOrderInput | SortOrder
     biometricPublicKey?: SortOrderInput | SortOrder
     audit_logs?: audit_logsOrderByRelationAggregateInput
-    networks?: networksOrderByRelationAggregateInput
-    wallets?: walletsOrderByRelationAggregateInput
-    comments?: commentsOrderByRelationAggregateInput
-    posts?: postsOrderByRelationAggregateInput
-    post_likes?: post_likesOrderByRelationAggregateInput
     comment_likes?: comment_likesOrderByRelationAggregateInput
+    comments?: commentsOrderByRelationAggregateInput
+    networks?: networksOrderByRelationAggregateInput
+    post_likes?: post_likesOrderByRelationAggregateInput
+    posts?: postsOrderByRelationAggregateInput
+    wallets?: walletsOrderByRelationAggregateInput
   }
 
   export type usersWhereUniqueInput = Prisma.AtLeast<{
@@ -17830,12 +17844,12 @@ export namespace Prisma {
     notiToken?: StringNullableFilter<"users"> | string | null
     biometricPublicKey?: StringNullableFilter<"users"> | string | null
     audit_logs?: Audit_logsListRelationFilter
-    networks?: NetworksListRelationFilter
-    wallets?: WalletsListRelationFilter
-    comments?: CommentsListRelationFilter
-    posts?: PostsListRelationFilter
-    post_likes?: Post_likesListRelationFilter
     comment_likes?: Comment_likesListRelationFilter
+    comments?: CommentsListRelationFilter
+    networks?: NetworksListRelationFilter
+    post_likes?: Post_likesListRelationFilter
+    posts?: PostsListRelationFilter
+    wallets?: WalletsListRelationFilter
   }, "user_id" | "email">
 
   export type usersOrderByWithAggregationInput = {
@@ -18010,6 +18024,7 @@ export namespace Prisma {
     created_at?: DateTimeNullableFilter<"wallets"> | Date | string | null
     updated_at?: DateTimeNullableFilter<"wallets"> | Date | string | null
     deleted_at?: DateTimeNullableFilter<"wallets"> | Date | string | null
+    thumbnail?: StringNullableFilter<"wallets"> | string | null
     wallet_network_tokens?: Wallet_network_tokensListRelationFilter
     wallet_networks?: Wallet_networksListRelationFilter
     users?: XOR<UsersNullableScalarRelationFilter, usersWhereInput> | null
@@ -18025,6 +18040,7 @@ export namespace Prisma {
     created_at?: SortOrderInput | SortOrder
     updated_at?: SortOrderInput | SortOrder
     deleted_at?: SortOrderInput | SortOrder
+    thumbnail?: SortOrderInput | SortOrder
     wallet_network_tokens?: wallet_network_tokensOrderByRelationAggregateInput
     wallet_networks?: wallet_networksOrderByRelationAggregateInput
     users?: usersOrderByWithRelationInput
@@ -18043,6 +18059,7 @@ export namespace Prisma {
     created_at?: DateTimeNullableFilter<"wallets"> | Date | string | null
     updated_at?: DateTimeNullableFilter<"wallets"> | Date | string | null
     deleted_at?: DateTimeNullableFilter<"wallets"> | Date | string | null
+    thumbnail?: StringNullableFilter<"wallets"> | string | null
     wallet_network_tokens?: Wallet_network_tokensListRelationFilter
     wallet_networks?: Wallet_networksListRelationFilter
     users?: XOR<UsersNullableScalarRelationFilter, usersWhereInput> | null
@@ -18058,6 +18075,7 @@ export namespace Prisma {
     created_at?: SortOrderInput | SortOrder
     updated_at?: SortOrderInput | SortOrder
     deleted_at?: SortOrderInput | SortOrder
+    thumbnail?: SortOrderInput | SortOrder
     _count?: walletsCountOrderByAggregateInput
     _avg?: walletsAvgOrderByAggregateInput
     _max?: walletsMaxOrderByAggregateInput
@@ -18078,6 +18096,7 @@ export namespace Prisma {
     created_at?: DateTimeNullableWithAggregatesFilter<"wallets"> | Date | string | null
     updated_at?: DateTimeNullableWithAggregatesFilter<"wallets"> | Date | string | null
     deleted_at?: DateTimeNullableWithAggregatesFilter<"wallets"> | Date | string | null
+    thumbnail?: StringNullableWithAggregatesFilter<"wallets"> | string | null
   }
 
   export type postsWhereInput = {
@@ -18091,10 +18110,10 @@ export namespace Prisma {
     created_at?: DateTimeFilter<"posts"> | Date | string
     updated_at?: DateTimeFilter<"posts"> | Date | string
     deleted_at?: DateTimeNullableFilter<"posts"> | Date | string | null
-    user?: XOR<UsersScalarRelationFilter, usersWhereInput>
     comments?: CommentsListRelationFilter
-    likes?: Post_likesListRelationFilter
     images?: Post_imagesListRelationFilter
+    likes?: Post_likesListRelationFilter
+    user?: XOR<UsersScalarRelationFilter, usersWhereInput>
   }
 
   export type postsOrderByWithRelationInput = {
@@ -18105,10 +18124,10 @@ export namespace Prisma {
     created_at?: SortOrder
     updated_at?: SortOrder
     deleted_at?: SortOrderInput | SortOrder
-    user?: usersOrderByWithRelationInput
     comments?: commentsOrderByRelationAggregateInput
-    likes?: post_likesOrderByRelationAggregateInput
     images?: post_imagesOrderByRelationAggregateInput
+    likes?: post_likesOrderByRelationAggregateInput
+    user?: usersOrderByWithRelationInput
   }
 
   export type postsWhereUniqueInput = Prisma.AtLeast<{
@@ -18122,10 +18141,10 @@ export namespace Prisma {
     created_at?: DateTimeFilter<"posts"> | Date | string
     updated_at?: DateTimeFilter<"posts"> | Date | string
     deleted_at?: DateTimeNullableFilter<"posts"> | Date | string | null
-    user?: XOR<UsersScalarRelationFilter, usersWhereInput>
     comments?: CommentsListRelationFilter
-    likes?: Post_likesListRelationFilter
     images?: Post_imagesListRelationFilter
+    likes?: Post_likesListRelationFilter
+    user?: XOR<UsersScalarRelationFilter, usersWhereInput>
   }, "post_id">
 
   export type postsOrderByWithAggregationInput = {
@@ -18215,9 +18234,9 @@ export namespace Prisma {
     created_at?: DateTimeFilter<"comments"> | Date | string
     updated_at?: DateTimeFilter<"comments"> | Date | string
     deleted_at?: DateTimeNullableFilter<"comments"> | Date | string | null
+    likes?: Comment_likesListRelationFilter
     post?: XOR<PostsScalarRelationFilter, postsWhereInput>
     user?: XOR<UsersScalarRelationFilter, usersWhereInput>
-    likes?: Comment_likesListRelationFilter
   }
 
   export type commentsOrderByWithRelationInput = {
@@ -18228,9 +18247,9 @@ export namespace Prisma {
     created_at?: SortOrder
     updated_at?: SortOrder
     deleted_at?: SortOrderInput | SortOrder
+    likes?: comment_likesOrderByRelationAggregateInput
     post?: postsOrderByWithRelationInput
     user?: usersOrderByWithRelationInput
-    likes?: comment_likesOrderByRelationAggregateInput
   }
 
   export type commentsWhereUniqueInput = Prisma.AtLeast<{
@@ -18244,9 +18263,9 @@ export namespace Prisma {
     created_at?: DateTimeFilter<"comments"> | Date | string
     updated_at?: DateTimeFilter<"comments"> | Date | string
     deleted_at?: DateTimeNullableFilter<"comments"> | Date | string | null
+    likes?: Comment_likesListRelationFilter
     post?: XOR<PostsScalarRelationFilter, postsWhereInput>
     user?: XOR<UsersScalarRelationFilter, usersWhereInput>
-    likes?: Comment_likesListRelationFilter
   }, "comment_id">
 
   export type commentsOrderByWithAggregationInput = {
@@ -18744,12 +18763,12 @@ export namespace Prisma {
     notiToken?: string | null
     biometricPublicKey?: string | null
     audit_logs?: audit_logsCreateNestedManyWithoutUsersInput
-    networks?: networksCreateNestedManyWithoutUsersInput
-    wallets?: walletsCreateNestedManyWithoutUsersInput
-    comments?: commentsCreateNestedManyWithoutUserInput
-    posts?: postsCreateNestedManyWithoutUserInput
-    post_likes?: post_likesCreateNestedManyWithoutUserInput
     comment_likes?: comment_likesCreateNestedManyWithoutUserInput
+    comments?: commentsCreateNestedManyWithoutUserInput
+    networks?: networksCreateNestedManyWithoutUsersInput
+    post_likes?: post_likesCreateNestedManyWithoutUserInput
+    posts?: postsCreateNestedManyWithoutUserInput
+    wallets?: walletsCreateNestedManyWithoutUsersInput
   }
 
   export type usersUncheckedCreateInput = {
@@ -18765,12 +18784,12 @@ export namespace Prisma {
     notiToken?: string | null
     biometricPublicKey?: string | null
     audit_logs?: audit_logsUncheckedCreateNestedManyWithoutUsersInput
-    networks?: networksUncheckedCreateNestedManyWithoutUsersInput
-    wallets?: walletsUncheckedCreateNestedManyWithoutUsersInput
-    comments?: commentsUncheckedCreateNestedManyWithoutUserInput
-    posts?: postsUncheckedCreateNestedManyWithoutUserInput
-    post_likes?: post_likesUncheckedCreateNestedManyWithoutUserInput
     comment_likes?: comment_likesUncheckedCreateNestedManyWithoutUserInput
+    comments?: commentsUncheckedCreateNestedManyWithoutUserInput
+    networks?: networksUncheckedCreateNestedManyWithoutUsersInput
+    post_likes?: post_likesUncheckedCreateNestedManyWithoutUserInput
+    posts?: postsUncheckedCreateNestedManyWithoutUserInput
+    wallets?: walletsUncheckedCreateNestedManyWithoutUsersInput
   }
 
   export type usersUpdateInput = {
@@ -18786,12 +18805,12 @@ export namespace Prisma {
     notiToken?: NullableStringFieldUpdateOperationsInput | string | null
     biometricPublicKey?: NullableStringFieldUpdateOperationsInput | string | null
     audit_logs?: audit_logsUpdateManyWithoutUsersNestedInput
-    networks?: networksUpdateManyWithoutUsersNestedInput
-    wallets?: walletsUpdateManyWithoutUsersNestedInput
-    comments?: commentsUpdateManyWithoutUserNestedInput
-    posts?: postsUpdateManyWithoutUserNestedInput
-    post_likes?: post_likesUpdateManyWithoutUserNestedInput
     comment_likes?: comment_likesUpdateManyWithoutUserNestedInput
+    comments?: commentsUpdateManyWithoutUserNestedInput
+    networks?: networksUpdateManyWithoutUsersNestedInput
+    post_likes?: post_likesUpdateManyWithoutUserNestedInput
+    posts?: postsUpdateManyWithoutUserNestedInput
+    wallets?: walletsUpdateManyWithoutUsersNestedInput
   }
 
   export type usersUncheckedUpdateInput = {
@@ -18807,12 +18826,12 @@ export namespace Prisma {
     notiToken?: NullableStringFieldUpdateOperationsInput | string | null
     biometricPublicKey?: NullableStringFieldUpdateOperationsInput | string | null
     audit_logs?: audit_logsUncheckedUpdateManyWithoutUsersNestedInput
-    networks?: networksUncheckedUpdateManyWithoutUsersNestedInput
-    wallets?: walletsUncheckedUpdateManyWithoutUsersNestedInput
-    comments?: commentsUncheckedUpdateManyWithoutUserNestedInput
-    posts?: postsUncheckedUpdateManyWithoutUserNestedInput
-    post_likes?: post_likesUncheckedUpdateManyWithoutUserNestedInput
     comment_likes?: comment_likesUncheckedUpdateManyWithoutUserNestedInput
+    comments?: commentsUncheckedUpdateManyWithoutUserNestedInput
+    networks?: networksUncheckedUpdateManyWithoutUsersNestedInput
+    post_likes?: post_likesUncheckedUpdateManyWithoutUserNestedInput
+    posts?: postsUncheckedUpdateManyWithoutUserNestedInput
+    wallets?: walletsUncheckedUpdateManyWithoutUsersNestedInput
   }
 
   export type usersCreateManyInput = {
@@ -18981,6 +19000,7 @@ export namespace Prisma {
     created_at?: Date | string | null
     updated_at?: Date | string | null
     deleted_at?: Date | string | null
+    thumbnail?: string | null
     wallet_network_tokens?: wallet_network_tokensCreateNestedManyWithoutWalletsInput
     wallet_networks?: wallet_networksCreateNestedManyWithoutWalletsInput
     users?: usersCreateNestedOneWithoutWalletsInput
@@ -18996,6 +19016,7 @@ export namespace Prisma {
     created_at?: Date | string | null
     updated_at?: Date | string | null
     deleted_at?: Date | string | null
+    thumbnail?: string | null
     wallet_network_tokens?: wallet_network_tokensUncheckedCreateNestedManyWithoutWalletsInput
     wallet_networks?: wallet_networksUncheckedCreateNestedManyWithoutWalletsInput
   }
@@ -19009,6 +19030,7 @@ export namespace Prisma {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    thumbnail?: NullableStringFieldUpdateOperationsInput | string | null
     wallet_network_tokens?: wallet_network_tokensUpdateManyWithoutWalletsNestedInput
     wallet_networks?: wallet_networksUpdateManyWithoutWalletsNestedInput
     users?: usersUpdateOneWithoutWalletsNestedInput
@@ -19024,6 +19046,7 @@ export namespace Prisma {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    thumbnail?: NullableStringFieldUpdateOperationsInput | string | null
     wallet_network_tokens?: wallet_network_tokensUncheckedUpdateManyWithoutWalletsNestedInput
     wallet_networks?: wallet_networksUncheckedUpdateManyWithoutWalletsNestedInput
   }
@@ -19038,6 +19061,7 @@ export namespace Prisma {
     created_at?: Date | string | null
     updated_at?: Date | string | null
     deleted_at?: Date | string | null
+    thumbnail?: string | null
   }
 
   export type walletsUpdateManyMutationInput = {
@@ -19049,6 +19073,7 @@ export namespace Prisma {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    thumbnail?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type walletsUncheckedUpdateManyInput = {
@@ -19061,6 +19086,7 @@ export namespace Prisma {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    thumbnail?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type postsCreateInput = {
@@ -19070,10 +19096,10 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     deleted_at?: Date | string | null
-    user: usersCreateNestedOneWithoutPostsInput
     comments?: commentsCreateNestedManyWithoutPostInput
-    likes?: post_likesCreateNestedManyWithoutPostInput
     images?: post_imagesCreateNestedManyWithoutPostInput
+    likes?: post_likesCreateNestedManyWithoutPostInput
+    user: usersCreateNestedOneWithoutPostsInput
   }
 
   export type postsUncheckedCreateInput = {
@@ -19085,8 +19111,8 @@ export namespace Prisma {
     updated_at?: Date | string
     deleted_at?: Date | string | null
     comments?: commentsUncheckedCreateNestedManyWithoutPostInput
-    likes?: post_likesUncheckedCreateNestedManyWithoutPostInput
     images?: post_imagesUncheckedCreateNestedManyWithoutPostInput
+    likes?: post_likesUncheckedCreateNestedManyWithoutPostInput
   }
 
   export type postsUpdateInput = {
@@ -19096,10 +19122,10 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    user?: usersUpdateOneRequiredWithoutPostsNestedInput
     comments?: commentsUpdateManyWithoutPostNestedInput
-    likes?: post_likesUpdateManyWithoutPostNestedInput
     images?: post_imagesUpdateManyWithoutPostNestedInput
+    likes?: post_likesUpdateManyWithoutPostNestedInput
+    user?: usersUpdateOneRequiredWithoutPostsNestedInput
   }
 
   export type postsUncheckedUpdateInput = {
@@ -19111,8 +19137,8 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     comments?: commentsUncheckedUpdateManyWithoutPostNestedInput
-    likes?: post_likesUncheckedUpdateManyWithoutPostNestedInput
     images?: post_imagesUncheckedUpdateManyWithoutPostNestedInput
+    likes?: post_likesUncheckedUpdateManyWithoutPostNestedInput
   }
 
   export type postsCreateManyInput = {
@@ -19198,9 +19224,9 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     deleted_at?: Date | string | null
+    likes?: comment_likesCreateNestedManyWithoutCommentInput
     post: postsCreateNestedOneWithoutCommentsInput
     user: usersCreateNestedOneWithoutCommentsInput
-    likes?: comment_likesCreateNestedManyWithoutCommentInput
   }
 
   export type commentsUncheckedCreateInput = {
@@ -19220,9 +19246,9 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    likes?: comment_likesUpdateManyWithoutCommentNestedInput
     post?: postsUpdateOneRequiredWithoutCommentsNestedInput
     user?: usersUpdateOneRequiredWithoutCommentsNestedInput
-    likes?: comment_likesUpdateManyWithoutCommentNestedInput
   }
 
   export type commentsUncheckedUpdateInput = {
@@ -19756,16 +19782,10 @@ export namespace Prisma {
     none?: audit_logsWhereInput
   }
 
-  export type NetworksListRelationFilter = {
-    every?: networksWhereInput
-    some?: networksWhereInput
-    none?: networksWhereInput
-  }
-
-  export type WalletsListRelationFilter = {
-    every?: walletsWhereInput
-    some?: walletsWhereInput
-    none?: walletsWhereInput
+  export type Comment_likesListRelationFilter = {
+    every?: comment_likesWhereInput
+    some?: comment_likesWhereInput
+    none?: comment_likesWhereInput
   }
 
   export type CommentsListRelationFilter = {
@@ -19774,10 +19794,10 @@ export namespace Prisma {
     none?: commentsWhereInput
   }
 
-  export type PostsListRelationFilter = {
-    every?: postsWhereInput
-    some?: postsWhereInput
-    none?: postsWhereInput
+  export type NetworksListRelationFilter = {
+    every?: networksWhereInput
+    some?: networksWhereInput
+    none?: networksWhereInput
   }
 
   export type Post_likesListRelationFilter = {
@@ -19786,21 +19806,23 @@ export namespace Prisma {
     none?: post_likesWhereInput
   }
 
-  export type Comment_likesListRelationFilter = {
-    every?: comment_likesWhereInput
-    some?: comment_likesWhereInput
-    none?: comment_likesWhereInput
+  export type PostsListRelationFilter = {
+    every?: postsWhereInput
+    some?: postsWhereInput
+    none?: postsWhereInput
+  }
+
+  export type WalletsListRelationFilter = {
+    every?: walletsWhereInput
+    some?: walletsWhereInput
+    none?: walletsWhereInput
   }
 
   export type audit_logsOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
-  export type networksOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type walletsOrderByRelationAggregateInput = {
+  export type comment_likesOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -19808,7 +19830,7 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
-  export type postsOrderByRelationAggregateInput = {
+  export type networksOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -19816,7 +19838,11 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
-  export type comment_likesOrderByRelationAggregateInput = {
+  export type postsOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type walletsOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -19978,6 +20004,7 @@ export namespace Prisma {
     created_at?: SortOrder
     updated_at?: SortOrder
     deleted_at?: SortOrder
+    thumbnail?: SortOrder
   }
 
   export type walletsAvgOrderByAggregateInput = {
@@ -19994,6 +20021,7 @@ export namespace Prisma {
     created_at?: SortOrder
     updated_at?: SortOrder
     deleted_at?: SortOrder
+    thumbnail?: SortOrder
   }
 
   export type walletsMinOrderByAggregateInput = {
@@ -20006,6 +20034,7 @@ export namespace Prisma {
     created_at?: SortOrder
     updated_at?: SortOrder
     deleted_at?: SortOrder
+    thumbnail?: SortOrder
   }
 
   export type walletsSumOrderByAggregateInput = {
@@ -20023,15 +20052,15 @@ export namespace Prisma {
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
-  export type UsersScalarRelationFilter = {
-    is?: usersWhereInput
-    isNot?: usersWhereInput
-  }
-
   export type Post_imagesListRelationFilter = {
     every?: post_imagesWhereInput
     some?: post_imagesWhereInput
     none?: post_imagesWhereInput
+  }
+
+  export type UsersScalarRelationFilter = {
+    is?: usersWhereInput
+    isNot?: usersWhereInput
   }
 
   export type post_imagesOrderByRelationAggregateInput = {
@@ -20458,18 +20487,11 @@ export namespace Prisma {
     connect?: audit_logsWhereUniqueInput | audit_logsWhereUniqueInput[]
   }
 
-  export type networksCreateNestedManyWithoutUsersInput = {
-    create?: XOR<networksCreateWithoutUsersInput, networksUncheckedCreateWithoutUsersInput> | networksCreateWithoutUsersInput[] | networksUncheckedCreateWithoutUsersInput[]
-    connectOrCreate?: networksCreateOrConnectWithoutUsersInput | networksCreateOrConnectWithoutUsersInput[]
-    createMany?: networksCreateManyUsersInputEnvelope
-    connect?: networksWhereUniqueInput | networksWhereUniqueInput[]
-  }
-
-  export type walletsCreateNestedManyWithoutUsersInput = {
-    create?: XOR<walletsCreateWithoutUsersInput, walletsUncheckedCreateWithoutUsersInput> | walletsCreateWithoutUsersInput[] | walletsUncheckedCreateWithoutUsersInput[]
-    connectOrCreate?: walletsCreateOrConnectWithoutUsersInput | walletsCreateOrConnectWithoutUsersInput[]
-    createMany?: walletsCreateManyUsersInputEnvelope
-    connect?: walletsWhereUniqueInput | walletsWhereUniqueInput[]
+  export type comment_likesCreateNestedManyWithoutUserInput = {
+    create?: XOR<comment_likesCreateWithoutUserInput, comment_likesUncheckedCreateWithoutUserInput> | comment_likesCreateWithoutUserInput[] | comment_likesUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: comment_likesCreateOrConnectWithoutUserInput | comment_likesCreateOrConnectWithoutUserInput[]
+    createMany?: comment_likesCreateManyUserInputEnvelope
+    connect?: comment_likesWhereUniqueInput | comment_likesWhereUniqueInput[]
   }
 
   export type commentsCreateNestedManyWithoutUserInput = {
@@ -20479,11 +20501,11 @@ export namespace Prisma {
     connect?: commentsWhereUniqueInput | commentsWhereUniqueInput[]
   }
 
-  export type postsCreateNestedManyWithoutUserInput = {
-    create?: XOR<postsCreateWithoutUserInput, postsUncheckedCreateWithoutUserInput> | postsCreateWithoutUserInput[] | postsUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: postsCreateOrConnectWithoutUserInput | postsCreateOrConnectWithoutUserInput[]
-    createMany?: postsCreateManyUserInputEnvelope
-    connect?: postsWhereUniqueInput | postsWhereUniqueInput[]
+  export type networksCreateNestedManyWithoutUsersInput = {
+    create?: XOR<networksCreateWithoutUsersInput, networksUncheckedCreateWithoutUsersInput> | networksCreateWithoutUsersInput[] | networksUncheckedCreateWithoutUsersInput[]
+    connectOrCreate?: networksCreateOrConnectWithoutUsersInput | networksCreateOrConnectWithoutUsersInput[]
+    createMany?: networksCreateManyUsersInputEnvelope
+    connect?: networksWhereUniqueInput | networksWhereUniqueInput[]
   }
 
   export type post_likesCreateNestedManyWithoutUserInput = {
@@ -20493,11 +20515,18 @@ export namespace Prisma {
     connect?: post_likesWhereUniqueInput | post_likesWhereUniqueInput[]
   }
 
-  export type comment_likesCreateNestedManyWithoutUserInput = {
-    create?: XOR<comment_likesCreateWithoutUserInput, comment_likesUncheckedCreateWithoutUserInput> | comment_likesCreateWithoutUserInput[] | comment_likesUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: comment_likesCreateOrConnectWithoutUserInput | comment_likesCreateOrConnectWithoutUserInput[]
-    createMany?: comment_likesCreateManyUserInputEnvelope
-    connect?: comment_likesWhereUniqueInput | comment_likesWhereUniqueInput[]
+  export type postsCreateNestedManyWithoutUserInput = {
+    create?: XOR<postsCreateWithoutUserInput, postsUncheckedCreateWithoutUserInput> | postsCreateWithoutUserInput[] | postsUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: postsCreateOrConnectWithoutUserInput | postsCreateOrConnectWithoutUserInput[]
+    createMany?: postsCreateManyUserInputEnvelope
+    connect?: postsWhereUniqueInput | postsWhereUniqueInput[]
+  }
+
+  export type walletsCreateNestedManyWithoutUsersInput = {
+    create?: XOR<walletsCreateWithoutUsersInput, walletsUncheckedCreateWithoutUsersInput> | walletsCreateWithoutUsersInput[] | walletsUncheckedCreateWithoutUsersInput[]
+    connectOrCreate?: walletsCreateOrConnectWithoutUsersInput | walletsCreateOrConnectWithoutUsersInput[]
+    createMany?: walletsCreateManyUsersInputEnvelope
+    connect?: walletsWhereUniqueInput | walletsWhereUniqueInput[]
   }
 
   export type audit_logsUncheckedCreateNestedManyWithoutUsersInput = {
@@ -20507,18 +20536,11 @@ export namespace Prisma {
     connect?: audit_logsWhereUniqueInput | audit_logsWhereUniqueInput[]
   }
 
-  export type networksUncheckedCreateNestedManyWithoutUsersInput = {
-    create?: XOR<networksCreateWithoutUsersInput, networksUncheckedCreateWithoutUsersInput> | networksCreateWithoutUsersInput[] | networksUncheckedCreateWithoutUsersInput[]
-    connectOrCreate?: networksCreateOrConnectWithoutUsersInput | networksCreateOrConnectWithoutUsersInput[]
-    createMany?: networksCreateManyUsersInputEnvelope
-    connect?: networksWhereUniqueInput | networksWhereUniqueInput[]
-  }
-
-  export type walletsUncheckedCreateNestedManyWithoutUsersInput = {
-    create?: XOR<walletsCreateWithoutUsersInput, walletsUncheckedCreateWithoutUsersInput> | walletsCreateWithoutUsersInput[] | walletsUncheckedCreateWithoutUsersInput[]
-    connectOrCreate?: walletsCreateOrConnectWithoutUsersInput | walletsCreateOrConnectWithoutUsersInput[]
-    createMany?: walletsCreateManyUsersInputEnvelope
-    connect?: walletsWhereUniqueInput | walletsWhereUniqueInput[]
+  export type comment_likesUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<comment_likesCreateWithoutUserInput, comment_likesUncheckedCreateWithoutUserInput> | comment_likesCreateWithoutUserInput[] | comment_likesUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: comment_likesCreateOrConnectWithoutUserInput | comment_likesCreateOrConnectWithoutUserInput[]
+    createMany?: comment_likesCreateManyUserInputEnvelope
+    connect?: comment_likesWhereUniqueInput | comment_likesWhereUniqueInput[]
   }
 
   export type commentsUncheckedCreateNestedManyWithoutUserInput = {
@@ -20528,11 +20550,11 @@ export namespace Prisma {
     connect?: commentsWhereUniqueInput | commentsWhereUniqueInput[]
   }
 
-  export type postsUncheckedCreateNestedManyWithoutUserInput = {
-    create?: XOR<postsCreateWithoutUserInput, postsUncheckedCreateWithoutUserInput> | postsCreateWithoutUserInput[] | postsUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: postsCreateOrConnectWithoutUserInput | postsCreateOrConnectWithoutUserInput[]
-    createMany?: postsCreateManyUserInputEnvelope
-    connect?: postsWhereUniqueInput | postsWhereUniqueInput[]
+  export type networksUncheckedCreateNestedManyWithoutUsersInput = {
+    create?: XOR<networksCreateWithoutUsersInput, networksUncheckedCreateWithoutUsersInput> | networksCreateWithoutUsersInput[] | networksUncheckedCreateWithoutUsersInput[]
+    connectOrCreate?: networksCreateOrConnectWithoutUsersInput | networksCreateOrConnectWithoutUsersInput[]
+    createMany?: networksCreateManyUsersInputEnvelope
+    connect?: networksWhereUniqueInput | networksWhereUniqueInput[]
   }
 
   export type post_likesUncheckedCreateNestedManyWithoutUserInput = {
@@ -20542,11 +20564,18 @@ export namespace Prisma {
     connect?: post_likesWhereUniqueInput | post_likesWhereUniqueInput[]
   }
 
-  export type comment_likesUncheckedCreateNestedManyWithoutUserInput = {
-    create?: XOR<comment_likesCreateWithoutUserInput, comment_likesUncheckedCreateWithoutUserInput> | comment_likesCreateWithoutUserInput[] | comment_likesUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: comment_likesCreateOrConnectWithoutUserInput | comment_likesCreateOrConnectWithoutUserInput[]
-    createMany?: comment_likesCreateManyUserInputEnvelope
-    connect?: comment_likesWhereUniqueInput | comment_likesWhereUniqueInput[]
+  export type postsUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<postsCreateWithoutUserInput, postsUncheckedCreateWithoutUserInput> | postsCreateWithoutUserInput[] | postsUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: postsCreateOrConnectWithoutUserInput | postsCreateOrConnectWithoutUserInput[]
+    createMany?: postsCreateManyUserInputEnvelope
+    connect?: postsWhereUniqueInput | postsWhereUniqueInput[]
+  }
+
+  export type walletsUncheckedCreateNestedManyWithoutUsersInput = {
+    create?: XOR<walletsCreateWithoutUsersInput, walletsUncheckedCreateWithoutUsersInput> | walletsCreateWithoutUsersInput[] | walletsUncheckedCreateWithoutUsersInput[]
+    connectOrCreate?: walletsCreateOrConnectWithoutUsersInput | walletsCreateOrConnectWithoutUsersInput[]
+    createMany?: walletsCreateManyUsersInputEnvelope
+    connect?: walletsWhereUniqueInput | walletsWhereUniqueInput[]
   }
 
   export type audit_logsUpdateManyWithoutUsersNestedInput = {
@@ -20563,32 +20592,18 @@ export namespace Prisma {
     deleteMany?: audit_logsScalarWhereInput | audit_logsScalarWhereInput[]
   }
 
-  export type networksUpdateManyWithoutUsersNestedInput = {
-    create?: XOR<networksCreateWithoutUsersInput, networksUncheckedCreateWithoutUsersInput> | networksCreateWithoutUsersInput[] | networksUncheckedCreateWithoutUsersInput[]
-    connectOrCreate?: networksCreateOrConnectWithoutUsersInput | networksCreateOrConnectWithoutUsersInput[]
-    upsert?: networksUpsertWithWhereUniqueWithoutUsersInput | networksUpsertWithWhereUniqueWithoutUsersInput[]
-    createMany?: networksCreateManyUsersInputEnvelope
-    set?: networksWhereUniqueInput | networksWhereUniqueInput[]
-    disconnect?: networksWhereUniqueInput | networksWhereUniqueInput[]
-    delete?: networksWhereUniqueInput | networksWhereUniqueInput[]
-    connect?: networksWhereUniqueInput | networksWhereUniqueInput[]
-    update?: networksUpdateWithWhereUniqueWithoutUsersInput | networksUpdateWithWhereUniqueWithoutUsersInput[]
-    updateMany?: networksUpdateManyWithWhereWithoutUsersInput | networksUpdateManyWithWhereWithoutUsersInput[]
-    deleteMany?: networksScalarWhereInput | networksScalarWhereInput[]
-  }
-
-  export type walletsUpdateManyWithoutUsersNestedInput = {
-    create?: XOR<walletsCreateWithoutUsersInput, walletsUncheckedCreateWithoutUsersInput> | walletsCreateWithoutUsersInput[] | walletsUncheckedCreateWithoutUsersInput[]
-    connectOrCreate?: walletsCreateOrConnectWithoutUsersInput | walletsCreateOrConnectWithoutUsersInput[]
-    upsert?: walletsUpsertWithWhereUniqueWithoutUsersInput | walletsUpsertWithWhereUniqueWithoutUsersInput[]
-    createMany?: walletsCreateManyUsersInputEnvelope
-    set?: walletsWhereUniqueInput | walletsWhereUniqueInput[]
-    disconnect?: walletsWhereUniqueInput | walletsWhereUniqueInput[]
-    delete?: walletsWhereUniqueInput | walletsWhereUniqueInput[]
-    connect?: walletsWhereUniqueInput | walletsWhereUniqueInput[]
-    update?: walletsUpdateWithWhereUniqueWithoutUsersInput | walletsUpdateWithWhereUniqueWithoutUsersInput[]
-    updateMany?: walletsUpdateManyWithWhereWithoutUsersInput | walletsUpdateManyWithWhereWithoutUsersInput[]
-    deleteMany?: walletsScalarWhereInput | walletsScalarWhereInput[]
+  export type comment_likesUpdateManyWithoutUserNestedInput = {
+    create?: XOR<comment_likesCreateWithoutUserInput, comment_likesUncheckedCreateWithoutUserInput> | comment_likesCreateWithoutUserInput[] | comment_likesUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: comment_likesCreateOrConnectWithoutUserInput | comment_likesCreateOrConnectWithoutUserInput[]
+    upsert?: comment_likesUpsertWithWhereUniqueWithoutUserInput | comment_likesUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: comment_likesCreateManyUserInputEnvelope
+    set?: comment_likesWhereUniqueInput | comment_likesWhereUniqueInput[]
+    disconnect?: comment_likesWhereUniqueInput | comment_likesWhereUniqueInput[]
+    delete?: comment_likesWhereUniqueInput | comment_likesWhereUniqueInput[]
+    connect?: comment_likesWhereUniqueInput | comment_likesWhereUniqueInput[]
+    update?: comment_likesUpdateWithWhereUniqueWithoutUserInput | comment_likesUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: comment_likesUpdateManyWithWhereWithoutUserInput | comment_likesUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: comment_likesScalarWhereInput | comment_likesScalarWhereInput[]
   }
 
   export type commentsUpdateManyWithoutUserNestedInput = {
@@ -20605,18 +20620,18 @@ export namespace Prisma {
     deleteMany?: commentsScalarWhereInput | commentsScalarWhereInput[]
   }
 
-  export type postsUpdateManyWithoutUserNestedInput = {
-    create?: XOR<postsCreateWithoutUserInput, postsUncheckedCreateWithoutUserInput> | postsCreateWithoutUserInput[] | postsUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: postsCreateOrConnectWithoutUserInput | postsCreateOrConnectWithoutUserInput[]
-    upsert?: postsUpsertWithWhereUniqueWithoutUserInput | postsUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: postsCreateManyUserInputEnvelope
-    set?: postsWhereUniqueInput | postsWhereUniqueInput[]
-    disconnect?: postsWhereUniqueInput | postsWhereUniqueInput[]
-    delete?: postsWhereUniqueInput | postsWhereUniqueInput[]
-    connect?: postsWhereUniqueInput | postsWhereUniqueInput[]
-    update?: postsUpdateWithWhereUniqueWithoutUserInput | postsUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: postsUpdateManyWithWhereWithoutUserInput | postsUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: postsScalarWhereInput | postsScalarWhereInput[]
+  export type networksUpdateManyWithoutUsersNestedInput = {
+    create?: XOR<networksCreateWithoutUsersInput, networksUncheckedCreateWithoutUsersInput> | networksCreateWithoutUsersInput[] | networksUncheckedCreateWithoutUsersInput[]
+    connectOrCreate?: networksCreateOrConnectWithoutUsersInput | networksCreateOrConnectWithoutUsersInput[]
+    upsert?: networksUpsertWithWhereUniqueWithoutUsersInput | networksUpsertWithWhereUniqueWithoutUsersInput[]
+    createMany?: networksCreateManyUsersInputEnvelope
+    set?: networksWhereUniqueInput | networksWhereUniqueInput[]
+    disconnect?: networksWhereUniqueInput | networksWhereUniqueInput[]
+    delete?: networksWhereUniqueInput | networksWhereUniqueInput[]
+    connect?: networksWhereUniqueInput | networksWhereUniqueInput[]
+    update?: networksUpdateWithWhereUniqueWithoutUsersInput | networksUpdateWithWhereUniqueWithoutUsersInput[]
+    updateMany?: networksUpdateManyWithWhereWithoutUsersInput | networksUpdateManyWithWhereWithoutUsersInput[]
+    deleteMany?: networksScalarWhereInput | networksScalarWhereInput[]
   }
 
   export type post_likesUpdateManyWithoutUserNestedInput = {
@@ -20633,18 +20648,32 @@ export namespace Prisma {
     deleteMany?: post_likesScalarWhereInput | post_likesScalarWhereInput[]
   }
 
-  export type comment_likesUpdateManyWithoutUserNestedInput = {
-    create?: XOR<comment_likesCreateWithoutUserInput, comment_likesUncheckedCreateWithoutUserInput> | comment_likesCreateWithoutUserInput[] | comment_likesUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: comment_likesCreateOrConnectWithoutUserInput | comment_likesCreateOrConnectWithoutUserInput[]
-    upsert?: comment_likesUpsertWithWhereUniqueWithoutUserInput | comment_likesUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: comment_likesCreateManyUserInputEnvelope
-    set?: comment_likesWhereUniqueInput | comment_likesWhereUniqueInput[]
-    disconnect?: comment_likesWhereUniqueInput | comment_likesWhereUniqueInput[]
-    delete?: comment_likesWhereUniqueInput | comment_likesWhereUniqueInput[]
-    connect?: comment_likesWhereUniqueInput | comment_likesWhereUniqueInput[]
-    update?: comment_likesUpdateWithWhereUniqueWithoutUserInput | comment_likesUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: comment_likesUpdateManyWithWhereWithoutUserInput | comment_likesUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: comment_likesScalarWhereInput | comment_likesScalarWhereInput[]
+  export type postsUpdateManyWithoutUserNestedInput = {
+    create?: XOR<postsCreateWithoutUserInput, postsUncheckedCreateWithoutUserInput> | postsCreateWithoutUserInput[] | postsUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: postsCreateOrConnectWithoutUserInput | postsCreateOrConnectWithoutUserInput[]
+    upsert?: postsUpsertWithWhereUniqueWithoutUserInput | postsUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: postsCreateManyUserInputEnvelope
+    set?: postsWhereUniqueInput | postsWhereUniqueInput[]
+    disconnect?: postsWhereUniqueInput | postsWhereUniqueInput[]
+    delete?: postsWhereUniqueInput | postsWhereUniqueInput[]
+    connect?: postsWhereUniqueInput | postsWhereUniqueInput[]
+    update?: postsUpdateWithWhereUniqueWithoutUserInput | postsUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: postsUpdateManyWithWhereWithoutUserInput | postsUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: postsScalarWhereInput | postsScalarWhereInput[]
+  }
+
+  export type walletsUpdateManyWithoutUsersNestedInput = {
+    create?: XOR<walletsCreateWithoutUsersInput, walletsUncheckedCreateWithoutUsersInput> | walletsCreateWithoutUsersInput[] | walletsUncheckedCreateWithoutUsersInput[]
+    connectOrCreate?: walletsCreateOrConnectWithoutUsersInput | walletsCreateOrConnectWithoutUsersInput[]
+    upsert?: walletsUpsertWithWhereUniqueWithoutUsersInput | walletsUpsertWithWhereUniqueWithoutUsersInput[]
+    createMany?: walletsCreateManyUsersInputEnvelope
+    set?: walletsWhereUniqueInput | walletsWhereUniqueInput[]
+    disconnect?: walletsWhereUniqueInput | walletsWhereUniqueInput[]
+    delete?: walletsWhereUniqueInput | walletsWhereUniqueInput[]
+    connect?: walletsWhereUniqueInput | walletsWhereUniqueInput[]
+    update?: walletsUpdateWithWhereUniqueWithoutUsersInput | walletsUpdateWithWhereUniqueWithoutUsersInput[]
+    updateMany?: walletsUpdateManyWithWhereWithoutUsersInput | walletsUpdateManyWithWhereWithoutUsersInput[]
+    deleteMany?: walletsScalarWhereInput | walletsScalarWhereInput[]
   }
 
   export type audit_logsUncheckedUpdateManyWithoutUsersNestedInput = {
@@ -20661,32 +20690,18 @@ export namespace Prisma {
     deleteMany?: audit_logsScalarWhereInput | audit_logsScalarWhereInput[]
   }
 
-  export type networksUncheckedUpdateManyWithoutUsersNestedInput = {
-    create?: XOR<networksCreateWithoutUsersInput, networksUncheckedCreateWithoutUsersInput> | networksCreateWithoutUsersInput[] | networksUncheckedCreateWithoutUsersInput[]
-    connectOrCreate?: networksCreateOrConnectWithoutUsersInput | networksCreateOrConnectWithoutUsersInput[]
-    upsert?: networksUpsertWithWhereUniqueWithoutUsersInput | networksUpsertWithWhereUniqueWithoutUsersInput[]
-    createMany?: networksCreateManyUsersInputEnvelope
-    set?: networksWhereUniqueInput | networksWhereUniqueInput[]
-    disconnect?: networksWhereUniqueInput | networksWhereUniqueInput[]
-    delete?: networksWhereUniqueInput | networksWhereUniqueInput[]
-    connect?: networksWhereUniqueInput | networksWhereUniqueInput[]
-    update?: networksUpdateWithWhereUniqueWithoutUsersInput | networksUpdateWithWhereUniqueWithoutUsersInput[]
-    updateMany?: networksUpdateManyWithWhereWithoutUsersInput | networksUpdateManyWithWhereWithoutUsersInput[]
-    deleteMany?: networksScalarWhereInput | networksScalarWhereInput[]
-  }
-
-  export type walletsUncheckedUpdateManyWithoutUsersNestedInput = {
-    create?: XOR<walletsCreateWithoutUsersInput, walletsUncheckedCreateWithoutUsersInput> | walletsCreateWithoutUsersInput[] | walletsUncheckedCreateWithoutUsersInput[]
-    connectOrCreate?: walletsCreateOrConnectWithoutUsersInput | walletsCreateOrConnectWithoutUsersInput[]
-    upsert?: walletsUpsertWithWhereUniqueWithoutUsersInput | walletsUpsertWithWhereUniqueWithoutUsersInput[]
-    createMany?: walletsCreateManyUsersInputEnvelope
-    set?: walletsWhereUniqueInput | walletsWhereUniqueInput[]
-    disconnect?: walletsWhereUniqueInput | walletsWhereUniqueInput[]
-    delete?: walletsWhereUniqueInput | walletsWhereUniqueInput[]
-    connect?: walletsWhereUniqueInput | walletsWhereUniqueInput[]
-    update?: walletsUpdateWithWhereUniqueWithoutUsersInput | walletsUpdateWithWhereUniqueWithoutUsersInput[]
-    updateMany?: walletsUpdateManyWithWhereWithoutUsersInput | walletsUpdateManyWithWhereWithoutUsersInput[]
-    deleteMany?: walletsScalarWhereInput | walletsScalarWhereInput[]
+  export type comment_likesUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<comment_likesCreateWithoutUserInput, comment_likesUncheckedCreateWithoutUserInput> | comment_likesCreateWithoutUserInput[] | comment_likesUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: comment_likesCreateOrConnectWithoutUserInput | comment_likesCreateOrConnectWithoutUserInput[]
+    upsert?: comment_likesUpsertWithWhereUniqueWithoutUserInput | comment_likesUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: comment_likesCreateManyUserInputEnvelope
+    set?: comment_likesWhereUniqueInput | comment_likesWhereUniqueInput[]
+    disconnect?: comment_likesWhereUniqueInput | comment_likesWhereUniqueInput[]
+    delete?: comment_likesWhereUniqueInput | comment_likesWhereUniqueInput[]
+    connect?: comment_likesWhereUniqueInput | comment_likesWhereUniqueInput[]
+    update?: comment_likesUpdateWithWhereUniqueWithoutUserInput | comment_likesUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: comment_likesUpdateManyWithWhereWithoutUserInput | comment_likesUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: comment_likesScalarWhereInput | comment_likesScalarWhereInput[]
   }
 
   export type commentsUncheckedUpdateManyWithoutUserNestedInput = {
@@ -20703,18 +20718,18 @@ export namespace Prisma {
     deleteMany?: commentsScalarWhereInput | commentsScalarWhereInput[]
   }
 
-  export type postsUncheckedUpdateManyWithoutUserNestedInput = {
-    create?: XOR<postsCreateWithoutUserInput, postsUncheckedCreateWithoutUserInput> | postsCreateWithoutUserInput[] | postsUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: postsCreateOrConnectWithoutUserInput | postsCreateOrConnectWithoutUserInput[]
-    upsert?: postsUpsertWithWhereUniqueWithoutUserInput | postsUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: postsCreateManyUserInputEnvelope
-    set?: postsWhereUniqueInput | postsWhereUniqueInput[]
-    disconnect?: postsWhereUniqueInput | postsWhereUniqueInput[]
-    delete?: postsWhereUniqueInput | postsWhereUniqueInput[]
-    connect?: postsWhereUniqueInput | postsWhereUniqueInput[]
-    update?: postsUpdateWithWhereUniqueWithoutUserInput | postsUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: postsUpdateManyWithWhereWithoutUserInput | postsUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: postsScalarWhereInput | postsScalarWhereInput[]
+  export type networksUncheckedUpdateManyWithoutUsersNestedInput = {
+    create?: XOR<networksCreateWithoutUsersInput, networksUncheckedCreateWithoutUsersInput> | networksCreateWithoutUsersInput[] | networksUncheckedCreateWithoutUsersInput[]
+    connectOrCreate?: networksCreateOrConnectWithoutUsersInput | networksCreateOrConnectWithoutUsersInput[]
+    upsert?: networksUpsertWithWhereUniqueWithoutUsersInput | networksUpsertWithWhereUniqueWithoutUsersInput[]
+    createMany?: networksCreateManyUsersInputEnvelope
+    set?: networksWhereUniqueInput | networksWhereUniqueInput[]
+    disconnect?: networksWhereUniqueInput | networksWhereUniqueInput[]
+    delete?: networksWhereUniqueInput | networksWhereUniqueInput[]
+    connect?: networksWhereUniqueInput | networksWhereUniqueInput[]
+    update?: networksUpdateWithWhereUniqueWithoutUsersInput | networksUpdateWithWhereUniqueWithoutUsersInput[]
+    updateMany?: networksUpdateManyWithWhereWithoutUsersInput | networksUpdateManyWithWhereWithoutUsersInput[]
+    deleteMany?: networksScalarWhereInput | networksScalarWhereInput[]
   }
 
   export type post_likesUncheckedUpdateManyWithoutUserNestedInput = {
@@ -20731,18 +20746,32 @@ export namespace Prisma {
     deleteMany?: post_likesScalarWhereInput | post_likesScalarWhereInput[]
   }
 
-  export type comment_likesUncheckedUpdateManyWithoutUserNestedInput = {
-    create?: XOR<comment_likesCreateWithoutUserInput, comment_likesUncheckedCreateWithoutUserInput> | comment_likesCreateWithoutUserInput[] | comment_likesUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: comment_likesCreateOrConnectWithoutUserInput | comment_likesCreateOrConnectWithoutUserInput[]
-    upsert?: comment_likesUpsertWithWhereUniqueWithoutUserInput | comment_likesUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: comment_likesCreateManyUserInputEnvelope
-    set?: comment_likesWhereUniqueInput | comment_likesWhereUniqueInput[]
-    disconnect?: comment_likesWhereUniqueInput | comment_likesWhereUniqueInput[]
-    delete?: comment_likesWhereUniqueInput | comment_likesWhereUniqueInput[]
-    connect?: comment_likesWhereUniqueInput | comment_likesWhereUniqueInput[]
-    update?: comment_likesUpdateWithWhereUniqueWithoutUserInput | comment_likesUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: comment_likesUpdateManyWithWhereWithoutUserInput | comment_likesUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: comment_likesScalarWhereInput | comment_likesScalarWhereInput[]
+  export type postsUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<postsCreateWithoutUserInput, postsUncheckedCreateWithoutUserInput> | postsCreateWithoutUserInput[] | postsUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: postsCreateOrConnectWithoutUserInput | postsCreateOrConnectWithoutUserInput[]
+    upsert?: postsUpsertWithWhereUniqueWithoutUserInput | postsUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: postsCreateManyUserInputEnvelope
+    set?: postsWhereUniqueInput | postsWhereUniqueInput[]
+    disconnect?: postsWhereUniqueInput | postsWhereUniqueInput[]
+    delete?: postsWhereUniqueInput | postsWhereUniqueInput[]
+    connect?: postsWhereUniqueInput | postsWhereUniqueInput[]
+    update?: postsUpdateWithWhereUniqueWithoutUserInput | postsUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: postsUpdateManyWithWhereWithoutUserInput | postsUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: postsScalarWhereInput | postsScalarWhereInput[]
+  }
+
+  export type walletsUncheckedUpdateManyWithoutUsersNestedInput = {
+    create?: XOR<walletsCreateWithoutUsersInput, walletsUncheckedCreateWithoutUsersInput> | walletsCreateWithoutUsersInput[] | walletsUncheckedCreateWithoutUsersInput[]
+    connectOrCreate?: walletsCreateOrConnectWithoutUsersInput | walletsCreateOrConnectWithoutUsersInput[]
+    upsert?: walletsUpsertWithWhereUniqueWithoutUsersInput | walletsUpsertWithWhereUniqueWithoutUsersInput[]
+    createMany?: walletsCreateManyUsersInputEnvelope
+    set?: walletsWhereUniqueInput | walletsWhereUniqueInput[]
+    disconnect?: walletsWhereUniqueInput | walletsWhereUniqueInput[]
+    delete?: walletsWhereUniqueInput | walletsWhereUniqueInput[]
+    connect?: walletsWhereUniqueInput | walletsWhereUniqueInput[]
+    update?: walletsUpdateWithWhereUniqueWithoutUsersInput | walletsUpdateWithWhereUniqueWithoutUsersInput[]
+    updateMany?: walletsUpdateManyWithWhereWithoutUsersInput | walletsUpdateManyWithWhereWithoutUsersInput[]
+    deleteMany?: walletsScalarWhereInput | walletsScalarWhereInput[]
   }
 
   export type token_networksCreateNestedOneWithoutWallet_network_tokensInput = {
@@ -20917,24 +20946,11 @@ export namespace Prisma {
     deleteMany?: wallet_networksScalarWhereInput | wallet_networksScalarWhereInput[]
   }
 
-  export type usersCreateNestedOneWithoutPostsInput = {
-    create?: XOR<usersCreateWithoutPostsInput, usersUncheckedCreateWithoutPostsInput>
-    connectOrCreate?: usersCreateOrConnectWithoutPostsInput
-    connect?: usersWhereUniqueInput
-  }
-
   export type commentsCreateNestedManyWithoutPostInput = {
     create?: XOR<commentsCreateWithoutPostInput, commentsUncheckedCreateWithoutPostInput> | commentsCreateWithoutPostInput[] | commentsUncheckedCreateWithoutPostInput[]
     connectOrCreate?: commentsCreateOrConnectWithoutPostInput | commentsCreateOrConnectWithoutPostInput[]
     createMany?: commentsCreateManyPostInputEnvelope
     connect?: commentsWhereUniqueInput | commentsWhereUniqueInput[]
-  }
-
-  export type post_likesCreateNestedManyWithoutPostInput = {
-    create?: XOR<post_likesCreateWithoutPostInput, post_likesUncheckedCreateWithoutPostInput> | post_likesCreateWithoutPostInput[] | post_likesUncheckedCreateWithoutPostInput[]
-    connectOrCreate?: post_likesCreateOrConnectWithoutPostInput | post_likesCreateOrConnectWithoutPostInput[]
-    createMany?: post_likesCreateManyPostInputEnvelope
-    connect?: post_likesWhereUniqueInput | post_likesWhereUniqueInput[]
   }
 
   export type post_imagesCreateNestedManyWithoutPostInput = {
@@ -20944,18 +20960,24 @@ export namespace Prisma {
     connect?: post_imagesWhereUniqueInput | post_imagesWhereUniqueInput[]
   }
 
+  export type post_likesCreateNestedManyWithoutPostInput = {
+    create?: XOR<post_likesCreateWithoutPostInput, post_likesUncheckedCreateWithoutPostInput> | post_likesCreateWithoutPostInput[] | post_likesUncheckedCreateWithoutPostInput[]
+    connectOrCreate?: post_likesCreateOrConnectWithoutPostInput | post_likesCreateOrConnectWithoutPostInput[]
+    createMany?: post_likesCreateManyPostInputEnvelope
+    connect?: post_likesWhereUniqueInput | post_likesWhereUniqueInput[]
+  }
+
+  export type usersCreateNestedOneWithoutPostsInput = {
+    create?: XOR<usersCreateWithoutPostsInput, usersUncheckedCreateWithoutPostsInput>
+    connectOrCreate?: usersCreateOrConnectWithoutPostsInput
+    connect?: usersWhereUniqueInput
+  }
+
   export type commentsUncheckedCreateNestedManyWithoutPostInput = {
     create?: XOR<commentsCreateWithoutPostInput, commentsUncheckedCreateWithoutPostInput> | commentsCreateWithoutPostInput[] | commentsUncheckedCreateWithoutPostInput[]
     connectOrCreate?: commentsCreateOrConnectWithoutPostInput | commentsCreateOrConnectWithoutPostInput[]
     createMany?: commentsCreateManyPostInputEnvelope
     connect?: commentsWhereUniqueInput | commentsWhereUniqueInput[]
-  }
-
-  export type post_likesUncheckedCreateNestedManyWithoutPostInput = {
-    create?: XOR<post_likesCreateWithoutPostInput, post_likesUncheckedCreateWithoutPostInput> | post_likesCreateWithoutPostInput[] | post_likesUncheckedCreateWithoutPostInput[]
-    connectOrCreate?: post_likesCreateOrConnectWithoutPostInput | post_likesCreateOrConnectWithoutPostInput[]
-    createMany?: post_likesCreateManyPostInputEnvelope
-    connect?: post_likesWhereUniqueInput | post_likesWhereUniqueInput[]
   }
 
   export type post_imagesUncheckedCreateNestedManyWithoutPostInput = {
@@ -20965,16 +20987,15 @@ export namespace Prisma {
     connect?: post_imagesWhereUniqueInput | post_imagesWhereUniqueInput[]
   }
 
-  export type DateTimeFieldUpdateOperationsInput = {
-    set?: Date | string
+  export type post_likesUncheckedCreateNestedManyWithoutPostInput = {
+    create?: XOR<post_likesCreateWithoutPostInput, post_likesUncheckedCreateWithoutPostInput> | post_likesCreateWithoutPostInput[] | post_likesUncheckedCreateWithoutPostInput[]
+    connectOrCreate?: post_likesCreateOrConnectWithoutPostInput | post_likesCreateOrConnectWithoutPostInput[]
+    createMany?: post_likesCreateManyPostInputEnvelope
+    connect?: post_likesWhereUniqueInput | post_likesWhereUniqueInput[]
   }
 
-  export type usersUpdateOneRequiredWithoutPostsNestedInput = {
-    create?: XOR<usersCreateWithoutPostsInput, usersUncheckedCreateWithoutPostsInput>
-    connectOrCreate?: usersCreateOrConnectWithoutPostsInput
-    upsert?: usersUpsertWithoutPostsInput
-    connect?: usersWhereUniqueInput
-    update?: XOR<XOR<usersUpdateToOneWithWhereWithoutPostsInput, usersUpdateWithoutPostsInput>, usersUncheckedUpdateWithoutPostsInput>
+  export type DateTimeFieldUpdateOperationsInput = {
+    set?: Date | string
   }
 
   export type commentsUpdateManyWithoutPostNestedInput = {
@@ -20991,6 +21012,20 @@ export namespace Prisma {
     deleteMany?: commentsScalarWhereInput | commentsScalarWhereInput[]
   }
 
+  export type post_imagesUpdateManyWithoutPostNestedInput = {
+    create?: XOR<post_imagesCreateWithoutPostInput, post_imagesUncheckedCreateWithoutPostInput> | post_imagesCreateWithoutPostInput[] | post_imagesUncheckedCreateWithoutPostInput[]
+    connectOrCreate?: post_imagesCreateOrConnectWithoutPostInput | post_imagesCreateOrConnectWithoutPostInput[]
+    upsert?: post_imagesUpsertWithWhereUniqueWithoutPostInput | post_imagesUpsertWithWhereUniqueWithoutPostInput[]
+    createMany?: post_imagesCreateManyPostInputEnvelope
+    set?: post_imagesWhereUniqueInput | post_imagesWhereUniqueInput[]
+    disconnect?: post_imagesWhereUniqueInput | post_imagesWhereUniqueInput[]
+    delete?: post_imagesWhereUniqueInput | post_imagesWhereUniqueInput[]
+    connect?: post_imagesWhereUniqueInput | post_imagesWhereUniqueInput[]
+    update?: post_imagesUpdateWithWhereUniqueWithoutPostInput | post_imagesUpdateWithWhereUniqueWithoutPostInput[]
+    updateMany?: post_imagesUpdateManyWithWhereWithoutPostInput | post_imagesUpdateManyWithWhereWithoutPostInput[]
+    deleteMany?: post_imagesScalarWhereInput | post_imagesScalarWhereInput[]
+  }
+
   export type post_likesUpdateManyWithoutPostNestedInput = {
     create?: XOR<post_likesCreateWithoutPostInput, post_likesUncheckedCreateWithoutPostInput> | post_likesCreateWithoutPostInput[] | post_likesUncheckedCreateWithoutPostInput[]
     connectOrCreate?: post_likesCreateOrConnectWithoutPostInput | post_likesCreateOrConnectWithoutPostInput[]
@@ -21005,18 +21040,12 @@ export namespace Prisma {
     deleteMany?: post_likesScalarWhereInput | post_likesScalarWhereInput[]
   }
 
-  export type post_imagesUpdateManyWithoutPostNestedInput = {
-    create?: XOR<post_imagesCreateWithoutPostInput, post_imagesUncheckedCreateWithoutPostInput> | post_imagesCreateWithoutPostInput[] | post_imagesUncheckedCreateWithoutPostInput[]
-    connectOrCreate?: post_imagesCreateOrConnectWithoutPostInput | post_imagesCreateOrConnectWithoutPostInput[]
-    upsert?: post_imagesUpsertWithWhereUniqueWithoutPostInput | post_imagesUpsertWithWhereUniqueWithoutPostInput[]
-    createMany?: post_imagesCreateManyPostInputEnvelope
-    set?: post_imagesWhereUniqueInput | post_imagesWhereUniqueInput[]
-    disconnect?: post_imagesWhereUniqueInput | post_imagesWhereUniqueInput[]
-    delete?: post_imagesWhereUniqueInput | post_imagesWhereUniqueInput[]
-    connect?: post_imagesWhereUniqueInput | post_imagesWhereUniqueInput[]
-    update?: post_imagesUpdateWithWhereUniqueWithoutPostInput | post_imagesUpdateWithWhereUniqueWithoutPostInput[]
-    updateMany?: post_imagesUpdateManyWithWhereWithoutPostInput | post_imagesUpdateManyWithWhereWithoutPostInput[]
-    deleteMany?: post_imagesScalarWhereInput | post_imagesScalarWhereInput[]
+  export type usersUpdateOneRequiredWithoutPostsNestedInput = {
+    create?: XOR<usersCreateWithoutPostsInput, usersUncheckedCreateWithoutPostsInput>
+    connectOrCreate?: usersCreateOrConnectWithoutPostsInput
+    upsert?: usersUpsertWithoutPostsInput
+    connect?: usersWhereUniqueInput
+    update?: XOR<XOR<usersUpdateToOneWithWhereWithoutPostsInput, usersUpdateWithoutPostsInput>, usersUncheckedUpdateWithoutPostsInput>
   }
 
   export type commentsUncheckedUpdateManyWithoutPostNestedInput = {
@@ -21033,20 +21062,6 @@ export namespace Prisma {
     deleteMany?: commentsScalarWhereInput | commentsScalarWhereInput[]
   }
 
-  export type post_likesUncheckedUpdateManyWithoutPostNestedInput = {
-    create?: XOR<post_likesCreateWithoutPostInput, post_likesUncheckedCreateWithoutPostInput> | post_likesCreateWithoutPostInput[] | post_likesUncheckedCreateWithoutPostInput[]
-    connectOrCreate?: post_likesCreateOrConnectWithoutPostInput | post_likesCreateOrConnectWithoutPostInput[]
-    upsert?: post_likesUpsertWithWhereUniqueWithoutPostInput | post_likesUpsertWithWhereUniqueWithoutPostInput[]
-    createMany?: post_likesCreateManyPostInputEnvelope
-    set?: post_likesWhereUniqueInput | post_likesWhereUniqueInput[]
-    disconnect?: post_likesWhereUniqueInput | post_likesWhereUniqueInput[]
-    delete?: post_likesWhereUniqueInput | post_likesWhereUniqueInput[]
-    connect?: post_likesWhereUniqueInput | post_likesWhereUniqueInput[]
-    update?: post_likesUpdateWithWhereUniqueWithoutPostInput | post_likesUpdateWithWhereUniqueWithoutPostInput[]
-    updateMany?: post_likesUpdateManyWithWhereWithoutPostInput | post_likesUpdateManyWithWhereWithoutPostInput[]
-    deleteMany?: post_likesScalarWhereInput | post_likesScalarWhereInput[]
-  }
-
   export type post_imagesUncheckedUpdateManyWithoutPostNestedInput = {
     create?: XOR<post_imagesCreateWithoutPostInput, post_imagesUncheckedCreateWithoutPostInput> | post_imagesCreateWithoutPostInput[] | post_imagesUncheckedCreateWithoutPostInput[]
     connectOrCreate?: post_imagesCreateOrConnectWithoutPostInput | post_imagesCreateOrConnectWithoutPostInput[]
@@ -21059,6 +21074,20 @@ export namespace Prisma {
     update?: post_imagesUpdateWithWhereUniqueWithoutPostInput | post_imagesUpdateWithWhereUniqueWithoutPostInput[]
     updateMany?: post_imagesUpdateManyWithWhereWithoutPostInput | post_imagesUpdateManyWithWhereWithoutPostInput[]
     deleteMany?: post_imagesScalarWhereInput | post_imagesScalarWhereInput[]
+  }
+
+  export type post_likesUncheckedUpdateManyWithoutPostNestedInput = {
+    create?: XOR<post_likesCreateWithoutPostInput, post_likesUncheckedCreateWithoutPostInput> | post_likesCreateWithoutPostInput[] | post_likesUncheckedCreateWithoutPostInput[]
+    connectOrCreate?: post_likesCreateOrConnectWithoutPostInput | post_likesCreateOrConnectWithoutPostInput[]
+    upsert?: post_likesUpsertWithWhereUniqueWithoutPostInput | post_likesUpsertWithWhereUniqueWithoutPostInput[]
+    createMany?: post_likesCreateManyPostInputEnvelope
+    set?: post_likesWhereUniqueInput | post_likesWhereUniqueInput[]
+    disconnect?: post_likesWhereUniqueInput | post_likesWhereUniqueInput[]
+    delete?: post_likesWhereUniqueInput | post_likesWhereUniqueInput[]
+    connect?: post_likesWhereUniqueInput | post_likesWhereUniqueInput[]
+    update?: post_likesUpdateWithWhereUniqueWithoutPostInput | post_likesUpdateWithWhereUniqueWithoutPostInput[]
+    updateMany?: post_likesUpdateManyWithWhereWithoutPostInput | post_likesUpdateManyWithWhereWithoutPostInput[]
+    deleteMany?: post_likesScalarWhereInput | post_likesScalarWhereInput[]
   }
 
   export type postsCreateNestedOneWithoutImagesInput = {
@@ -21075,6 +21104,13 @@ export namespace Prisma {
     update?: XOR<XOR<postsUpdateToOneWithWhereWithoutImagesInput, postsUpdateWithoutImagesInput>, postsUncheckedUpdateWithoutImagesInput>
   }
 
+  export type comment_likesCreateNestedManyWithoutCommentInput = {
+    create?: XOR<comment_likesCreateWithoutCommentInput, comment_likesUncheckedCreateWithoutCommentInput> | comment_likesCreateWithoutCommentInput[] | comment_likesUncheckedCreateWithoutCommentInput[]
+    connectOrCreate?: comment_likesCreateOrConnectWithoutCommentInput | comment_likesCreateOrConnectWithoutCommentInput[]
+    createMany?: comment_likesCreateManyCommentInputEnvelope
+    connect?: comment_likesWhereUniqueInput | comment_likesWhereUniqueInput[]
+  }
+
   export type postsCreateNestedOneWithoutCommentsInput = {
     create?: XOR<postsCreateWithoutCommentsInput, postsUncheckedCreateWithoutCommentsInput>
     connectOrCreate?: postsCreateOrConnectWithoutCommentsInput
@@ -21087,18 +21123,25 @@ export namespace Prisma {
     connect?: usersWhereUniqueInput
   }
 
-  export type comment_likesCreateNestedManyWithoutCommentInput = {
+  export type comment_likesUncheckedCreateNestedManyWithoutCommentInput = {
     create?: XOR<comment_likesCreateWithoutCommentInput, comment_likesUncheckedCreateWithoutCommentInput> | comment_likesCreateWithoutCommentInput[] | comment_likesUncheckedCreateWithoutCommentInput[]
     connectOrCreate?: comment_likesCreateOrConnectWithoutCommentInput | comment_likesCreateOrConnectWithoutCommentInput[]
     createMany?: comment_likesCreateManyCommentInputEnvelope
     connect?: comment_likesWhereUniqueInput | comment_likesWhereUniqueInput[]
   }
 
-  export type comment_likesUncheckedCreateNestedManyWithoutCommentInput = {
+  export type comment_likesUpdateManyWithoutCommentNestedInput = {
     create?: XOR<comment_likesCreateWithoutCommentInput, comment_likesUncheckedCreateWithoutCommentInput> | comment_likesCreateWithoutCommentInput[] | comment_likesUncheckedCreateWithoutCommentInput[]
     connectOrCreate?: comment_likesCreateOrConnectWithoutCommentInput | comment_likesCreateOrConnectWithoutCommentInput[]
+    upsert?: comment_likesUpsertWithWhereUniqueWithoutCommentInput | comment_likesUpsertWithWhereUniqueWithoutCommentInput[]
     createMany?: comment_likesCreateManyCommentInputEnvelope
+    set?: comment_likesWhereUniqueInput | comment_likesWhereUniqueInput[]
+    disconnect?: comment_likesWhereUniqueInput | comment_likesWhereUniqueInput[]
+    delete?: comment_likesWhereUniqueInput | comment_likesWhereUniqueInput[]
     connect?: comment_likesWhereUniqueInput | comment_likesWhereUniqueInput[]
+    update?: comment_likesUpdateWithWhereUniqueWithoutCommentInput | comment_likesUpdateWithWhereUniqueWithoutCommentInput[]
+    updateMany?: comment_likesUpdateManyWithWhereWithoutCommentInput | comment_likesUpdateManyWithWhereWithoutCommentInput[]
+    deleteMany?: comment_likesScalarWhereInput | comment_likesScalarWhereInput[]
   }
 
   export type postsUpdateOneRequiredWithoutCommentsNestedInput = {
@@ -21115,20 +21158,6 @@ export namespace Prisma {
     upsert?: usersUpsertWithoutCommentsInput
     connect?: usersWhereUniqueInput
     update?: XOR<XOR<usersUpdateToOneWithWhereWithoutCommentsInput, usersUpdateWithoutCommentsInput>, usersUncheckedUpdateWithoutCommentsInput>
-  }
-
-  export type comment_likesUpdateManyWithoutCommentNestedInput = {
-    create?: XOR<comment_likesCreateWithoutCommentInput, comment_likesUncheckedCreateWithoutCommentInput> | comment_likesCreateWithoutCommentInput[] | comment_likesUncheckedCreateWithoutCommentInput[]
-    connectOrCreate?: comment_likesCreateOrConnectWithoutCommentInput | comment_likesCreateOrConnectWithoutCommentInput[]
-    upsert?: comment_likesUpsertWithWhereUniqueWithoutCommentInput | comment_likesUpsertWithWhereUniqueWithoutCommentInput[]
-    createMany?: comment_likesCreateManyCommentInputEnvelope
-    set?: comment_likesWhereUniqueInput | comment_likesWhereUniqueInput[]
-    disconnect?: comment_likesWhereUniqueInput | comment_likesWhereUniqueInput[]
-    delete?: comment_likesWhereUniqueInput | comment_likesWhereUniqueInput[]
-    connect?: comment_likesWhereUniqueInput | comment_likesWhereUniqueInput[]
-    update?: comment_likesUpdateWithWhereUniqueWithoutCommentInput | comment_likesUpdateWithWhereUniqueWithoutCommentInput[]
-    updateMany?: comment_likesUpdateManyWithWhereWithoutCommentInput | comment_likesUpdateManyWithWhereWithoutCommentInput[]
-    deleteMany?: comment_likesScalarWhereInput | comment_likesScalarWhereInput[]
   }
 
   export type comment_likesUncheckedUpdateManyWithoutCommentNestedInput = {
@@ -21464,12 +21493,12 @@ export namespace Prisma {
     deleted_at?: Date | string | null
     notiToken?: string | null
     biometricPublicKey?: string | null
-    networks?: networksCreateNestedManyWithoutUsersInput
-    wallets?: walletsCreateNestedManyWithoutUsersInput
-    comments?: commentsCreateNestedManyWithoutUserInput
-    posts?: postsCreateNestedManyWithoutUserInput
-    post_likes?: post_likesCreateNestedManyWithoutUserInput
     comment_likes?: comment_likesCreateNestedManyWithoutUserInput
+    comments?: commentsCreateNestedManyWithoutUserInput
+    networks?: networksCreateNestedManyWithoutUsersInput
+    post_likes?: post_likesCreateNestedManyWithoutUserInput
+    posts?: postsCreateNestedManyWithoutUserInput
+    wallets?: walletsCreateNestedManyWithoutUsersInput
   }
 
   export type usersUncheckedCreateWithoutAudit_logsInput = {
@@ -21484,12 +21513,12 @@ export namespace Prisma {
     deleted_at?: Date | string | null
     notiToken?: string | null
     biometricPublicKey?: string | null
-    networks?: networksUncheckedCreateNestedManyWithoutUsersInput
-    wallets?: walletsUncheckedCreateNestedManyWithoutUsersInput
-    comments?: commentsUncheckedCreateNestedManyWithoutUserInput
-    posts?: postsUncheckedCreateNestedManyWithoutUserInput
-    post_likes?: post_likesUncheckedCreateNestedManyWithoutUserInput
     comment_likes?: comment_likesUncheckedCreateNestedManyWithoutUserInput
+    comments?: commentsUncheckedCreateNestedManyWithoutUserInput
+    networks?: networksUncheckedCreateNestedManyWithoutUsersInput
+    post_likes?: post_likesUncheckedCreateNestedManyWithoutUserInput
+    posts?: postsUncheckedCreateNestedManyWithoutUserInput
+    wallets?: walletsUncheckedCreateNestedManyWithoutUsersInput
   }
 
   export type usersCreateOrConnectWithoutAudit_logsInput = {
@@ -21520,12 +21549,12 @@ export namespace Prisma {
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notiToken?: NullableStringFieldUpdateOperationsInput | string | null
     biometricPublicKey?: NullableStringFieldUpdateOperationsInput | string | null
-    networks?: networksUpdateManyWithoutUsersNestedInput
-    wallets?: walletsUpdateManyWithoutUsersNestedInput
-    comments?: commentsUpdateManyWithoutUserNestedInput
-    posts?: postsUpdateManyWithoutUserNestedInput
-    post_likes?: post_likesUpdateManyWithoutUserNestedInput
     comment_likes?: comment_likesUpdateManyWithoutUserNestedInput
+    comments?: commentsUpdateManyWithoutUserNestedInput
+    networks?: networksUpdateManyWithoutUsersNestedInput
+    post_likes?: post_likesUpdateManyWithoutUserNestedInput
+    posts?: postsUpdateManyWithoutUserNestedInput
+    wallets?: walletsUpdateManyWithoutUsersNestedInput
   }
 
   export type usersUncheckedUpdateWithoutAudit_logsInput = {
@@ -21540,12 +21569,12 @@ export namespace Prisma {
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notiToken?: NullableStringFieldUpdateOperationsInput | string | null
     biometricPublicKey?: NullableStringFieldUpdateOperationsInput | string | null
-    networks?: networksUncheckedUpdateManyWithoutUsersNestedInput
-    wallets?: walletsUncheckedUpdateManyWithoutUsersNestedInput
-    comments?: commentsUncheckedUpdateManyWithoutUserNestedInput
-    posts?: postsUncheckedUpdateManyWithoutUserNestedInput
-    post_likes?: post_likesUncheckedUpdateManyWithoutUserNestedInput
     comment_likes?: comment_likesUncheckedUpdateManyWithoutUserNestedInput
+    comments?: commentsUncheckedUpdateManyWithoutUserNestedInput
+    networks?: networksUncheckedUpdateManyWithoutUsersNestedInput
+    post_likes?: post_likesUncheckedUpdateManyWithoutUserNestedInput
+    posts?: postsUncheckedUpdateManyWithoutUserNestedInput
+    wallets?: walletsUncheckedUpdateManyWithoutUsersNestedInput
   }
 
   export type usersCreateWithoutNetworksInput = {
@@ -21561,11 +21590,11 @@ export namespace Prisma {
     notiToken?: string | null
     biometricPublicKey?: string | null
     audit_logs?: audit_logsCreateNestedManyWithoutUsersInput
-    wallets?: walletsCreateNestedManyWithoutUsersInput
-    comments?: commentsCreateNestedManyWithoutUserInput
-    posts?: postsCreateNestedManyWithoutUserInput
-    post_likes?: post_likesCreateNestedManyWithoutUserInput
     comment_likes?: comment_likesCreateNestedManyWithoutUserInput
+    comments?: commentsCreateNestedManyWithoutUserInput
+    post_likes?: post_likesCreateNestedManyWithoutUserInput
+    posts?: postsCreateNestedManyWithoutUserInput
+    wallets?: walletsCreateNestedManyWithoutUsersInput
   }
 
   export type usersUncheckedCreateWithoutNetworksInput = {
@@ -21581,11 +21610,11 @@ export namespace Prisma {
     notiToken?: string | null
     biometricPublicKey?: string | null
     audit_logs?: audit_logsUncheckedCreateNestedManyWithoutUsersInput
-    wallets?: walletsUncheckedCreateNestedManyWithoutUsersInput
-    comments?: commentsUncheckedCreateNestedManyWithoutUserInput
-    posts?: postsUncheckedCreateNestedManyWithoutUserInput
-    post_likes?: post_likesUncheckedCreateNestedManyWithoutUserInput
     comment_likes?: comment_likesUncheckedCreateNestedManyWithoutUserInput
+    comments?: commentsUncheckedCreateNestedManyWithoutUserInput
+    post_likes?: post_likesUncheckedCreateNestedManyWithoutUserInput
+    posts?: postsUncheckedCreateNestedManyWithoutUserInput
+    wallets?: walletsUncheckedCreateNestedManyWithoutUsersInput
   }
 
   export type usersCreateOrConnectWithoutNetworksInput = {
@@ -21667,11 +21696,11 @@ export namespace Prisma {
     notiToken?: NullableStringFieldUpdateOperationsInput | string | null
     biometricPublicKey?: NullableStringFieldUpdateOperationsInput | string | null
     audit_logs?: audit_logsUpdateManyWithoutUsersNestedInput
-    wallets?: walletsUpdateManyWithoutUsersNestedInput
-    comments?: commentsUpdateManyWithoutUserNestedInput
-    posts?: postsUpdateManyWithoutUserNestedInput
-    post_likes?: post_likesUpdateManyWithoutUserNestedInput
     comment_likes?: comment_likesUpdateManyWithoutUserNestedInput
+    comments?: commentsUpdateManyWithoutUserNestedInput
+    post_likes?: post_likesUpdateManyWithoutUserNestedInput
+    posts?: postsUpdateManyWithoutUserNestedInput
+    wallets?: walletsUpdateManyWithoutUsersNestedInput
   }
 
   export type usersUncheckedUpdateWithoutNetworksInput = {
@@ -21687,11 +21716,11 @@ export namespace Prisma {
     notiToken?: NullableStringFieldUpdateOperationsInput | string | null
     biometricPublicKey?: NullableStringFieldUpdateOperationsInput | string | null
     audit_logs?: audit_logsUncheckedUpdateManyWithoutUsersNestedInput
-    wallets?: walletsUncheckedUpdateManyWithoutUsersNestedInput
-    comments?: commentsUncheckedUpdateManyWithoutUserNestedInput
-    posts?: postsUncheckedUpdateManyWithoutUserNestedInput
-    post_likes?: post_likesUncheckedUpdateManyWithoutUserNestedInput
     comment_likes?: comment_likesUncheckedUpdateManyWithoutUserNestedInput
+    comments?: commentsUncheckedUpdateManyWithoutUserNestedInput
+    post_likes?: post_likesUncheckedUpdateManyWithoutUserNestedInput
+    posts?: postsUncheckedUpdateManyWithoutUserNestedInput
+    wallets?: walletsUncheckedUpdateManyWithoutUsersNestedInput
   }
 
   export type token_networksUpsertWithWhereUniqueWithoutNetworksInput = {
@@ -22029,6 +22058,58 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type comment_likesCreateWithoutUserInput = {
+    comment_like_id?: string
+    created_at?: Date | string
+    comment: commentsCreateNestedOneWithoutLikesInput
+  }
+
+  export type comment_likesUncheckedCreateWithoutUserInput = {
+    comment_like_id?: string
+    comment_id: string
+    created_at?: Date | string
+  }
+
+  export type comment_likesCreateOrConnectWithoutUserInput = {
+    where: comment_likesWhereUniqueInput
+    create: XOR<comment_likesCreateWithoutUserInput, comment_likesUncheckedCreateWithoutUserInput>
+  }
+
+  export type comment_likesCreateManyUserInputEnvelope = {
+    data: comment_likesCreateManyUserInput | comment_likesCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type commentsCreateWithoutUserInput = {
+    comment_id?: string
+    content: string
+    created_at?: Date | string
+    updated_at?: Date | string
+    deleted_at?: Date | string | null
+    likes?: comment_likesCreateNestedManyWithoutCommentInput
+    post: postsCreateNestedOneWithoutCommentsInput
+  }
+
+  export type commentsUncheckedCreateWithoutUserInput = {
+    comment_id?: string
+    post_id: string
+    content: string
+    created_at?: Date | string
+    updated_at?: Date | string
+    deleted_at?: Date | string | null
+    likes?: comment_likesUncheckedCreateNestedManyWithoutCommentInput
+  }
+
+  export type commentsCreateOrConnectWithoutUserInput = {
+    where: commentsWhereUniqueInput
+    create: XOR<commentsCreateWithoutUserInput, commentsUncheckedCreateWithoutUserInput>
+  }
+
+  export type commentsCreateManyUserInputEnvelope = {
+    data: commentsCreateManyUserInput | commentsCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
   export type networksCreateWithoutUsersInput = {
     network_id?: string
     network_name: string
@@ -22079,106 +22160,6 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type walletsCreateWithoutUsersInput = {
-    wallet_id?: string
-    wallet_name: string
-    wallet_balance?: Decimal | DecimalJsLike | number | string
-    wallet_address: string
-    wallet_phrase?: string | null
-    created_at?: Date | string | null
-    updated_at?: Date | string | null
-    deleted_at?: Date | string | null
-    wallet_network_tokens?: wallet_network_tokensCreateNestedManyWithoutWalletsInput
-    wallet_networks?: wallet_networksCreateNestedManyWithoutWalletsInput
-  }
-
-  export type walletsUncheckedCreateWithoutUsersInput = {
-    wallet_id?: string
-    wallet_name: string
-    wallet_balance?: Decimal | DecimalJsLike | number | string
-    wallet_address: string
-    wallet_phrase?: string | null
-    created_at?: Date | string | null
-    updated_at?: Date | string | null
-    deleted_at?: Date | string | null
-    wallet_network_tokens?: wallet_network_tokensUncheckedCreateNestedManyWithoutWalletsInput
-    wallet_networks?: wallet_networksUncheckedCreateNestedManyWithoutWalletsInput
-  }
-
-  export type walletsCreateOrConnectWithoutUsersInput = {
-    where: walletsWhereUniqueInput
-    create: XOR<walletsCreateWithoutUsersInput, walletsUncheckedCreateWithoutUsersInput>
-  }
-
-  export type walletsCreateManyUsersInputEnvelope = {
-    data: walletsCreateManyUsersInput | walletsCreateManyUsersInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type commentsCreateWithoutUserInput = {
-    comment_id?: string
-    content: string
-    created_at?: Date | string
-    updated_at?: Date | string
-    deleted_at?: Date | string | null
-    post: postsCreateNestedOneWithoutCommentsInput
-    likes?: comment_likesCreateNestedManyWithoutCommentInput
-  }
-
-  export type commentsUncheckedCreateWithoutUserInput = {
-    comment_id?: string
-    post_id: string
-    content: string
-    created_at?: Date | string
-    updated_at?: Date | string
-    deleted_at?: Date | string | null
-    likes?: comment_likesUncheckedCreateNestedManyWithoutCommentInput
-  }
-
-  export type commentsCreateOrConnectWithoutUserInput = {
-    where: commentsWhereUniqueInput
-    create: XOR<commentsCreateWithoutUserInput, commentsUncheckedCreateWithoutUserInput>
-  }
-
-  export type commentsCreateManyUserInputEnvelope = {
-    data: commentsCreateManyUserInput | commentsCreateManyUserInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type postsCreateWithoutUserInput = {
-    post_id?: string
-    title: string
-    content: string
-    created_at?: Date | string
-    updated_at?: Date | string
-    deleted_at?: Date | string | null
-    comments?: commentsCreateNestedManyWithoutPostInput
-    likes?: post_likesCreateNestedManyWithoutPostInput
-    images?: post_imagesCreateNestedManyWithoutPostInput
-  }
-
-  export type postsUncheckedCreateWithoutUserInput = {
-    post_id?: string
-    title: string
-    content: string
-    created_at?: Date | string
-    updated_at?: Date | string
-    deleted_at?: Date | string | null
-    comments?: commentsUncheckedCreateNestedManyWithoutPostInput
-    likes?: post_likesUncheckedCreateNestedManyWithoutPostInput
-    images?: post_imagesUncheckedCreateNestedManyWithoutPostInput
-  }
-
-  export type postsCreateOrConnectWithoutUserInput = {
-    where: postsWhereUniqueInput
-    create: XOR<postsCreateWithoutUserInput, postsUncheckedCreateWithoutUserInput>
-  }
-
-  export type postsCreateManyUserInputEnvelope = {
-    data: postsCreateManyUserInput | postsCreateManyUserInput[]
-    skipDuplicates?: boolean
-  }
-
   export type post_likesCreateWithoutUserInput = {
     post_like_id?: string
     created_at?: Date | string
@@ -22201,25 +22182,75 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type comment_likesCreateWithoutUserInput = {
-    comment_like_id?: string
+  export type postsCreateWithoutUserInput = {
+    post_id?: string
+    title: string
+    content: string
     created_at?: Date | string
-    comment: commentsCreateNestedOneWithoutLikesInput
+    updated_at?: Date | string
+    deleted_at?: Date | string | null
+    comments?: commentsCreateNestedManyWithoutPostInput
+    images?: post_imagesCreateNestedManyWithoutPostInput
+    likes?: post_likesCreateNestedManyWithoutPostInput
   }
 
-  export type comment_likesUncheckedCreateWithoutUserInput = {
-    comment_like_id?: string
-    comment_id: string
+  export type postsUncheckedCreateWithoutUserInput = {
+    post_id?: string
+    title: string
+    content: string
     created_at?: Date | string
+    updated_at?: Date | string
+    deleted_at?: Date | string | null
+    comments?: commentsUncheckedCreateNestedManyWithoutPostInput
+    images?: post_imagesUncheckedCreateNestedManyWithoutPostInput
+    likes?: post_likesUncheckedCreateNestedManyWithoutPostInput
   }
 
-  export type comment_likesCreateOrConnectWithoutUserInput = {
-    where: comment_likesWhereUniqueInput
-    create: XOR<comment_likesCreateWithoutUserInput, comment_likesUncheckedCreateWithoutUserInput>
+  export type postsCreateOrConnectWithoutUserInput = {
+    where: postsWhereUniqueInput
+    create: XOR<postsCreateWithoutUserInput, postsUncheckedCreateWithoutUserInput>
   }
 
-  export type comment_likesCreateManyUserInputEnvelope = {
-    data: comment_likesCreateManyUserInput | comment_likesCreateManyUserInput[]
+  export type postsCreateManyUserInputEnvelope = {
+    data: postsCreateManyUserInput | postsCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type walletsCreateWithoutUsersInput = {
+    wallet_id?: string
+    wallet_name: string
+    wallet_balance?: Decimal | DecimalJsLike | number | string
+    wallet_address: string
+    wallet_phrase?: string | null
+    created_at?: Date | string | null
+    updated_at?: Date | string | null
+    deleted_at?: Date | string | null
+    thumbnail?: string | null
+    wallet_network_tokens?: wallet_network_tokensCreateNestedManyWithoutWalletsInput
+    wallet_networks?: wallet_networksCreateNestedManyWithoutWalletsInput
+  }
+
+  export type walletsUncheckedCreateWithoutUsersInput = {
+    wallet_id?: string
+    wallet_name: string
+    wallet_balance?: Decimal | DecimalJsLike | number | string
+    wallet_address: string
+    wallet_phrase?: string | null
+    created_at?: Date | string | null
+    updated_at?: Date | string | null
+    deleted_at?: Date | string | null
+    thumbnail?: string | null
+    wallet_network_tokens?: wallet_network_tokensUncheckedCreateNestedManyWithoutWalletsInput
+    wallet_networks?: wallet_networksUncheckedCreateNestedManyWithoutWalletsInput
+  }
+
+  export type walletsCreateOrConnectWithoutUsersInput = {
+    where: walletsWhereUniqueInput
+    create: XOR<walletsCreateWithoutUsersInput, walletsUncheckedCreateWithoutUsersInput>
+  }
+
+  export type walletsCreateManyUsersInputEnvelope = {
+    data: walletsCreateManyUsersInput | walletsCreateManyUsersInput[]
     skipDuplicates?: boolean
   }
 
@@ -22249,6 +22280,61 @@ export namespace Prisma {
     target_table?: StringNullableFilter<"audit_logs"> | string | null
     target_id?: UuidNullableFilter<"audit_logs"> | string | null
     created_at?: DateTimeNullableFilter<"audit_logs"> | Date | string | null
+  }
+
+  export type comment_likesUpsertWithWhereUniqueWithoutUserInput = {
+    where: comment_likesWhereUniqueInput
+    update: XOR<comment_likesUpdateWithoutUserInput, comment_likesUncheckedUpdateWithoutUserInput>
+    create: XOR<comment_likesCreateWithoutUserInput, comment_likesUncheckedCreateWithoutUserInput>
+  }
+
+  export type comment_likesUpdateWithWhereUniqueWithoutUserInput = {
+    where: comment_likesWhereUniqueInput
+    data: XOR<comment_likesUpdateWithoutUserInput, comment_likesUncheckedUpdateWithoutUserInput>
+  }
+
+  export type comment_likesUpdateManyWithWhereWithoutUserInput = {
+    where: comment_likesScalarWhereInput
+    data: XOR<comment_likesUpdateManyMutationInput, comment_likesUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type comment_likesScalarWhereInput = {
+    AND?: comment_likesScalarWhereInput | comment_likesScalarWhereInput[]
+    OR?: comment_likesScalarWhereInput[]
+    NOT?: comment_likesScalarWhereInput | comment_likesScalarWhereInput[]
+    comment_like_id?: UuidFilter<"comment_likes"> | string
+    comment_id?: UuidFilter<"comment_likes"> | string
+    user_id?: UuidFilter<"comment_likes"> | string
+    created_at?: DateTimeFilter<"comment_likes"> | Date | string
+  }
+
+  export type commentsUpsertWithWhereUniqueWithoutUserInput = {
+    where: commentsWhereUniqueInput
+    update: XOR<commentsUpdateWithoutUserInput, commentsUncheckedUpdateWithoutUserInput>
+    create: XOR<commentsCreateWithoutUserInput, commentsUncheckedCreateWithoutUserInput>
+  }
+
+  export type commentsUpdateWithWhereUniqueWithoutUserInput = {
+    where: commentsWhereUniqueInput
+    data: XOR<commentsUpdateWithoutUserInput, commentsUncheckedUpdateWithoutUserInput>
+  }
+
+  export type commentsUpdateManyWithWhereWithoutUserInput = {
+    where: commentsScalarWhereInput
+    data: XOR<commentsUpdateManyMutationInput, commentsUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type commentsScalarWhereInput = {
+    AND?: commentsScalarWhereInput | commentsScalarWhereInput[]
+    OR?: commentsScalarWhereInput[]
+    NOT?: commentsScalarWhereInput | commentsScalarWhereInput[]
+    comment_id?: UuidFilter<"comments"> | string
+    post_id?: UuidFilter<"comments"> | string
+    user_id?: UuidFilter<"comments"> | string
+    content?: StringFilter<"comments"> | string
+    created_at?: DateTimeFilter<"comments"> | Date | string
+    updated_at?: DateTimeFilter<"comments"> | Date | string
+    deleted_at?: DateTimeNullableFilter<"comments"> | Date | string | null
   }
 
   export type networksUpsertWithWhereUniqueWithoutUsersInput = {
@@ -22289,64 +22375,30 @@ export namespace Prisma {
     coingecko_id?: StringNullableFilter<"networks"> | string | null
   }
 
-  export type walletsUpsertWithWhereUniqueWithoutUsersInput = {
-    where: walletsWhereUniqueInput
-    update: XOR<walletsUpdateWithoutUsersInput, walletsUncheckedUpdateWithoutUsersInput>
-    create: XOR<walletsCreateWithoutUsersInput, walletsUncheckedCreateWithoutUsersInput>
+  export type post_likesUpsertWithWhereUniqueWithoutUserInput = {
+    where: post_likesWhereUniqueInput
+    update: XOR<post_likesUpdateWithoutUserInput, post_likesUncheckedUpdateWithoutUserInput>
+    create: XOR<post_likesCreateWithoutUserInput, post_likesUncheckedCreateWithoutUserInput>
   }
 
-  export type walletsUpdateWithWhereUniqueWithoutUsersInput = {
-    where: walletsWhereUniqueInput
-    data: XOR<walletsUpdateWithoutUsersInput, walletsUncheckedUpdateWithoutUsersInput>
+  export type post_likesUpdateWithWhereUniqueWithoutUserInput = {
+    where: post_likesWhereUniqueInput
+    data: XOR<post_likesUpdateWithoutUserInput, post_likesUncheckedUpdateWithoutUserInput>
   }
 
-  export type walletsUpdateManyWithWhereWithoutUsersInput = {
-    where: walletsScalarWhereInput
-    data: XOR<walletsUpdateManyMutationInput, walletsUncheckedUpdateManyWithoutUsersInput>
+  export type post_likesUpdateManyWithWhereWithoutUserInput = {
+    where: post_likesScalarWhereInput
+    data: XOR<post_likesUpdateManyMutationInput, post_likesUncheckedUpdateManyWithoutUserInput>
   }
 
-  export type walletsScalarWhereInput = {
-    AND?: walletsScalarWhereInput | walletsScalarWhereInput[]
-    OR?: walletsScalarWhereInput[]
-    NOT?: walletsScalarWhereInput | walletsScalarWhereInput[]
-    wallet_id?: UuidFilter<"wallets"> | string
-    user_id?: UuidNullableFilter<"wallets"> | string | null
-    wallet_name?: StringFilter<"wallets"> | string
-    wallet_balance?: DecimalFilter<"wallets"> | Decimal | DecimalJsLike | number | string
-    wallet_address?: StringFilter<"wallets"> | string
-    wallet_phrase?: StringNullableFilter<"wallets"> | string | null
-    created_at?: DateTimeNullableFilter<"wallets"> | Date | string | null
-    updated_at?: DateTimeNullableFilter<"wallets"> | Date | string | null
-    deleted_at?: DateTimeNullableFilter<"wallets"> | Date | string | null
-  }
-
-  export type commentsUpsertWithWhereUniqueWithoutUserInput = {
-    where: commentsWhereUniqueInput
-    update: XOR<commentsUpdateWithoutUserInput, commentsUncheckedUpdateWithoutUserInput>
-    create: XOR<commentsCreateWithoutUserInput, commentsUncheckedCreateWithoutUserInput>
-  }
-
-  export type commentsUpdateWithWhereUniqueWithoutUserInput = {
-    where: commentsWhereUniqueInput
-    data: XOR<commentsUpdateWithoutUserInput, commentsUncheckedUpdateWithoutUserInput>
-  }
-
-  export type commentsUpdateManyWithWhereWithoutUserInput = {
-    where: commentsScalarWhereInput
-    data: XOR<commentsUpdateManyMutationInput, commentsUncheckedUpdateManyWithoutUserInput>
-  }
-
-  export type commentsScalarWhereInput = {
-    AND?: commentsScalarWhereInput | commentsScalarWhereInput[]
-    OR?: commentsScalarWhereInput[]
-    NOT?: commentsScalarWhereInput | commentsScalarWhereInput[]
-    comment_id?: UuidFilter<"comments"> | string
-    post_id?: UuidFilter<"comments"> | string
-    user_id?: UuidFilter<"comments"> | string
-    content?: StringFilter<"comments"> | string
-    created_at?: DateTimeFilter<"comments"> | Date | string
-    updated_at?: DateTimeFilter<"comments"> | Date | string
-    deleted_at?: DateTimeNullableFilter<"comments"> | Date | string | null
+  export type post_likesScalarWhereInput = {
+    AND?: post_likesScalarWhereInput | post_likesScalarWhereInput[]
+    OR?: post_likesScalarWhereInput[]
+    NOT?: post_likesScalarWhereInput | post_likesScalarWhereInput[]
+    post_like_id?: UuidFilter<"post_likes"> | string
+    post_id?: UuidFilter<"post_likes"> | string
+    user_id?: UuidFilter<"post_likes"> | string
+    created_at?: DateTimeFilter<"post_likes"> | Date | string
   }
 
   export type postsUpsertWithWhereUniqueWithoutUserInput = {
@@ -22378,56 +22430,36 @@ export namespace Prisma {
     deleted_at?: DateTimeNullableFilter<"posts"> | Date | string | null
   }
 
-  export type post_likesUpsertWithWhereUniqueWithoutUserInput = {
-    where: post_likesWhereUniqueInput
-    update: XOR<post_likesUpdateWithoutUserInput, post_likesUncheckedUpdateWithoutUserInput>
-    create: XOR<post_likesCreateWithoutUserInput, post_likesUncheckedCreateWithoutUserInput>
+  export type walletsUpsertWithWhereUniqueWithoutUsersInput = {
+    where: walletsWhereUniqueInput
+    update: XOR<walletsUpdateWithoutUsersInput, walletsUncheckedUpdateWithoutUsersInput>
+    create: XOR<walletsCreateWithoutUsersInput, walletsUncheckedCreateWithoutUsersInput>
   }
 
-  export type post_likesUpdateWithWhereUniqueWithoutUserInput = {
-    where: post_likesWhereUniqueInput
-    data: XOR<post_likesUpdateWithoutUserInput, post_likesUncheckedUpdateWithoutUserInput>
+  export type walletsUpdateWithWhereUniqueWithoutUsersInput = {
+    where: walletsWhereUniqueInput
+    data: XOR<walletsUpdateWithoutUsersInput, walletsUncheckedUpdateWithoutUsersInput>
   }
 
-  export type post_likesUpdateManyWithWhereWithoutUserInput = {
-    where: post_likesScalarWhereInput
-    data: XOR<post_likesUpdateManyMutationInput, post_likesUncheckedUpdateManyWithoutUserInput>
+  export type walletsUpdateManyWithWhereWithoutUsersInput = {
+    where: walletsScalarWhereInput
+    data: XOR<walletsUpdateManyMutationInput, walletsUncheckedUpdateManyWithoutUsersInput>
   }
 
-  export type post_likesScalarWhereInput = {
-    AND?: post_likesScalarWhereInput | post_likesScalarWhereInput[]
-    OR?: post_likesScalarWhereInput[]
-    NOT?: post_likesScalarWhereInput | post_likesScalarWhereInput[]
-    post_like_id?: UuidFilter<"post_likes"> | string
-    post_id?: UuidFilter<"post_likes"> | string
-    user_id?: UuidFilter<"post_likes"> | string
-    created_at?: DateTimeFilter<"post_likes"> | Date | string
-  }
-
-  export type comment_likesUpsertWithWhereUniqueWithoutUserInput = {
-    where: comment_likesWhereUniqueInput
-    update: XOR<comment_likesUpdateWithoutUserInput, comment_likesUncheckedUpdateWithoutUserInput>
-    create: XOR<comment_likesCreateWithoutUserInput, comment_likesUncheckedCreateWithoutUserInput>
-  }
-
-  export type comment_likesUpdateWithWhereUniqueWithoutUserInput = {
-    where: comment_likesWhereUniqueInput
-    data: XOR<comment_likesUpdateWithoutUserInput, comment_likesUncheckedUpdateWithoutUserInput>
-  }
-
-  export type comment_likesUpdateManyWithWhereWithoutUserInput = {
-    where: comment_likesScalarWhereInput
-    data: XOR<comment_likesUpdateManyMutationInput, comment_likesUncheckedUpdateManyWithoutUserInput>
-  }
-
-  export type comment_likesScalarWhereInput = {
-    AND?: comment_likesScalarWhereInput | comment_likesScalarWhereInput[]
-    OR?: comment_likesScalarWhereInput[]
-    NOT?: comment_likesScalarWhereInput | comment_likesScalarWhereInput[]
-    comment_like_id?: UuidFilter<"comment_likes"> | string
-    comment_id?: UuidFilter<"comment_likes"> | string
-    user_id?: UuidFilter<"comment_likes"> | string
-    created_at?: DateTimeFilter<"comment_likes"> | Date | string
+  export type walletsScalarWhereInput = {
+    AND?: walletsScalarWhereInput | walletsScalarWhereInput[]
+    OR?: walletsScalarWhereInput[]
+    NOT?: walletsScalarWhereInput | walletsScalarWhereInput[]
+    wallet_id?: UuidFilter<"wallets"> | string
+    user_id?: UuidNullableFilter<"wallets"> | string | null
+    wallet_name?: StringFilter<"wallets"> | string
+    wallet_balance?: DecimalFilter<"wallets"> | Decimal | DecimalJsLike | number | string
+    wallet_address?: StringFilter<"wallets"> | string
+    wallet_phrase?: StringNullableFilter<"wallets"> | string | null
+    created_at?: DateTimeNullableFilter<"wallets"> | Date | string | null
+    updated_at?: DateTimeNullableFilter<"wallets"> | Date | string | null
+    deleted_at?: DateTimeNullableFilter<"wallets"> | Date | string | null
+    thumbnail?: StringNullableFilter<"wallets"> | string | null
   }
 
   export type token_networksCreateWithoutWallet_network_tokensInput = {
@@ -22458,6 +22490,7 @@ export namespace Prisma {
     created_at?: Date | string | null
     updated_at?: Date | string | null
     deleted_at?: Date | string | null
+    thumbnail?: string | null
     wallet_networks?: wallet_networksCreateNestedManyWithoutWalletsInput
     users?: usersCreateNestedOneWithoutWalletsInput
   }
@@ -22472,6 +22505,7 @@ export namespace Prisma {
     created_at?: Date | string | null
     updated_at?: Date | string | null
     deleted_at?: Date | string | null
+    thumbnail?: string | null
     wallet_networks?: wallet_networksUncheckedCreateNestedManyWithoutWalletsInput
   }
 
@@ -22525,6 +22559,7 @@ export namespace Prisma {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    thumbnail?: NullableStringFieldUpdateOperationsInput | string | null
     wallet_networks?: wallet_networksUpdateManyWithoutWalletsNestedInput
     users?: usersUpdateOneWithoutWalletsNestedInput
   }
@@ -22539,6 +22574,7 @@ export namespace Prisma {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    thumbnail?: NullableStringFieldUpdateOperationsInput | string | null
     wallet_networks?: wallet_networksUncheckedUpdateManyWithoutWalletsNestedInput
   }
 
@@ -22596,6 +22632,7 @@ export namespace Prisma {
     created_at?: Date | string | null
     updated_at?: Date | string | null
     deleted_at?: Date | string | null
+    thumbnail?: string | null
     wallet_network_tokens?: wallet_network_tokensCreateNestedManyWithoutWalletsInput
     users?: usersCreateNestedOneWithoutWalletsInput
   }
@@ -22610,6 +22647,7 @@ export namespace Prisma {
     created_at?: Date | string | null
     updated_at?: Date | string | null
     deleted_at?: Date | string | null
+    thumbnail?: string | null
     wallet_network_tokens?: wallet_network_tokensUncheckedCreateNestedManyWithoutWalletsInput
   }
 
@@ -22689,6 +22727,7 @@ export namespace Prisma {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    thumbnail?: NullableStringFieldUpdateOperationsInput | string | null
     wallet_network_tokens?: wallet_network_tokensUpdateManyWithoutWalletsNestedInput
     users?: usersUpdateOneWithoutWalletsNestedInput
   }
@@ -22703,6 +22742,7 @@ export namespace Prisma {
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    thumbnail?: NullableStringFieldUpdateOperationsInput | string | null
     wallet_network_tokens?: wallet_network_tokensUncheckedUpdateManyWithoutWalletsNestedInput
   }
 
@@ -22769,11 +22809,11 @@ export namespace Prisma {
     notiToken?: string | null
     biometricPublicKey?: string | null
     audit_logs?: audit_logsCreateNestedManyWithoutUsersInput
-    networks?: networksCreateNestedManyWithoutUsersInput
-    comments?: commentsCreateNestedManyWithoutUserInput
-    posts?: postsCreateNestedManyWithoutUserInput
-    post_likes?: post_likesCreateNestedManyWithoutUserInput
     comment_likes?: comment_likesCreateNestedManyWithoutUserInput
+    comments?: commentsCreateNestedManyWithoutUserInput
+    networks?: networksCreateNestedManyWithoutUsersInput
+    post_likes?: post_likesCreateNestedManyWithoutUserInput
+    posts?: postsCreateNestedManyWithoutUserInput
   }
 
   export type usersUncheckedCreateWithoutWalletsInput = {
@@ -22789,11 +22829,11 @@ export namespace Prisma {
     notiToken?: string | null
     biometricPublicKey?: string | null
     audit_logs?: audit_logsUncheckedCreateNestedManyWithoutUsersInput
-    networks?: networksUncheckedCreateNestedManyWithoutUsersInput
-    comments?: commentsUncheckedCreateNestedManyWithoutUserInput
-    posts?: postsUncheckedCreateNestedManyWithoutUserInput
-    post_likes?: post_likesUncheckedCreateNestedManyWithoutUserInput
     comment_likes?: comment_likesUncheckedCreateNestedManyWithoutUserInput
+    comments?: commentsUncheckedCreateNestedManyWithoutUserInput
+    networks?: networksUncheckedCreateNestedManyWithoutUsersInput
+    post_likes?: post_likesUncheckedCreateNestedManyWithoutUserInput
+    posts?: postsUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type usersCreateOrConnectWithoutWalletsInput = {
@@ -22857,11 +22897,11 @@ export namespace Prisma {
     notiToken?: NullableStringFieldUpdateOperationsInput | string | null
     biometricPublicKey?: NullableStringFieldUpdateOperationsInput | string | null
     audit_logs?: audit_logsUpdateManyWithoutUsersNestedInput
-    networks?: networksUpdateManyWithoutUsersNestedInput
-    comments?: commentsUpdateManyWithoutUserNestedInput
-    posts?: postsUpdateManyWithoutUserNestedInput
-    post_likes?: post_likesUpdateManyWithoutUserNestedInput
     comment_likes?: comment_likesUpdateManyWithoutUserNestedInput
+    comments?: commentsUpdateManyWithoutUserNestedInput
+    networks?: networksUpdateManyWithoutUsersNestedInput
+    post_likes?: post_likesUpdateManyWithoutUserNestedInput
+    posts?: postsUpdateManyWithoutUserNestedInput
   }
 
   export type usersUncheckedUpdateWithoutWalletsInput = {
@@ -22877,56 +22917,11 @@ export namespace Prisma {
     notiToken?: NullableStringFieldUpdateOperationsInput | string | null
     biometricPublicKey?: NullableStringFieldUpdateOperationsInput | string | null
     audit_logs?: audit_logsUncheckedUpdateManyWithoutUsersNestedInput
-    networks?: networksUncheckedUpdateManyWithoutUsersNestedInput
-    comments?: commentsUncheckedUpdateManyWithoutUserNestedInput
-    posts?: postsUncheckedUpdateManyWithoutUserNestedInput
-    post_likes?: post_likesUncheckedUpdateManyWithoutUserNestedInput
     comment_likes?: comment_likesUncheckedUpdateManyWithoutUserNestedInput
-  }
-
-  export type usersCreateWithoutPostsInput = {
-    user_id?: string
-    username: string
-    avatar?: string | null
-    bio?: string | null
-    email?: string | null
-    password_hash: string
-    created_at?: Date | string | null
-    updated_at?: Date | string | null
-    deleted_at?: Date | string | null
-    notiToken?: string | null
-    biometricPublicKey?: string | null
-    audit_logs?: audit_logsCreateNestedManyWithoutUsersInput
-    networks?: networksCreateNestedManyWithoutUsersInput
-    wallets?: walletsCreateNestedManyWithoutUsersInput
-    comments?: commentsCreateNestedManyWithoutUserInput
-    post_likes?: post_likesCreateNestedManyWithoutUserInput
-    comment_likes?: comment_likesCreateNestedManyWithoutUserInput
-  }
-
-  export type usersUncheckedCreateWithoutPostsInput = {
-    user_id?: string
-    username: string
-    avatar?: string | null
-    bio?: string | null
-    email?: string | null
-    password_hash: string
-    created_at?: Date | string | null
-    updated_at?: Date | string | null
-    deleted_at?: Date | string | null
-    notiToken?: string | null
-    biometricPublicKey?: string | null
-    audit_logs?: audit_logsUncheckedCreateNestedManyWithoutUsersInput
-    networks?: networksUncheckedCreateNestedManyWithoutUsersInput
-    wallets?: walletsUncheckedCreateNestedManyWithoutUsersInput
-    comments?: commentsUncheckedCreateNestedManyWithoutUserInput
-    post_likes?: post_likesUncheckedCreateNestedManyWithoutUserInput
-    comment_likes?: comment_likesUncheckedCreateNestedManyWithoutUserInput
-  }
-
-  export type usersCreateOrConnectWithoutPostsInput = {
-    where: usersWhereUniqueInput
-    create: XOR<usersCreateWithoutPostsInput, usersUncheckedCreateWithoutPostsInput>
+    comments?: commentsUncheckedUpdateManyWithoutUserNestedInput
+    networks?: networksUncheckedUpdateManyWithoutUsersNestedInput
+    post_likes?: post_likesUncheckedUpdateManyWithoutUserNestedInput
+    posts?: postsUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type commentsCreateWithoutPostInput = {
@@ -22935,8 +22930,8 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     deleted_at?: Date | string | null
-    user: usersCreateNestedOneWithoutCommentsInput
     likes?: comment_likesCreateNestedManyWithoutCommentInput
+    user: usersCreateNestedOneWithoutCommentsInput
   }
 
   export type commentsUncheckedCreateWithoutPostInput = {
@@ -22956,28 +22951,6 @@ export namespace Prisma {
 
   export type commentsCreateManyPostInputEnvelope = {
     data: commentsCreateManyPostInput | commentsCreateManyPostInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type post_likesCreateWithoutPostInput = {
-    post_like_id?: string
-    created_at?: Date | string
-    user: usersCreateNestedOneWithoutPost_likesInput
-  }
-
-  export type post_likesUncheckedCreateWithoutPostInput = {
-    post_like_id?: string
-    user_id: string
-    created_at?: Date | string
-  }
-
-  export type post_likesCreateOrConnectWithoutPostInput = {
-    where: post_likesWhereUniqueInput
-    create: XOR<post_likesCreateWithoutPostInput, post_likesUncheckedCreateWithoutPostInput>
-  }
-
-  export type post_likesCreateManyPostInputEnvelope = {
-    data: post_likesCreateManyPostInput | post_likesCreateManyPostInput[]
     skipDuplicates?: boolean
   }
 
@@ -23003,55 +22976,71 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type usersUpsertWithoutPostsInput = {
-    update: XOR<usersUpdateWithoutPostsInput, usersUncheckedUpdateWithoutPostsInput>
+  export type post_likesCreateWithoutPostInput = {
+    post_like_id?: string
+    created_at?: Date | string
+    user: usersCreateNestedOneWithoutPost_likesInput
+  }
+
+  export type post_likesUncheckedCreateWithoutPostInput = {
+    post_like_id?: string
+    user_id: string
+    created_at?: Date | string
+  }
+
+  export type post_likesCreateOrConnectWithoutPostInput = {
+    where: post_likesWhereUniqueInput
+    create: XOR<post_likesCreateWithoutPostInput, post_likesUncheckedCreateWithoutPostInput>
+  }
+
+  export type post_likesCreateManyPostInputEnvelope = {
+    data: post_likesCreateManyPostInput | post_likesCreateManyPostInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type usersCreateWithoutPostsInput = {
+    user_id?: string
+    username: string
+    avatar?: string | null
+    bio?: string | null
+    email?: string | null
+    password_hash: string
+    created_at?: Date | string | null
+    updated_at?: Date | string | null
+    deleted_at?: Date | string | null
+    notiToken?: string | null
+    biometricPublicKey?: string | null
+    audit_logs?: audit_logsCreateNestedManyWithoutUsersInput
+    comment_likes?: comment_likesCreateNestedManyWithoutUserInput
+    comments?: commentsCreateNestedManyWithoutUserInput
+    networks?: networksCreateNestedManyWithoutUsersInput
+    post_likes?: post_likesCreateNestedManyWithoutUserInput
+    wallets?: walletsCreateNestedManyWithoutUsersInput
+  }
+
+  export type usersUncheckedCreateWithoutPostsInput = {
+    user_id?: string
+    username: string
+    avatar?: string | null
+    bio?: string | null
+    email?: string | null
+    password_hash: string
+    created_at?: Date | string | null
+    updated_at?: Date | string | null
+    deleted_at?: Date | string | null
+    notiToken?: string | null
+    biometricPublicKey?: string | null
+    audit_logs?: audit_logsUncheckedCreateNestedManyWithoutUsersInput
+    comment_likes?: comment_likesUncheckedCreateNestedManyWithoutUserInput
+    comments?: commentsUncheckedCreateNestedManyWithoutUserInput
+    networks?: networksUncheckedCreateNestedManyWithoutUsersInput
+    post_likes?: post_likesUncheckedCreateNestedManyWithoutUserInput
+    wallets?: walletsUncheckedCreateNestedManyWithoutUsersInput
+  }
+
+  export type usersCreateOrConnectWithoutPostsInput = {
+    where: usersWhereUniqueInput
     create: XOR<usersCreateWithoutPostsInput, usersUncheckedCreateWithoutPostsInput>
-    where?: usersWhereInput
-  }
-
-  export type usersUpdateToOneWithWhereWithoutPostsInput = {
-    where?: usersWhereInput
-    data: XOR<usersUpdateWithoutPostsInput, usersUncheckedUpdateWithoutPostsInput>
-  }
-
-  export type usersUpdateWithoutPostsInput = {
-    user_id?: StringFieldUpdateOperationsInput | string
-    username?: StringFieldUpdateOperationsInput | string
-    avatar?: NullableStringFieldUpdateOperationsInput | string | null
-    bio?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    password_hash?: StringFieldUpdateOperationsInput | string
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    notiToken?: NullableStringFieldUpdateOperationsInput | string | null
-    biometricPublicKey?: NullableStringFieldUpdateOperationsInput | string | null
-    audit_logs?: audit_logsUpdateManyWithoutUsersNestedInput
-    networks?: networksUpdateManyWithoutUsersNestedInput
-    wallets?: walletsUpdateManyWithoutUsersNestedInput
-    comments?: commentsUpdateManyWithoutUserNestedInput
-    post_likes?: post_likesUpdateManyWithoutUserNestedInput
-    comment_likes?: comment_likesUpdateManyWithoutUserNestedInput
-  }
-
-  export type usersUncheckedUpdateWithoutPostsInput = {
-    user_id?: StringFieldUpdateOperationsInput | string
-    username?: StringFieldUpdateOperationsInput | string
-    avatar?: NullableStringFieldUpdateOperationsInput | string | null
-    bio?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    password_hash?: StringFieldUpdateOperationsInput | string
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    notiToken?: NullableStringFieldUpdateOperationsInput | string | null
-    biometricPublicKey?: NullableStringFieldUpdateOperationsInput | string | null
-    audit_logs?: audit_logsUncheckedUpdateManyWithoutUsersNestedInput
-    networks?: networksUncheckedUpdateManyWithoutUsersNestedInput
-    wallets?: walletsUncheckedUpdateManyWithoutUsersNestedInput
-    comments?: commentsUncheckedUpdateManyWithoutUserNestedInput
-    post_likes?: post_likesUncheckedUpdateManyWithoutUserNestedInput
-    comment_likes?: comment_likesUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type commentsUpsertWithWhereUniqueWithoutPostInput = {
@@ -23068,22 +23057,6 @@ export namespace Prisma {
   export type commentsUpdateManyWithWhereWithoutPostInput = {
     where: commentsScalarWhereInput
     data: XOR<commentsUpdateManyMutationInput, commentsUncheckedUpdateManyWithoutPostInput>
-  }
-
-  export type post_likesUpsertWithWhereUniqueWithoutPostInput = {
-    where: post_likesWhereUniqueInput
-    update: XOR<post_likesUpdateWithoutPostInput, post_likesUncheckedUpdateWithoutPostInput>
-    create: XOR<post_likesCreateWithoutPostInput, post_likesUncheckedCreateWithoutPostInput>
-  }
-
-  export type post_likesUpdateWithWhereUniqueWithoutPostInput = {
-    where: post_likesWhereUniqueInput
-    data: XOR<post_likesUpdateWithoutPostInput, post_likesUncheckedUpdateWithoutPostInput>
-  }
-
-  export type post_likesUpdateManyWithWhereWithoutPostInput = {
-    where: post_likesScalarWhereInput
-    data: XOR<post_likesUpdateManyMutationInput, post_likesUncheckedUpdateManyWithoutPostInput>
   }
 
   export type post_imagesUpsertWithWhereUniqueWithoutPostInput = {
@@ -23112,6 +23085,73 @@ export namespace Prisma {
     created_at?: DateTimeFilter<"post_images"> | Date | string
   }
 
+  export type post_likesUpsertWithWhereUniqueWithoutPostInput = {
+    where: post_likesWhereUniqueInput
+    update: XOR<post_likesUpdateWithoutPostInput, post_likesUncheckedUpdateWithoutPostInput>
+    create: XOR<post_likesCreateWithoutPostInput, post_likesUncheckedCreateWithoutPostInput>
+  }
+
+  export type post_likesUpdateWithWhereUniqueWithoutPostInput = {
+    where: post_likesWhereUniqueInput
+    data: XOR<post_likesUpdateWithoutPostInput, post_likesUncheckedUpdateWithoutPostInput>
+  }
+
+  export type post_likesUpdateManyWithWhereWithoutPostInput = {
+    where: post_likesScalarWhereInput
+    data: XOR<post_likesUpdateManyMutationInput, post_likesUncheckedUpdateManyWithoutPostInput>
+  }
+
+  export type usersUpsertWithoutPostsInput = {
+    update: XOR<usersUpdateWithoutPostsInput, usersUncheckedUpdateWithoutPostsInput>
+    create: XOR<usersCreateWithoutPostsInput, usersUncheckedCreateWithoutPostsInput>
+    where?: usersWhereInput
+  }
+
+  export type usersUpdateToOneWithWhereWithoutPostsInput = {
+    where?: usersWhereInput
+    data: XOR<usersUpdateWithoutPostsInput, usersUncheckedUpdateWithoutPostsInput>
+  }
+
+  export type usersUpdateWithoutPostsInput = {
+    user_id?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    password_hash?: StringFieldUpdateOperationsInput | string
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notiToken?: NullableStringFieldUpdateOperationsInput | string | null
+    biometricPublicKey?: NullableStringFieldUpdateOperationsInput | string | null
+    audit_logs?: audit_logsUpdateManyWithoutUsersNestedInput
+    comment_likes?: comment_likesUpdateManyWithoutUserNestedInput
+    comments?: commentsUpdateManyWithoutUserNestedInput
+    networks?: networksUpdateManyWithoutUsersNestedInput
+    post_likes?: post_likesUpdateManyWithoutUserNestedInput
+    wallets?: walletsUpdateManyWithoutUsersNestedInput
+  }
+
+  export type usersUncheckedUpdateWithoutPostsInput = {
+    user_id?: StringFieldUpdateOperationsInput | string
+    username?: StringFieldUpdateOperationsInput | string
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    password_hash?: StringFieldUpdateOperationsInput | string
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notiToken?: NullableStringFieldUpdateOperationsInput | string | null
+    biometricPublicKey?: NullableStringFieldUpdateOperationsInput | string | null
+    audit_logs?: audit_logsUncheckedUpdateManyWithoutUsersNestedInput
+    comment_likes?: comment_likesUncheckedUpdateManyWithoutUserNestedInput
+    comments?: commentsUncheckedUpdateManyWithoutUserNestedInput
+    networks?: networksUncheckedUpdateManyWithoutUsersNestedInput
+    post_likes?: post_likesUncheckedUpdateManyWithoutUserNestedInput
+    wallets?: walletsUncheckedUpdateManyWithoutUsersNestedInput
+  }
+
   export type postsCreateWithoutImagesInput = {
     post_id?: string
     title: string
@@ -23119,9 +23159,9 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     deleted_at?: Date | string | null
-    user: usersCreateNestedOneWithoutPostsInput
     comments?: commentsCreateNestedManyWithoutPostInput
     likes?: post_likesCreateNestedManyWithoutPostInput
+    user: usersCreateNestedOneWithoutPostsInput
   }
 
   export type postsUncheckedCreateWithoutImagesInput = {
@@ -23159,9 +23199,9 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    user?: usersUpdateOneRequiredWithoutPostsNestedInput
     comments?: commentsUpdateManyWithoutPostNestedInput
     likes?: post_likesUpdateManyWithoutPostNestedInput
+    user?: usersUpdateOneRequiredWithoutPostsNestedInput
   }
 
   export type postsUncheckedUpdateWithoutImagesInput = {
@@ -23174,80 +23214,6 @@ export namespace Prisma {
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     comments?: commentsUncheckedUpdateManyWithoutPostNestedInput
     likes?: post_likesUncheckedUpdateManyWithoutPostNestedInput
-  }
-
-  export type postsCreateWithoutCommentsInput = {
-    post_id?: string
-    title: string
-    content: string
-    created_at?: Date | string
-    updated_at?: Date | string
-    deleted_at?: Date | string | null
-    user: usersCreateNestedOneWithoutPostsInput
-    likes?: post_likesCreateNestedManyWithoutPostInput
-    images?: post_imagesCreateNestedManyWithoutPostInput
-  }
-
-  export type postsUncheckedCreateWithoutCommentsInput = {
-    post_id?: string
-    user_id: string
-    title: string
-    content: string
-    created_at?: Date | string
-    updated_at?: Date | string
-    deleted_at?: Date | string | null
-    likes?: post_likesUncheckedCreateNestedManyWithoutPostInput
-    images?: post_imagesUncheckedCreateNestedManyWithoutPostInput
-  }
-
-  export type postsCreateOrConnectWithoutCommentsInput = {
-    where: postsWhereUniqueInput
-    create: XOR<postsCreateWithoutCommentsInput, postsUncheckedCreateWithoutCommentsInput>
-  }
-
-  export type usersCreateWithoutCommentsInput = {
-    user_id?: string
-    username: string
-    avatar?: string | null
-    bio?: string | null
-    email?: string | null
-    password_hash: string
-    created_at?: Date | string | null
-    updated_at?: Date | string | null
-    deleted_at?: Date | string | null
-    notiToken?: string | null
-    biometricPublicKey?: string | null
-    audit_logs?: audit_logsCreateNestedManyWithoutUsersInput
-    networks?: networksCreateNestedManyWithoutUsersInput
-    wallets?: walletsCreateNestedManyWithoutUsersInput
-    posts?: postsCreateNestedManyWithoutUserInput
-    post_likes?: post_likesCreateNestedManyWithoutUserInput
-    comment_likes?: comment_likesCreateNestedManyWithoutUserInput
-  }
-
-  export type usersUncheckedCreateWithoutCommentsInput = {
-    user_id?: string
-    username: string
-    avatar?: string | null
-    bio?: string | null
-    email?: string | null
-    password_hash: string
-    created_at?: Date | string | null
-    updated_at?: Date | string | null
-    deleted_at?: Date | string | null
-    notiToken?: string | null
-    biometricPublicKey?: string | null
-    audit_logs?: audit_logsUncheckedCreateNestedManyWithoutUsersInput
-    networks?: networksUncheckedCreateNestedManyWithoutUsersInput
-    wallets?: walletsUncheckedCreateNestedManyWithoutUsersInput
-    posts?: postsUncheckedCreateNestedManyWithoutUserInput
-    post_likes?: post_likesUncheckedCreateNestedManyWithoutUserInput
-    comment_likes?: comment_likesUncheckedCreateNestedManyWithoutUserInput
-  }
-
-  export type usersCreateOrConnectWithoutCommentsInput = {
-    where: usersWhereUniqueInput
-    create: XOR<usersCreateWithoutCommentsInput, usersUncheckedCreateWithoutCommentsInput>
   }
 
   export type comment_likesCreateWithoutCommentInput = {
@@ -23272,6 +23238,96 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type postsCreateWithoutCommentsInput = {
+    post_id?: string
+    title: string
+    content: string
+    created_at?: Date | string
+    updated_at?: Date | string
+    deleted_at?: Date | string | null
+    images?: post_imagesCreateNestedManyWithoutPostInput
+    likes?: post_likesCreateNestedManyWithoutPostInput
+    user: usersCreateNestedOneWithoutPostsInput
+  }
+
+  export type postsUncheckedCreateWithoutCommentsInput = {
+    post_id?: string
+    user_id: string
+    title: string
+    content: string
+    created_at?: Date | string
+    updated_at?: Date | string
+    deleted_at?: Date | string | null
+    images?: post_imagesUncheckedCreateNestedManyWithoutPostInput
+    likes?: post_likesUncheckedCreateNestedManyWithoutPostInput
+  }
+
+  export type postsCreateOrConnectWithoutCommentsInput = {
+    where: postsWhereUniqueInput
+    create: XOR<postsCreateWithoutCommentsInput, postsUncheckedCreateWithoutCommentsInput>
+  }
+
+  export type usersCreateWithoutCommentsInput = {
+    user_id?: string
+    username: string
+    avatar?: string | null
+    bio?: string | null
+    email?: string | null
+    password_hash: string
+    created_at?: Date | string | null
+    updated_at?: Date | string | null
+    deleted_at?: Date | string | null
+    notiToken?: string | null
+    biometricPublicKey?: string | null
+    audit_logs?: audit_logsCreateNestedManyWithoutUsersInput
+    comment_likes?: comment_likesCreateNestedManyWithoutUserInput
+    networks?: networksCreateNestedManyWithoutUsersInput
+    post_likes?: post_likesCreateNestedManyWithoutUserInput
+    posts?: postsCreateNestedManyWithoutUserInput
+    wallets?: walletsCreateNestedManyWithoutUsersInput
+  }
+
+  export type usersUncheckedCreateWithoutCommentsInput = {
+    user_id?: string
+    username: string
+    avatar?: string | null
+    bio?: string | null
+    email?: string | null
+    password_hash: string
+    created_at?: Date | string | null
+    updated_at?: Date | string | null
+    deleted_at?: Date | string | null
+    notiToken?: string | null
+    biometricPublicKey?: string | null
+    audit_logs?: audit_logsUncheckedCreateNestedManyWithoutUsersInput
+    comment_likes?: comment_likesUncheckedCreateNestedManyWithoutUserInput
+    networks?: networksUncheckedCreateNestedManyWithoutUsersInput
+    post_likes?: post_likesUncheckedCreateNestedManyWithoutUserInput
+    posts?: postsUncheckedCreateNestedManyWithoutUserInput
+    wallets?: walletsUncheckedCreateNestedManyWithoutUsersInput
+  }
+
+  export type usersCreateOrConnectWithoutCommentsInput = {
+    where: usersWhereUniqueInput
+    create: XOR<usersCreateWithoutCommentsInput, usersUncheckedCreateWithoutCommentsInput>
+  }
+
+  export type comment_likesUpsertWithWhereUniqueWithoutCommentInput = {
+    where: comment_likesWhereUniqueInput
+    update: XOR<comment_likesUpdateWithoutCommentInput, comment_likesUncheckedUpdateWithoutCommentInput>
+    create: XOR<comment_likesCreateWithoutCommentInput, comment_likesUncheckedCreateWithoutCommentInput>
+  }
+
+  export type comment_likesUpdateWithWhereUniqueWithoutCommentInput = {
+    where: comment_likesWhereUniqueInput
+    data: XOR<comment_likesUpdateWithoutCommentInput, comment_likesUncheckedUpdateWithoutCommentInput>
+  }
+
+  export type comment_likesUpdateManyWithWhereWithoutCommentInput = {
+    where: comment_likesScalarWhereInput
+    data: XOR<comment_likesUpdateManyMutationInput, comment_likesUncheckedUpdateManyWithoutCommentInput>
+  }
+
   export type postsUpsertWithoutCommentsInput = {
     update: XOR<postsUpdateWithoutCommentsInput, postsUncheckedUpdateWithoutCommentsInput>
     create: XOR<postsCreateWithoutCommentsInput, postsUncheckedCreateWithoutCommentsInput>
@@ -23290,9 +23346,9 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    user?: usersUpdateOneRequiredWithoutPostsNestedInput
-    likes?: post_likesUpdateManyWithoutPostNestedInput
     images?: post_imagesUpdateManyWithoutPostNestedInput
+    likes?: post_likesUpdateManyWithoutPostNestedInput
+    user?: usersUpdateOneRequiredWithoutPostsNestedInput
   }
 
   export type postsUncheckedUpdateWithoutCommentsInput = {
@@ -23303,8 +23359,8 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    likes?: post_likesUncheckedUpdateManyWithoutPostNestedInput
     images?: post_imagesUncheckedUpdateManyWithoutPostNestedInput
+    likes?: post_likesUncheckedUpdateManyWithoutPostNestedInput
   }
 
   export type usersUpsertWithoutCommentsInput = {
@@ -23331,11 +23387,11 @@ export namespace Prisma {
     notiToken?: NullableStringFieldUpdateOperationsInput | string | null
     biometricPublicKey?: NullableStringFieldUpdateOperationsInput | string | null
     audit_logs?: audit_logsUpdateManyWithoutUsersNestedInput
-    networks?: networksUpdateManyWithoutUsersNestedInput
-    wallets?: walletsUpdateManyWithoutUsersNestedInput
-    posts?: postsUpdateManyWithoutUserNestedInput
-    post_likes?: post_likesUpdateManyWithoutUserNestedInput
     comment_likes?: comment_likesUpdateManyWithoutUserNestedInput
+    networks?: networksUpdateManyWithoutUsersNestedInput
+    post_likes?: post_likesUpdateManyWithoutUserNestedInput
+    posts?: postsUpdateManyWithoutUserNestedInput
+    wallets?: walletsUpdateManyWithoutUsersNestedInput
   }
 
   export type usersUncheckedUpdateWithoutCommentsInput = {
@@ -23351,27 +23407,11 @@ export namespace Prisma {
     notiToken?: NullableStringFieldUpdateOperationsInput | string | null
     biometricPublicKey?: NullableStringFieldUpdateOperationsInput | string | null
     audit_logs?: audit_logsUncheckedUpdateManyWithoutUsersNestedInput
-    networks?: networksUncheckedUpdateManyWithoutUsersNestedInput
-    wallets?: walletsUncheckedUpdateManyWithoutUsersNestedInput
-    posts?: postsUncheckedUpdateManyWithoutUserNestedInput
-    post_likes?: post_likesUncheckedUpdateManyWithoutUserNestedInput
     comment_likes?: comment_likesUncheckedUpdateManyWithoutUserNestedInput
-  }
-
-  export type comment_likesUpsertWithWhereUniqueWithoutCommentInput = {
-    where: comment_likesWhereUniqueInput
-    update: XOR<comment_likesUpdateWithoutCommentInput, comment_likesUncheckedUpdateWithoutCommentInput>
-    create: XOR<comment_likesCreateWithoutCommentInput, comment_likesUncheckedCreateWithoutCommentInput>
-  }
-
-  export type comment_likesUpdateWithWhereUniqueWithoutCommentInput = {
-    where: comment_likesWhereUniqueInput
-    data: XOR<comment_likesUpdateWithoutCommentInput, comment_likesUncheckedUpdateWithoutCommentInput>
-  }
-
-  export type comment_likesUpdateManyWithWhereWithoutCommentInput = {
-    where: comment_likesScalarWhereInput
-    data: XOR<comment_likesUpdateManyMutationInput, comment_likesUncheckedUpdateManyWithoutCommentInput>
+    networks?: networksUncheckedUpdateManyWithoutUsersNestedInput
+    post_likes?: post_likesUncheckedUpdateManyWithoutUserNestedInput
+    posts?: postsUncheckedUpdateManyWithoutUserNestedInput
+    wallets?: walletsUncheckedUpdateManyWithoutUsersNestedInput
   }
 
   export type postsCreateWithoutLikesInput = {
@@ -23381,9 +23421,9 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     deleted_at?: Date | string | null
-    user: usersCreateNestedOneWithoutPostsInput
     comments?: commentsCreateNestedManyWithoutPostInput
     images?: post_imagesCreateNestedManyWithoutPostInput
+    user: usersCreateNestedOneWithoutPostsInput
   }
 
   export type postsUncheckedCreateWithoutLikesInput = {
@@ -23416,11 +23456,11 @@ export namespace Prisma {
     notiToken?: string | null
     biometricPublicKey?: string | null
     audit_logs?: audit_logsCreateNestedManyWithoutUsersInput
-    networks?: networksCreateNestedManyWithoutUsersInput
-    wallets?: walletsCreateNestedManyWithoutUsersInput
-    comments?: commentsCreateNestedManyWithoutUserInput
-    posts?: postsCreateNestedManyWithoutUserInput
     comment_likes?: comment_likesCreateNestedManyWithoutUserInput
+    comments?: commentsCreateNestedManyWithoutUserInput
+    networks?: networksCreateNestedManyWithoutUsersInput
+    posts?: postsCreateNestedManyWithoutUserInput
+    wallets?: walletsCreateNestedManyWithoutUsersInput
   }
 
   export type usersUncheckedCreateWithoutPost_likesInput = {
@@ -23436,11 +23476,11 @@ export namespace Prisma {
     notiToken?: string | null
     biometricPublicKey?: string | null
     audit_logs?: audit_logsUncheckedCreateNestedManyWithoutUsersInput
-    networks?: networksUncheckedCreateNestedManyWithoutUsersInput
-    wallets?: walletsUncheckedCreateNestedManyWithoutUsersInput
-    comments?: commentsUncheckedCreateNestedManyWithoutUserInput
-    posts?: postsUncheckedCreateNestedManyWithoutUserInput
     comment_likes?: comment_likesUncheckedCreateNestedManyWithoutUserInput
+    comments?: commentsUncheckedCreateNestedManyWithoutUserInput
+    networks?: networksUncheckedCreateNestedManyWithoutUsersInput
+    posts?: postsUncheckedCreateNestedManyWithoutUserInput
+    wallets?: walletsUncheckedCreateNestedManyWithoutUsersInput
   }
 
   export type usersCreateOrConnectWithoutPost_likesInput = {
@@ -23466,9 +23506,9 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    user?: usersUpdateOneRequiredWithoutPostsNestedInput
     comments?: commentsUpdateManyWithoutPostNestedInput
     images?: post_imagesUpdateManyWithoutPostNestedInput
+    user?: usersUpdateOneRequiredWithoutPostsNestedInput
   }
 
   export type postsUncheckedUpdateWithoutLikesInput = {
@@ -23507,11 +23547,11 @@ export namespace Prisma {
     notiToken?: NullableStringFieldUpdateOperationsInput | string | null
     biometricPublicKey?: NullableStringFieldUpdateOperationsInput | string | null
     audit_logs?: audit_logsUpdateManyWithoutUsersNestedInput
-    networks?: networksUpdateManyWithoutUsersNestedInput
-    wallets?: walletsUpdateManyWithoutUsersNestedInput
-    comments?: commentsUpdateManyWithoutUserNestedInput
-    posts?: postsUpdateManyWithoutUserNestedInput
     comment_likes?: comment_likesUpdateManyWithoutUserNestedInput
+    comments?: commentsUpdateManyWithoutUserNestedInput
+    networks?: networksUpdateManyWithoutUsersNestedInput
+    posts?: postsUpdateManyWithoutUserNestedInput
+    wallets?: walletsUpdateManyWithoutUsersNestedInput
   }
 
   export type usersUncheckedUpdateWithoutPost_likesInput = {
@@ -23527,11 +23567,11 @@ export namespace Prisma {
     notiToken?: NullableStringFieldUpdateOperationsInput | string | null
     biometricPublicKey?: NullableStringFieldUpdateOperationsInput | string | null
     audit_logs?: audit_logsUncheckedUpdateManyWithoutUsersNestedInput
-    networks?: networksUncheckedUpdateManyWithoutUsersNestedInput
-    wallets?: walletsUncheckedUpdateManyWithoutUsersNestedInput
-    comments?: commentsUncheckedUpdateManyWithoutUserNestedInput
-    posts?: postsUncheckedUpdateManyWithoutUserNestedInput
     comment_likes?: comment_likesUncheckedUpdateManyWithoutUserNestedInput
+    comments?: commentsUncheckedUpdateManyWithoutUserNestedInput
+    networks?: networksUncheckedUpdateManyWithoutUsersNestedInput
+    posts?: postsUncheckedUpdateManyWithoutUserNestedInput
+    wallets?: walletsUncheckedUpdateManyWithoutUsersNestedInput
   }
 
   export type commentsCreateWithoutLikesInput = {
@@ -23572,11 +23612,11 @@ export namespace Prisma {
     notiToken?: string | null
     biometricPublicKey?: string | null
     audit_logs?: audit_logsCreateNestedManyWithoutUsersInput
-    networks?: networksCreateNestedManyWithoutUsersInput
-    wallets?: walletsCreateNestedManyWithoutUsersInput
     comments?: commentsCreateNestedManyWithoutUserInput
-    posts?: postsCreateNestedManyWithoutUserInput
+    networks?: networksCreateNestedManyWithoutUsersInput
     post_likes?: post_likesCreateNestedManyWithoutUserInput
+    posts?: postsCreateNestedManyWithoutUserInput
+    wallets?: walletsCreateNestedManyWithoutUsersInput
   }
 
   export type usersUncheckedCreateWithoutComment_likesInput = {
@@ -23592,11 +23632,11 @@ export namespace Prisma {
     notiToken?: string | null
     biometricPublicKey?: string | null
     audit_logs?: audit_logsUncheckedCreateNestedManyWithoutUsersInput
-    networks?: networksUncheckedCreateNestedManyWithoutUsersInput
-    wallets?: walletsUncheckedCreateNestedManyWithoutUsersInput
     comments?: commentsUncheckedCreateNestedManyWithoutUserInput
-    posts?: postsUncheckedCreateNestedManyWithoutUserInput
+    networks?: networksUncheckedCreateNestedManyWithoutUsersInput
     post_likes?: post_likesUncheckedCreateNestedManyWithoutUserInput
+    posts?: postsUncheckedCreateNestedManyWithoutUserInput
+    wallets?: walletsUncheckedCreateNestedManyWithoutUsersInput
   }
 
   export type usersCreateOrConnectWithoutComment_likesInput = {
@@ -23659,11 +23699,11 @@ export namespace Prisma {
     notiToken?: NullableStringFieldUpdateOperationsInput | string | null
     biometricPublicKey?: NullableStringFieldUpdateOperationsInput | string | null
     audit_logs?: audit_logsUpdateManyWithoutUsersNestedInput
-    networks?: networksUpdateManyWithoutUsersNestedInput
-    wallets?: walletsUpdateManyWithoutUsersNestedInput
     comments?: commentsUpdateManyWithoutUserNestedInput
-    posts?: postsUpdateManyWithoutUserNestedInput
+    networks?: networksUpdateManyWithoutUsersNestedInput
     post_likes?: post_likesUpdateManyWithoutUserNestedInput
+    posts?: postsUpdateManyWithoutUserNestedInput
+    wallets?: walletsUpdateManyWithoutUsersNestedInput
   }
 
   export type usersUncheckedUpdateWithoutComment_likesInput = {
@@ -23679,11 +23719,11 @@ export namespace Prisma {
     notiToken?: NullableStringFieldUpdateOperationsInput | string | null
     biometricPublicKey?: NullableStringFieldUpdateOperationsInput | string | null
     audit_logs?: audit_logsUncheckedUpdateManyWithoutUsersNestedInput
-    networks?: networksUncheckedUpdateManyWithoutUsersNestedInput
-    wallets?: walletsUncheckedUpdateManyWithoutUsersNestedInput
     comments?: commentsUncheckedUpdateManyWithoutUserNestedInput
-    posts?: postsUncheckedUpdateManyWithoutUserNestedInput
+    networks?: networksUncheckedUpdateManyWithoutUsersNestedInput
     post_likes?: post_likesUncheckedUpdateManyWithoutUserNestedInput
+    posts?: postsUncheckedUpdateManyWithoutUserNestedInput
+    wallets?: walletsUncheckedUpdateManyWithoutUsersNestedInput
   }
 
   export type token_networksCreateManyNetworksInput = {
@@ -23806,6 +23846,21 @@ export namespace Prisma {
     created_at?: Date | string | null
   }
 
+  export type comment_likesCreateManyUserInput = {
+    comment_like_id?: string
+    comment_id: string
+    created_at?: Date | string
+  }
+
+  export type commentsCreateManyUserInput = {
+    comment_id?: string
+    post_id: string
+    content: string
+    created_at?: Date | string
+    updated_at?: Date | string
+    deleted_at?: Date | string | null
+  }
+
   export type networksCreateManyUsersInput = {
     network_id?: string
     network_name: string
@@ -23824,24 +23879,10 @@ export namespace Prisma {
     coingecko_id?: string | null
   }
 
-  export type walletsCreateManyUsersInput = {
-    wallet_id?: string
-    wallet_name: string
-    wallet_balance?: Decimal | DecimalJsLike | number | string
-    wallet_address: string
-    wallet_phrase?: string | null
-    created_at?: Date | string | null
-    updated_at?: Date | string | null
-    deleted_at?: Date | string | null
-  }
-
-  export type commentsCreateManyUserInput = {
-    comment_id?: string
+  export type post_likesCreateManyUserInput = {
+    post_like_id?: string
     post_id: string
-    content: string
     created_at?: Date | string
-    updated_at?: Date | string
-    deleted_at?: Date | string | null
   }
 
   export type postsCreateManyUserInput = {
@@ -23853,16 +23894,16 @@ export namespace Prisma {
     deleted_at?: Date | string | null
   }
 
-  export type post_likesCreateManyUserInput = {
-    post_like_id?: string
-    post_id: string
-    created_at?: Date | string
-  }
-
-  export type comment_likesCreateManyUserInput = {
-    comment_like_id?: string
-    comment_id: string
-    created_at?: Date | string
+  export type walletsCreateManyUsersInput = {
+    wallet_id?: string
+    wallet_name: string
+    wallet_balance?: Decimal | DecimalJsLike | number | string
+    wallet_address: string
+    wallet_phrase?: string | null
+    created_at?: Date | string | null
+    updated_at?: Date | string | null
+    deleted_at?: Date | string | null
+    thumbnail?: string | null
   }
 
   export type audit_logsUpdateWithoutUsersInput = {
@@ -23887,6 +23928,53 @@ export namespace Prisma {
     target_table?: NullableStringFieldUpdateOperationsInput | string | null
     target_id?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type comment_likesUpdateWithoutUserInput = {
+    comment_like_id?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    comment?: commentsUpdateOneRequiredWithoutLikesNestedInput
+  }
+
+  export type comment_likesUncheckedUpdateWithoutUserInput = {
+    comment_like_id?: StringFieldUpdateOperationsInput | string
+    comment_id?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type comment_likesUncheckedUpdateManyWithoutUserInput = {
+    comment_like_id?: StringFieldUpdateOperationsInput | string
+    comment_id?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type commentsUpdateWithoutUserInput = {
+    comment_id?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    likes?: comment_likesUpdateManyWithoutCommentNestedInput
+    post?: postsUpdateOneRequiredWithoutCommentsNestedInput
+  }
+
+  export type commentsUncheckedUpdateWithoutUserInput = {
+    comment_id?: StringFieldUpdateOperationsInput | string
+    post_id?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    likes?: comment_likesUncheckedUpdateManyWithoutCommentNestedInput
+  }
+
+  export type commentsUncheckedUpdateManyWithoutUserInput = {
+    comment_id?: StringFieldUpdateOperationsInput | string
+    post_id?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type networksUpdateWithoutUsersInput = {
@@ -23947,105 +24035,6 @@ export namespace Prisma {
     coingecko_id?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
-  export type walletsUpdateWithoutUsersInput = {
-    wallet_id?: StringFieldUpdateOperationsInput | string
-    wallet_name?: StringFieldUpdateOperationsInput | string
-    wallet_balance?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    wallet_address?: StringFieldUpdateOperationsInput | string
-    wallet_phrase?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    wallet_network_tokens?: wallet_network_tokensUpdateManyWithoutWalletsNestedInput
-    wallet_networks?: wallet_networksUpdateManyWithoutWalletsNestedInput
-  }
-
-  export type walletsUncheckedUpdateWithoutUsersInput = {
-    wallet_id?: StringFieldUpdateOperationsInput | string
-    wallet_name?: StringFieldUpdateOperationsInput | string
-    wallet_balance?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    wallet_address?: StringFieldUpdateOperationsInput | string
-    wallet_phrase?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    wallet_network_tokens?: wallet_network_tokensUncheckedUpdateManyWithoutWalletsNestedInput
-    wallet_networks?: wallet_networksUncheckedUpdateManyWithoutWalletsNestedInput
-  }
-
-  export type walletsUncheckedUpdateManyWithoutUsersInput = {
-    wallet_id?: StringFieldUpdateOperationsInput | string
-    wallet_name?: StringFieldUpdateOperationsInput | string
-    wallet_balance?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    wallet_address?: StringFieldUpdateOperationsInput | string
-    wallet_phrase?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  }
-
-  export type commentsUpdateWithoutUserInput = {
-    comment_id?: StringFieldUpdateOperationsInput | string
-    content?: StringFieldUpdateOperationsInput | string
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    post?: postsUpdateOneRequiredWithoutCommentsNestedInput
-    likes?: comment_likesUpdateManyWithoutCommentNestedInput
-  }
-
-  export type commentsUncheckedUpdateWithoutUserInput = {
-    comment_id?: StringFieldUpdateOperationsInput | string
-    post_id?: StringFieldUpdateOperationsInput | string
-    content?: StringFieldUpdateOperationsInput | string
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    likes?: comment_likesUncheckedUpdateManyWithoutCommentNestedInput
-  }
-
-  export type commentsUncheckedUpdateManyWithoutUserInput = {
-    comment_id?: StringFieldUpdateOperationsInput | string
-    post_id?: StringFieldUpdateOperationsInput | string
-    content?: StringFieldUpdateOperationsInput | string
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  }
-
-  export type postsUpdateWithoutUserInput = {
-    post_id?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    content?: StringFieldUpdateOperationsInput | string
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    comments?: commentsUpdateManyWithoutPostNestedInput
-    likes?: post_likesUpdateManyWithoutPostNestedInput
-    images?: post_imagesUpdateManyWithoutPostNestedInput
-  }
-
-  export type postsUncheckedUpdateWithoutUserInput = {
-    post_id?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    content?: StringFieldUpdateOperationsInput | string
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    comments?: commentsUncheckedUpdateManyWithoutPostNestedInput
-    likes?: post_likesUncheckedUpdateManyWithoutPostNestedInput
-    images?: post_imagesUncheckedUpdateManyWithoutPostNestedInput
-  }
-
-  export type postsUncheckedUpdateManyWithoutUserInput = {
-    post_id?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    content?: StringFieldUpdateOperationsInput | string
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  }
-
   export type post_likesUpdateWithoutUserInput = {
     post_like_id?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -24064,22 +24053,77 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type comment_likesUpdateWithoutUserInput = {
-    comment_like_id?: StringFieldUpdateOperationsInput | string
+  export type postsUpdateWithoutUserInput = {
+    post_id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    comment?: commentsUpdateOneRequiredWithoutLikesNestedInput
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    comments?: commentsUpdateManyWithoutPostNestedInput
+    images?: post_imagesUpdateManyWithoutPostNestedInput
+    likes?: post_likesUpdateManyWithoutPostNestedInput
   }
 
-  export type comment_likesUncheckedUpdateWithoutUserInput = {
-    comment_like_id?: StringFieldUpdateOperationsInput | string
-    comment_id?: StringFieldUpdateOperationsInput | string
+  export type postsUncheckedUpdateWithoutUserInput = {
+    post_id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    comments?: commentsUncheckedUpdateManyWithoutPostNestedInput
+    images?: post_imagesUncheckedUpdateManyWithoutPostNestedInput
+    likes?: post_likesUncheckedUpdateManyWithoutPostNestedInput
   }
 
-  export type comment_likesUncheckedUpdateManyWithoutUserInput = {
-    comment_like_id?: StringFieldUpdateOperationsInput | string
-    comment_id?: StringFieldUpdateOperationsInput | string
+  export type postsUncheckedUpdateManyWithoutUserInput = {
+    post_id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type walletsUpdateWithoutUsersInput = {
+    wallet_id?: StringFieldUpdateOperationsInput | string
+    wallet_name?: StringFieldUpdateOperationsInput | string
+    wallet_balance?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    wallet_address?: StringFieldUpdateOperationsInput | string
+    wallet_phrase?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    thumbnail?: NullableStringFieldUpdateOperationsInput | string | null
+    wallet_network_tokens?: wallet_network_tokensUpdateManyWithoutWalletsNestedInput
+    wallet_networks?: wallet_networksUpdateManyWithoutWalletsNestedInput
+  }
+
+  export type walletsUncheckedUpdateWithoutUsersInput = {
+    wallet_id?: StringFieldUpdateOperationsInput | string
+    wallet_name?: StringFieldUpdateOperationsInput | string
+    wallet_balance?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    wallet_address?: StringFieldUpdateOperationsInput | string
+    wallet_phrase?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    thumbnail?: NullableStringFieldUpdateOperationsInput | string | null
+    wallet_network_tokens?: wallet_network_tokensUncheckedUpdateManyWithoutWalletsNestedInput
+    wallet_networks?: wallet_networksUncheckedUpdateManyWithoutWalletsNestedInput
+  }
+
+  export type walletsUncheckedUpdateManyWithoutUsersInput = {
+    wallet_id?: StringFieldUpdateOperationsInput | string
+    wallet_name?: StringFieldUpdateOperationsInput | string
+    wallet_balance?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    wallet_address?: StringFieldUpdateOperationsInput | string
+    wallet_phrase?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    thumbnail?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type wallet_network_tokensCreateManyWalletsInput = {
@@ -24151,15 +24195,15 @@ export namespace Prisma {
     deleted_at?: Date | string | null
   }
 
-  export type post_likesCreateManyPostInput = {
-    post_like_id?: string
-    user_id: string
-    created_at?: Date | string
-  }
-
   export type post_imagesCreateManyPostInput = {
     image_id?: string
     imageUrl: string
+    created_at?: Date | string
+  }
+
+  export type post_likesCreateManyPostInput = {
+    post_like_id?: string
+    user_id: string
     created_at?: Date | string
   }
 
@@ -24169,8 +24213,8 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    user?: usersUpdateOneRequiredWithoutCommentsNestedInput
     likes?: comment_likesUpdateManyWithoutCommentNestedInput
+    user?: usersUpdateOneRequiredWithoutCommentsNestedInput
   }
 
   export type commentsUncheckedUpdateWithoutPostInput = {
@@ -24192,24 +24236,6 @@ export namespace Prisma {
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
-  export type post_likesUpdateWithoutPostInput = {
-    post_like_id?: StringFieldUpdateOperationsInput | string
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: usersUpdateOneRequiredWithoutPost_likesNestedInput
-  }
-
-  export type post_likesUncheckedUpdateWithoutPostInput = {
-    post_like_id?: StringFieldUpdateOperationsInput | string
-    user_id?: StringFieldUpdateOperationsInput | string
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type post_likesUncheckedUpdateManyWithoutPostInput = {
-    post_like_id?: StringFieldUpdateOperationsInput | string
-    user_id?: StringFieldUpdateOperationsInput | string
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
   export type post_imagesUpdateWithoutPostInput = {
     image_id?: StringFieldUpdateOperationsInput | string
     imageUrl?: StringFieldUpdateOperationsInput | string
@@ -24225,6 +24251,24 @@ export namespace Prisma {
   export type post_imagesUncheckedUpdateManyWithoutPostInput = {
     image_id?: StringFieldUpdateOperationsInput | string
     imageUrl?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type post_likesUpdateWithoutPostInput = {
+    post_like_id?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: usersUpdateOneRequiredWithoutPost_likesNestedInput
+  }
+
+  export type post_likesUncheckedUpdateWithoutPostInput = {
+    post_like_id?: StringFieldUpdateOperationsInput | string
+    user_id?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type post_likesUncheckedUpdateManyWithoutPostInput = {
+    post_like_id?: StringFieldUpdateOperationsInput | string
+    user_id?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 

@@ -23,6 +23,9 @@ import { Cache } from 'cache-manager';
 import { generateResponse } from 'src/utils/response';
 import { CoinService } from '../coinpaprika/coinpaprika.service';
 import { CoinMarketResponse } from '../coinpaprika/coinpaprika.dto';
+import { CacheService } from '../cache/cache.service';
+import pLimit from 'p-limit';
+const limit = pLimit(3);
 @UseGuards(JwtGuard)
 @Injectable()
 export class TokenService {
@@ -32,6 +35,8 @@ export class TokenService {
     private jwt: JwtService,
     private config: ConfigService,
     private readonly coinService: CoinService,
+    private readonly cacheService: CacheService,
+
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
   private async getSymbolToIdMap(): Promise<Record<string, string>> {
@@ -101,52 +106,70 @@ export class TokenService {
       },
     );
     const token_networkList = await Promise.all(
-      walletTokenNetwork.map(async (item) => {
-        return await this.prisma.token_networks.findFirst({
-          where: { token_network_id: item.token_network_id! },
-        });
-      }),
+      walletTokenNetwork.map(async (item) =>
+        this.cacheService.getOrSet(
+          `token_network_${item.token_network_id}`,
+          () =>
+            this.prisma.token_networks.findFirst({
+              where: { token_network_id: item.token_network_id! },
+            }),
+        ),
+      ),
     );
+
     return await Promise.all(
-      token_networkList.map(async (item) => {
-        const token = await this.prisma.tokens.findFirst({
-          where: { token_id: item?.token_id || '' },
-        });
-        const network = await this.prisma.networks.findFirst({
-          where: { network_id: item?.network_id || '' },
-        });
-        const wallet_network = await this.prisma.wallet_networks.findFirst({
-          where: { wallet_id: wallet_id, network_id: item?.network_id },
-        });
-        const market_data: CoinMarketResponse | null =
-          await this.getTokenMarketData({
-            symbol: token?.symbol || '',
-            name: token?.token_name || '',
-          });
-        const market = {
-          price: market_data?.quotes.USD.price,
-          percent_change_1h: market_data?.quotes.USD.percent_change_1h,
-          percent_change_24h: market_data?.quotes.USD.percent_change_24h,
-          percent_change_7d: market_data?.quotes.USD.percent_change_7d,
-          percent_change_30d: market_data?.quotes.USD.percent_change_30d,
-          volume_24h: market_data?.quotes.USD.volume_24h,
-          volume_24h_change_24h: market_data?.quotes.USD.volume_24h_change_24h,
-        };
-        const balance = await getBalanceV1(
-          wallet_network!.address.toLowerCase(),
-          network?.symbol,
-          network?.rpc_url,
-          item?.contract_address,
-          token?.decimals,
-        );
-        return {
-          token: token,
-          network: network,
-          contract_address: item?.contract_address,
-          balance,
-          market_data: market,
-        };
-      }),
+      token_networkList.map(async (item) =>
+        limit(async () => {
+          const [token, network, wallet_network] = await Promise.all([
+            this.cacheService.getOrSet(`token_${item?.token_id}`, () =>
+              this.prisma.tokens.findFirst({
+                where: { token_id: item?.token_id || '' },
+              }),
+            ),
+            this.cacheService.getOrSet(`network_${item?.network_id}`, () =>
+              this.prisma.networks.findFirst({
+                where: { network_id: item?.network_id || '' },
+              }),
+            ),
+            this.cacheService.getOrSet(
+              `wallet_network_${wallet_id}_${item?.network_id}`,
+              () =>
+                this.prisma.wallet_networks.findFirst({
+                  where: { wallet_id: wallet_id, network_id: item?.network_id },
+                }),
+            ),
+          ]);
+          const market_data: CoinMarketResponse | null =
+            await this.getTokenMarketData({
+              symbol: token?.symbol || '',
+              name: token?.token_name || '',
+            });
+          const market = {
+            price: market_data?.quotes.USD.price,
+            percent_change_1h: market_data?.quotes.USD.percent_change_1h,
+            percent_change_24h: market_data?.quotes.USD.percent_change_24h,
+            percent_change_7d: market_data?.quotes.USD.percent_change_7d,
+            percent_change_30d: market_data?.quotes.USD.percent_change_30d,
+            volume_24h: market_data?.quotes.USD.volume_24h,
+            volume_24h_change_24h:
+              market_data?.quotes.USD.volume_24h_change_24h,
+          };
+          const balance = await getBalanceV1(
+            wallet_network!.address.toLowerCase(),
+            network?.symbol,
+            network?.rpc_url,
+            item?.contract_address,
+            token?.decimals,
+          );
+          return {
+            token: token,
+            network: network,
+            contract_address: item?.contract_address,
+            balance,
+            market_data: market,
+          };
+        }),
+      ),
     );
   }
   async createDefaultToken() {
@@ -385,6 +408,15 @@ export class TokenService {
       },
     });
     return wallet_token_network;
+  }
+  async getTokenByNetworkId(network_id: string, wallet_id: string) {
+    const walletN = await this.prisma.wallet_networks.findFirst({
+      where: {
+        network_id: network_id,
+        wallet_id: wallet_id,
+      },
+    });
+    return walletN;
   }
   // async getPriceFeedId(symbol: string): Promise<string | null> {
   //   try {

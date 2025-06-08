@@ -63,6 +63,7 @@ export class TransactionController {
       rq.address,
       rq.chain_id,
       rq.token_id,
+      rq.rpc_url,
     );
   }
 }

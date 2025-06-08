@@ -24,7 +24,7 @@ export const ListNetworkDefault: Prisma.networksCreateManyInput[] = [
     is_default_network: true,
     is_testnet: false,
     rpc_url:
-      'https://polygon-mainnet.infura.io/v3/44b62ee0153941579e73f1d784472ad1',
+      'https://polygon-mainnet.infura.io/v3/b59e348d43364c6abc6f7d8608b2c277',
   },
   {
     network_name: 'Binance',
@@ -37,7 +37,7 @@ export const ListNetworkDefault: Prisma.networksCreateManyInput[] = [
     is_default_network: true,
     is_testnet: false,
     rpc_url:
-      'https://bsc-mainnet.infura.io/v3/44b62ee0153941579e73f1d784472ad1',
+      'https://bsc-mainnet.infura.io/v3/b59e348d43364c6abc6f7d8608b2c277',
   },
   {
     network_name: 'Ethereum',
@@ -49,7 +49,7 @@ export const ListNetworkDefault: Prisma.networksCreateManyInput[] = [
     price_feed_id: 'ETHUSD',
     is_default_network: true,
     is_testnet: false,
-    rpc_url: 'https://mainnet.infura.io/v3/44b62ee0153941579e73f1d784472ad1',
+    rpc_url: 'https://mainnet.infura.io/v3/b59e348d43364c6abc6f7d8608b2c277',
   },
   {
     network_name: 'Sepolia',
@@ -61,6 +61,6 @@ export const ListNetworkDefault: Prisma.networksCreateManyInput[] = [
     price_feed_id: '0x694AA1769357215DE4FAC081bf1f309aDC325306',
     is_default_network: true,
     is_testnet: true,
-    rpc_url: 'https://sepolia.infura.io/v3/44b62ee0153941579e73f1d784472ad1',
+    rpc_url: 'https://sepolia.infura.io/v3/b59e348d43364c6abc6f7d8608b2c277',
   },
 ];
