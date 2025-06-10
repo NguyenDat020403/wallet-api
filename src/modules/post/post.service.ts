@@ -3,9 +3,17 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { JwtGuard } from 'src/guards';
 import { PrismaService } from 'src/modules/prisma/prisma.service';
-import { CreatePostDto, LikePostDto, UpdatePostDto } from './post.dto';
+import {
+  CreateCommentDto,
+  CreatePostDto,
+  LikeCommentDto,
+  LikePostDto,
+  UpdatePostDto,
+} from './post.dto';
 import { SupabaseService } from '../supabase/supabase.service';
 import { post_images } from 'generated/prisma';
+import { CommentGateway } from '../comment/comment.gateway';
+import { NotificationService } from '../notification/notification.services';
 
 @UseGuards(JwtGuard)
 @Injectable()
@@ -15,6 +23,8 @@ export class PostService {
     private jwt: JwtService,
     private config: ConfigService,
     private supabaseService: SupabaseService,
+    private commentGateway: CommentGateway,
+    private notificationService: NotificationService,
   ) {}
   async createPost(
     userId: string,
@@ -134,6 +144,12 @@ export class PostService {
     };
   }
   async likePost(user_id: string, rq: LikePostDto) {
+    const user = await this.prisma.users.findUnique({
+      where: { user_id: user_id },
+    });
+    if (!user) {
+      return { message: `user does not existed`, error: true };
+    }
     const post = await this.prisma.posts.findFirst({
       where: {
         post_id: rq.post_id,
@@ -165,10 +181,14 @@ export class PostService {
           user_id: user_id,
         },
       });
+      await this.notificationService.sendUserNotification(post.user_id, {
+        title: 'Post',
+        body: user.username + 'like your post',
+      });
       return { message: 'Like success', error: false };
     }
   }
-  async getPosts(page: number = 1, limit: number = 10) {
+  async getPosts(page: number = 1, limit: number = 10, userId?: string) {
     const skip = (page - 1) * limit;
 
     const [total, posts] = await this.prisma.$transaction([
@@ -181,6 +201,7 @@ export class PostService {
         skip,
         take: limit,
         include: {
+          likes: true,
           user: {
             select: {
               user_id: true,
@@ -193,11 +214,207 @@ export class PostService {
       }),
     ]);
 
+    const postsWithLikeStatus = posts.map((post) => ({
+      ...post,
+      isCurrentUserLike: userId
+        ? post.likes.some((like) => like.user_id === userId)
+        : false,
+    }));
+
     return {
       total,
       page,
       limit,
-      data: posts,
+      data: postsWithLikeStatus,
     };
+  }
+  async createComment(userId: string, rq: CreateCommentDto) {
+    const post = await this.prisma.posts.findFirst({
+      where: {
+        post_id: rq.post_id,
+        deleted_at: null,
+      },
+    });
+    if (!post) {
+      return null;
+    }
+    const comment = await this.prisma.comments.create({
+      data: {
+        post_id: rq.post_id,
+        user_id: userId,
+        content: rq.content,
+      },
+      include: {
+        user: {
+          select: {
+            user_id: true,
+            username: true,
+            avatar: true,
+          },
+        },
+      },
+    });
+    await this.notificationService.sendUserNotification(post.user_id, {
+      title: `${userId} just comment your post`,
+      body: comment.content,
+    });
+    await this.commentGateway.notifyNewComment(comment);
+    return comment;
+  }
+
+  async getComments(
+    postId: string,
+    page: number = 1,
+    limit: number = 10,
+    userId?: string,
+  ) {
+    const post = await this.prisma.posts.findFirst({
+      where: {
+        post_id: postId,
+        deleted_at: null,
+      },
+    });
+    if (!post) {
+      return null;
+    }
+    const skip = (page - 1) * limit;
+    const [total, comments] = await this.prisma.$transaction([
+      this.prisma.comments.count({
+        where: {
+          post_id: postId,
+          deleted_at: null,
+        },
+      }),
+      this.prisma.comments.findMany({
+        where: {
+          post_id: postId,
+          deleted_at: null,
+        },
+        orderBy: {
+          created_at: 'desc',
+        },
+        skip,
+        take: Number(limit),
+        include: {
+          likes: true,
+          user: {
+            select: {
+              user_id: true,
+              username: true,
+              avatar: true,
+            },
+          },
+        },
+      }),
+    ]);
+    const commentsWithLikeStatus = comments.map((comment) => ({
+      ...comment,
+      isCurrentUserLike: userId
+        ? comment.likes.some((like) => like.user_id === userId)
+        : false,
+    }));
+
+    return {
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+      data: commentsWithLikeStatus,
+    };
+  }
+  async likeComment(user_id: string, rq: LikeCommentDto) {
+    const user = await this.prisma.users.findUnique({
+      where: { user_id: user_id },
+    });
+    if (!user) {
+      return { message: `user does not existed`, error: true };
+    }
+    const comment = await this.prisma.comments.findFirst({
+      where: {
+        comment_id: rq.comment_id,
+        deleted_at: null,
+      },
+    });
+    if (!comment) {
+      return { message: `can't find this comment`, error: true };
+    }
+    const existingLike = await this.prisma.comment_likes.findFirst({
+      where: {
+        comment_id: rq.comment_id,
+        user_id: user_id,
+      },
+    });
+    if (existingLike) {
+      // Nếu đã like rồi => xóa like (unlike)
+      await this.prisma.comment_likes.delete({
+        where: {
+          comment_like_id: existingLike.comment_like_id,
+        },
+      });
+      return { message: 'Like removed', error: false };
+    } else {
+      // Nếu chưa like => tạo mới like
+      await this.prisma.comment_likes.create({
+        data: {
+          comment_id: rq.comment_id,
+          user_id: user_id,
+        },
+      });
+      await this.notificationService.sendUserNotification(comment.user_id, {
+        title: 'Comment',
+        body: user.username + 'like your comment',
+      });
+      return { message: 'Like success', error: false };
+    }
+  }
+  async deleteComments(userId: string, postId: string, comment_id: string) {
+    const post = await this.prisma.posts.findFirst({
+      where: {
+        post_id: postId,
+        deleted_at: null,
+      },
+      include: {
+        user: true,
+      },
+    });
+    if (!post) {
+      return {
+        data: '',
+        message: 'Not found post',
+      };
+    }
+    const comment = await this.prisma.comments.findFirst({
+      where: {
+        post_id: postId,
+        comment_id: comment_id,
+      },
+    });
+    if (!comment) {
+      return {
+        data: '',
+        message: 'Not found comment',
+      };
+    }
+    if (comment && (comment?.user_id === userId || post.user_id === userId)) {
+      const updateComment = await this.prisma.comments.update({
+        where: {
+          post_id: postId,
+          user_id: userId,
+          comment_id: comment_id,
+        },
+        data: {
+          deleted_at: new Date(),
+        },
+      });
+      return {
+        data: updateComment,
+        message: 'success',
+      };
+    } else {
+      return {
+        data: '',
+        message: 'you are not authorized to delete this comment',
+      };
+    }
   }
 }

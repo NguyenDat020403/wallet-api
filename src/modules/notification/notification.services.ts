@@ -52,4 +52,18 @@ export class NotificationService {
 
     await this.firebaseService.sendNotification(user.notiToken, notification);
   }
+
+  async sendUserNotification(
+    user_id: string,
+    notification: { title: string; body: string },
+  ) {
+    const user = await this.prisma.users.findFirst({
+      where: {
+        user_id: user_id,
+      },
+    });
+    if (user && user.notiToken) {
+      await this.firebaseService.sendNotification(user.notiToken, notification);
+    }
+  }
 }

@@ -1,7 +1,9 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
+  Param,
   Patch,
   Post,
   Query,
@@ -11,7 +13,13 @@ import {
 } from '@nestjs/common';
 import { JwtGuard } from 'src/guards';
 import { PostService } from './post.service';
-import { CreatePostDto, LikePostDto, UpdatePostDto } from './post.dto';
+import {
+  CreateCommentDto,
+  CreatePostDto,
+  LikeCommentDto,
+  LikePostDto,
+  UpdatePostDto,
+} from './post.dto';
 import { User } from 'src/decorators/user.decorator';
 import { generateResponse } from 'src/utils/response';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
@@ -55,13 +63,76 @@ export class PostController {
     return generateResponse(response_like.message, '', '200', '0');
   }
   @Get('getPosts')
-  async getPosts(@Query('page') page?: string, @Query('limit') limit?: string) {
+  async getPosts(
+    @User('sub') userId?: string,
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
+  ) {
     const pageNumber = page ? parseInt(page, 10) : 1;
     const limitNumber = limit ? parseInt(limit, 10) : 10;
-    const response = await this.postService.getPosts(pageNumber, limitNumber);
+    const response = await this.postService.getPosts(
+      pageNumber,
+      limitNumber,
+      userId,
+    );
     if (response.data.length === 0) {
-      return generateResponse('no more data', response, '200', '0');
+      return generateResponse('no more data', response, '200', '1');
     }
     return generateResponse('success', response, '200', '0');
+  }
+
+  @Post('comment')
+  async commentPost(
+    @User('sub') userId: string,
+    @Body() dto: CreateCommentDto,
+  ) {
+    const response = await this.postService.createComment(userId, dto);
+    if (!response) {
+      return generateResponse('fail to comment', '', '200', '1');
+    }
+    return generateResponse('success', response, '200', '0');
+  }
+
+  @Get(':postId/comments')
+  async getComments(
+    @Param('postId') postId: string,
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 10,
+    @User('sub') userId?: string,
+  ) {
+    const response = await this.postService.getComments(
+      postId,
+      page,
+      limit,
+      userId,
+    );
+    if (!response) {
+      return generateResponse('fail to load comment', '', '200', '1');
+    }
+    return generateResponse('success', response, '200', '0');
+  }
+  @Post('likeComment')
+  async likeComment(@User('sub') userId: string, @Body() dto: LikeCommentDto) {
+    const response_like = await this.postService.likeComment(userId, dto);
+    if (response_like.error) {
+      return generateResponse(response_like.message, '', '200', '1');
+    }
+    return generateResponse(response_like.message, '', '200', '0');
+  }
+  @Delete(':postId/:commentId/delete')
+  async deleteComment(
+    @User('sub') userId: string,
+    @Param('postId') postId: string,
+    @Param('commentId') commentId: string,
+  ) {
+    const response = await this.postService.deleteComments(
+      userId,
+      postId,
+      commentId,
+    );
+    if (!response.data) {
+      return generateResponse(response.message, '', '200', '1');
+    }
+    return generateResponse(response.message, response, '200', '0');
   }
 }
