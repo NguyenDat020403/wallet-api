@@ -190,7 +190,7 @@ export class PostService {
   }
   async getPosts(page: number = 1, limit: number = 10, userId?: string) {
     const skip = (page - 1) * limit;
-
+    console.log('vao getPosst');
     const [total, posts] = await this.prisma.$transaction([
       this.prisma.posts.count({
         where: { deleted_at: null },
@@ -220,6 +220,7 @@ export class PostService {
         ? post.likes.some((like) => like.user_id === userId)
         : false,
     }));
+    console.log(postsWithLikeStatus);
 
     return {
       total,
