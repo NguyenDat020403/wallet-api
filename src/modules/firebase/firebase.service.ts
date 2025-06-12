@@ -24,15 +24,19 @@ export class FirebaseService implements OnModuleInit {
   async sendNotification(
     token: string,
     notification: { title: string; body: string },
+    screen?: string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    props?: any,
   ) {
     const message: admin.messaging.Message = {
       data: {
-        navigationId: 'HomeScreen',
+        navigationId: screen || 'HomeScreen',
+        ...props,
       },
       notification: notification,
       token,
       android: {
-        priority: 'high', // OK vì đã đúng kiểu
+        priority: 'high',
       },
       apns: {
         headers: {

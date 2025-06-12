@@ -6,6 +6,7 @@ import { PrismaService } from 'src/modules/prisma/prisma.service';
 import {
   CreateCommentDto,
   CreatePostDto,
+  DeletePostDto,
   LikeCommentDto,
   LikePostDto,
   UpdatePostDto,
@@ -181,12 +182,36 @@ export class PostService {
           user_id: user_id,
         },
       });
-      await this.notificationService.sendUserNotification(post.user_id, {
-        title: 'Post',
-        body: user.username + 'like your post',
-      });
+      if (user_id !== post.user_id) {
+        await this.notificationService.sendUserNotification(post.user_id, {
+          title: 'Post:',
+          body: user.username + ' like your post',
+        });
+      }
+
       return { message: 'Like success', error: false };
     }
+  }
+  async deletePost(user_id: string, rq: DeletePostDto) {
+    const post = await this.prisma.posts.findFirst({
+      where: {
+        post_id: rq.post_id,
+        deleted_at: null,
+        user_id: user_id,
+      },
+    });
+    if (!post) {
+      return { message: `can't find this post`, error: true };
+    }
+    await this.prisma.posts.update({
+      where: {
+        post_id: rq.post_id,
+      },
+      data: {
+        deleted_at: new Date(),
+      },
+    });
+    return { message: 'Delete post success', error: false };
   }
   async getPosts(page: number = 1, limit: number = 10, userId?: string) {
     const skip = (page - 1) * limit;
@@ -201,6 +226,12 @@ export class PostService {
         skip,
         take: limit,
         include: {
+          _count: {
+            select: {
+              likes: true,
+              comments: true,
+            },
+          },
           likes: true,
           user: {
             select: {
@@ -216,10 +247,13 @@ export class PostService {
 
     const postsWithLikeStatus = posts.map((post) => ({
       ...post,
+      likeCount: post._count.likes,
+      commentCount: post._count.comments,
       isCurrentUserLike: userId
         ? post.likes.some((like) => like.user_id === userId)
         : false,
     }));
+
     console.log(postsWithLikeStatus);
 
     return {
@@ -229,6 +263,91 @@ export class PostService {
       data: postsWithLikeStatus,
     };
   }
+  async getPostById(postId: string, userId: string) {
+    const post = await this.prisma.posts.findFirst({
+      where: { deleted_at: null, post_id: postId },
+      include: {
+        _count: {
+          select: {
+            likes: true,
+            comments: true,
+          },
+        },
+        likes: true,
+        user: {
+          select: {
+            user_id: true,
+            username: true,
+            avatar: true,
+          },
+        },
+        images: true,
+      },
+    });
+    if (!post) {
+      return null;
+    }
+    const postWithLikeStatus = {
+      ...post,
+      likeCount: post._count.likes,
+      commentCount: post._count.comments,
+      isCurrentUserLike: userId
+        ? post.likes.some((like) => like.user_id === userId)
+        : false,
+    };
+
+    return postWithLikeStatus;
+  }
+  async getUserPosts(page: number = 1, limit: number = 10, userId: string) {
+    const skip = (page - 1) * limit;
+    const [total, posts] = await this.prisma.$transaction([
+      this.prisma.posts.count({
+        where: { user_id: userId, deleted_at: null },
+      }),
+      this.prisma.posts.findMany({
+        where: { deleted_at: null, user_id: userId },
+        orderBy: { created_at: 'desc' },
+        skip,
+        take: limit,
+        include: {
+          _count: {
+            select: {
+              likes: true,
+              comments: true,
+            },
+          },
+          likes: true,
+          user: {
+            select: {
+              user_id: true,
+              username: true,
+              avatar: true,
+            },
+          },
+          images: true,
+        },
+      }),
+    ]);
+
+    const postsWithLikeStatus = posts.map((post) => ({
+      ...post,
+      likeCount: post._count.likes,
+      commentCount: post._count.comments,
+      isCurrentUserLike: userId
+        ? post.likes.some((like) => like.user_id === userId)
+        : false,
+    }));
+
+    console.log(postsWithLikeStatus);
+
+    return {
+      total,
+      page,
+      limit,
+      data: postsWithLikeStatus,
+    };
+  }
+
   async createComment(userId: string, rq: CreateCommentDto) {
     const post = await this.prisma.posts.findFirst({
       where: {
@@ -255,10 +374,21 @@ export class PostService {
         },
       },
     });
-    await this.notificationService.sendUserNotification(post.user_id, {
-      title: `${userId} just comment your post`,
-      body: comment.content,
-    });
+    // if (userId !== post.user_id) {
+    await this.notificationService.sendUserNotification(
+      post.user_id,
+      {
+        title: `${userId} just comment your post`,
+        body: comment.content,
+      },
+      'PostDetailScreen',
+      {
+        postId: post.post_id,
+        userId: post.user_id,
+      },
+    );
+    // }
+
     await this.commentGateway.notifyNewComment(comment);
     return comment;
   }
@@ -361,10 +491,13 @@ export class PostService {
           user_id: user_id,
         },
       });
-      await this.notificationService.sendUserNotification(comment.user_id, {
-        title: 'Comment',
-        body: user.username + 'like your comment',
-      });
+      if (user_id !== comment.user_id) {
+        await this.notificationService.sendUserNotification(comment.user_id, {
+          title: 'Comment',
+          body: user.username + 'like your comment',
+        });
+      }
+
       return { message: 'Like success', error: false };
     }
   }

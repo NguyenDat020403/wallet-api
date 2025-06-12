@@ -12,6 +12,11 @@ export class LikePostDto {
   @IsNotEmpty()
   post_id: string;
 }
+export class DeletePostDto {
+  @IsString()
+  @IsNotEmpty()
+  post_id: string;
+}
 
 export class LikeCommentDto {
   @IsString()

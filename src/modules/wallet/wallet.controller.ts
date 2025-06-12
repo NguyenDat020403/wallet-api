@@ -5,6 +5,7 @@ import {
   Get,
   Patch,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { JwtGuard } from 'src/guards';
@@ -83,10 +84,8 @@ export class WalletController {
   }
 
   @Get('getUserWalletNetwork')
-  async getUserWalletNetwork(@Body() dto: WalletNetworksRequest) {
-    const response = await this.walletService.getUserWalletNetwork(
-      dto.wallet_id,
-    );
-    return generateResponse('success', response);
+  async getUserWalletNetwork(@Query('userId') userId: string) {
+    const response = await this.walletService.getUserWalletNetwork(userId);
+    return response;
   }
 }

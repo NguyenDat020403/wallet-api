@@ -56,6 +56,8 @@ export class NotificationService {
   async sendUserNotification(
     user_id: string,
     notification: { title: string; body: string },
+    screen?: string,
+    props?: Record<string, string>,
   ) {
     const user = await this.prisma.users.findFirst({
       where: {
@@ -63,7 +65,12 @@ export class NotificationService {
       },
     });
     if (user && user.notiToken) {
-      await this.firebaseService.sendNotification(user.notiToken, notification);
+      await this.firebaseService.sendNotification(
+        user.notiToken,
+        notification,
+        screen,
+        props,
+      );
     }
   }
 }

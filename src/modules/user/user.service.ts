@@ -38,9 +38,6 @@ export class UserService {
     const user = await this.prisma.users.findFirst({
       where: { user_id: id },
     });
-    if (!user) {
-      throw new BadRequestException(ERROR_MAP.USER_NOT_FOUND);
-    }
     return user;
   }
   async findUserByEmail(email: string) {

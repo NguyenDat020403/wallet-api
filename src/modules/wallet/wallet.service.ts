@@ -10,10 +10,6 @@ import { CreateWallet, importWallet } from 'src/utils/wallet';
 import { GetWalletRequest, ImportWalletDto } from './wallet.dto';
 import { NetworkService } from '../network/network.services';
 import { TokenService } from '../token/token.service';
-
-import pLimit from 'p-limit';
-const limit = pLimit(2);
-
 @UseGuards(JwtGuard)
 @Injectable()
 export class WalletService {
@@ -230,16 +226,44 @@ export class WalletService {
 
     return wallet;
   }
-  async getUserWalletNetwork(wallet_id) {
-    const walletNetworks = await this.prisma.wallet_networks.findMany({
+  async getUserWalletNetwork(user_id: string) {
+    const wallets = await this.prisma.wallets.findMany({
       where: {
-        wallet_id: wallet_id,
-      },
-      include: {
-        networks: true,
+        user_id: user_id,
       },
     });
-    return walletNetworks;
+    if (!wallets) {
+      return {
+        message: 'Not found wallet',
+        error: '1',
+        data: '',
+        status: '200',
+      };
+    }
+
+    const walletNetworks = await Promise.all(
+      wallets.map(async (w) => {
+        const walletNetwork = await this.prisma.wallet_networks.findMany({
+          where: {
+            wallet_id: w.wallet_id,
+          },
+          include: {
+            networks: true,
+          },
+        });
+
+        return {
+          wallet: w,
+          walletNetwork: walletNetwork,
+        };
+      }),
+    );
+    return {
+      message: 'success',
+      error: '0',
+      data: walletNetworks,
+      status: '200',
+    };
   }
   async createManyWalletNetwork(walletNetworkList) {
     const walletNetworks = await this.prisma.wallet_networks.createMany({

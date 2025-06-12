@@ -16,6 +16,7 @@ import { PostService } from './post.service';
 import {
   CreateCommentDto,
   CreatePostDto,
+  DeletePostDto,
   LikeCommentDto,
   LikePostDto,
   UpdatePostDto,
@@ -28,6 +29,17 @@ import { FileFieldsInterceptor } from '@nestjs/platform-express';
 @Controller('posts')
 export class PostController {
   constructor(private postService: PostService) {}
+  @Get('')
+  async getPost(
+    @Query('userId') userId: string,
+    @Query('postId') postId: string,
+  ) {
+    const response = await this.postService.getPostById(postId, userId);
+    if (!response) {
+      return generateResponse('Not found', response, '200', '1');
+    }
+    return generateResponse('success', response, '200', '0');
+  }
   @Post('create')
   @UseInterceptors(FileFieldsInterceptor([{ name: 'images', maxCount: 10 }]))
   async createPost(
@@ -53,6 +65,14 @@ export class PostController {
       return generateResponse(`can't find this post`, '', '200', '1');
     }
     return generateResponse('success', post_updated, '200', '0');
+  }
+  @Patch('deletePost')
+  async deletePost(@User('sub') userId: string, @Body() dto: DeletePostDto) {
+    const response_like = await this.postService.deletePost(userId, dto);
+    if (response_like.error) {
+      return generateResponse(response_like.message, '', '200', '1');
+    }
+    return generateResponse(response_like.message, '', '200', '0');
   }
   @Post('likePost')
   async likePost(@User('sub') userId: string, @Body() dto: LikePostDto) {
@@ -80,7 +100,24 @@ export class PostController {
     }
     return generateResponse('success', response, '200', '0');
   }
-
+  @Get('getUserPosts')
+  async getUserPosts(
+    @Query('userId') userId: string,
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
+  ) {
+    const pageNumber = page ? parseInt(page, 10) : 1;
+    const limitNumber = limit ? parseInt(limit, 10) : 10;
+    const response = await this.postService.getUserPosts(
+      pageNumber,
+      limitNumber,
+      userId,
+    );
+    if (response.data.length === 0) {
+      return generateResponse('no more data', response, '200', '1');
+    }
+    return generateResponse('success', response, '200', '0');
+  }
   @Post('comment')
   async commentPost(
     @User('sub') userId: string,
