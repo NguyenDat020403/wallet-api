@@ -1,17 +1,15 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { UserService } from '../user/user.service';
 import { users } from 'generated/prisma';
-import jdenticon from 'jdenticon';
-import { createAvatar } from '@dicebear/avatars';
-import * as style from '@dicebear/pixel-art';
 @Injectable()
 export class SupabaseService {
   private supabase: SupabaseClient;
 
   constructor(
     private config: ConfigService,
+    @Inject(forwardRef(() => UserService))
     private userService: UserService,
   ) {
     const supabeUrl: string | undefined = this.config.get('SUPABASE_URL');

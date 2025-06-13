@@ -5,6 +5,7 @@ import { JwtGuard } from 'src/guards';
 import { ERROR_MAP } from 'src/constants/errorMap';
 import { PrismaService } from 'src/modules/prisma/prisma.service';
 import { UpdateUserDto } from './user.dto';
+import { SupabaseService } from '../supabase/supabase.service';
 @UseGuards(JwtGuard)
 @Injectable()
 export class UserService {
@@ -18,6 +19,7 @@ export class UserService {
       where: { user_id: userId },
       data: {
         username: dto.username,
+        bio: dto.bio,
       },
     });
     return updatedUser;

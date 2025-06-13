@@ -183,10 +183,18 @@ export class PostService {
         },
       });
       if (user_id !== post.user_id) {
-        await this.notificationService.sendUserNotification(post.user_id, {
-          title: 'Post:',
-          body: user.username + ' like your post',
-        });
+        await this.notificationService.sendUserNotification(
+          post.user_id,
+          {
+            title: 'Post',
+            body: `${user.username} just like your post`,
+          },
+          'PostDetailScreen',
+          {
+            postId: post.post_id,
+            userId: post.user_id,
+          },
+        );
       }
 
       return { message: 'Like success', error: false };
@@ -492,10 +500,26 @@ export class PostService {
         },
       });
       if (user_id !== comment.user_id) {
-        await this.notificationService.sendUserNotification(comment.user_id, {
-          title: 'Comment',
-          body: user.username + 'like your comment',
+        const post = await this.prisma.posts.findFirst({
+          where: {
+            post_id: comment.post_id,
+          },
         });
+        if (!post) {
+          return { message: 'Like fail', error: true };
+        }
+        await this.notificationService.sendUserNotification(
+          comment.user_id,
+          {
+            title: 'Comment',
+            body: `${user.username} just like your comment`,
+          },
+          'PostDetailScreen',
+          {
+            postId: post.post_id,
+            userId: post?.user_id,
+          },
+        );
       }
 
       return { message: 'Like success', error: false };
