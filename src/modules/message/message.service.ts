@@ -43,7 +43,7 @@ export class MessageService {
         userId: userR.user_id,
       },
     );
-    this.messageGateway.sendMessageNotification(userR.user_id, message.content);
+    this.messageGateway.sendMessageNotification(userR.user_id, message);
     return generateResponse('success', message, '200', '0');
   }
 
@@ -100,7 +100,7 @@ export class MessageService {
           { sender_id: otherUserId, receiver_id: userId },
         ],
       },
-      orderBy: { created_at: 'asc' },
+      orderBy: { created_at: 'desc' },
       skip,
       take: limit,
     });

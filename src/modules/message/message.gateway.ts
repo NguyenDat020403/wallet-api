@@ -6,7 +6,7 @@ import {
 import { Server } from 'socket.io';
 
 @WebSocketGateway({
-  cors: true,
+  cors: { origin: '*' },
   namespace: 'messages',
 })
 export class MessageGateway {
