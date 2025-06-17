@@ -33,7 +33,8 @@ export class MessageService {
       },
     });
     await this.notificationService.sendUserNotification(
-      message.receiver_id,
+      // message.receiver_id,
+      message.sender_id,
       {
         title: 'Message',
         body: `From ${userR.username}: ${message.content}`,
@@ -43,7 +44,7 @@ export class MessageService {
         userId: userR.user_id,
       },
     );
-    this.messageGateway.sendMessageNotification(userR.user_id, message);
+    this.messageGateway.sendMessageNotification(message.receiver_id, message);
     return generateResponse('success', message, '200', '0');
   }
 
