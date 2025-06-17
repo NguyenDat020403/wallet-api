@@ -7,7 +7,11 @@ import { JwtService } from '@nestjs/jwt';
 import { JwtGuard } from 'src/guards';
 import { PrismaService } from 'src/modules/prisma/prisma.service';
 import { CreateWallet, importWallet } from 'src/utils/wallet';
-import { GetWalletRequest, ImportWalletDto } from './wallet.dto';
+import {
+  GetWalletRequest,
+  ImportWalletDto,
+  TokenWithNetwork,
+} from './wallet.dto';
 import { NetworkService } from '../network/network.services';
 import { TokenService } from '../token/token.service';
 @UseGuards(JwtGuard)
@@ -217,6 +221,52 @@ export class WalletService {
       },
     };
   }
+  async getWalletV1(userId: string, wallet_id: string) {
+    const wallet = await this.prisma.wallets.findFirst({
+      where: { wallet_id },
+    });
+
+    const groupedTokens = await this.tokenService.getTokensV1(wallet_id);
+    const result: Record<string, any> = {};
+    let totalBalance = 0;
+
+    for (const [networkName, data] of Object.entries(groupedTokens)) {
+      const tokens = data.tokens.filter((t) => {
+        return (
+          t?.balance !== undefined &&
+          parseFloat(t.balance) !== 0 &&
+          data.network?.is_testnet === false
+        );
+      });
+
+      const networkBalance = tokens.reduce((sum, token) => {
+        const price = token.market_data?.price ?? 0;
+        const tokenBalance = parseFloat(token.balance || '0');
+        return sum + tokenBalance * price;
+      }, 0);
+
+      totalBalance += networkBalance;
+
+      result[networkName] = {
+        network: data.network,
+        tokens,
+      };
+    }
+
+    await this.prisma.wallets.update({
+      where: { wallet_id: wallet?.wallet_id },
+      data: { wallet_balance: totalBalance || 0 },
+    });
+
+    return {
+      wallet: {
+        ...wallet,
+        wallet_balance: totalBalance,
+      },
+      groupedTokens,
+    };
+  }
+
   async getUserWallets(userId: string) {
     const wallet = await this.prisma.wallets.findMany({
       where: {

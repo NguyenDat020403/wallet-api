@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
 import { JwtGuard } from 'src/guards';
 import { TokenService } from './token.service';
 import {
@@ -93,6 +93,20 @@ export class TokenController {
     const response = await this.tokenService.getTokenByNetworkId(
       body.network_id,
       body.wallet_id,
+    );
+    if (!response) {
+      return generateResponse('load failed', '', '200', '1');
+    }
+    return generateResponse('success', response, '200', '0');
+  }
+  @Get('tokensByNetworkId')
+  async getTokensByNetworkId(
+    @Query('network_id') network_id: string,
+    @Query('wallet_id') wallet_id: string,
+  ) {
+    const response = await this.tokenService.getTokensByNetworkId(
+      network_id,
+      wallet_id,
     );
     if (!response) {
       return generateResponse('load failed', '', '200', '1');

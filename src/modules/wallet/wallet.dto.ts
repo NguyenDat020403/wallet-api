@@ -1,4 +1,5 @@
 import { IsNotEmpty, IsString, IsUUID } from 'class-validator';
+import { networks, tokens } from 'generated/prisma';
 import { Mnemonic } from 'src/common/validators';
 
 export class GetWalletRequest {
@@ -36,4 +37,20 @@ export class DeleteWalletDto {
 export class ImportWalletDto {
   @Mnemonic()
   mnemonic: string;
+}
+
+export interface TokenWithNetwork {
+  token?: any;
+  network?: any;
+  contract_address?: string;
+  balance?: string;
+  market_data?: {
+    price: number;
+    percent_change_1h?: number;
+    percent_change_24h?: number;
+    percent_change_7d?: number;
+    percent_change_30d?: number;
+    volume_24h?: number;
+    volume_24h_change_24h?: number;
+  };
 }

@@ -76,7 +76,14 @@ export class WalletController {
     const response = await this.walletService.getWallet(userId, dto);
     return generateResponse('success', response);
   }
-
+  @Get('getWalletV1')
+  async getWalletV1(
+    @User('sub') userId: string,
+    @Query('wallet_id') wallet_id: string,
+  ) {
+    const response = await this.walletService.getWalletV1(userId, wallet_id);
+    return generateResponse('success', response);
+  }
   @Get('getUserWallets')
   async getUserWallets(@User('sub') userId: string) {
     const response = await this.walletService.getUserWallets(userId);

@@ -461,110 +461,70 @@ export async function getTransactionByHash(
   token_decimals?: number,
   rpc_url?: string,
 ): Promise<TransactionHistoryEVM | null> {
-  // try {
-  //   const config = networkConfigService.getNetworkConfig(chain_id);
-  //   if (!config || !config.api_url || !config.api_key || config.status !== 1) {
-  //     throw new Error(
-  //       `Cấu hình mạng không hợp lệ hoặc mạng đang offline cho chain_id: ${chain_id}`,
-  //     );
-  //   }
-
-  //   const url = `${config.api_url}&module=proxy&action=eth_getTransactionByHash&txhash=${txHash}&apikey=${config.api_key}`;
-
-  //   const response = await axios.get<{
-  //     jsonrpc: string;
-  //     id: number;
-  //     result: EtherscanTransaction | null;
-  //   }>(url);
-
-  //   if (!response.data.result) {
-  //     throw new Error(`Không tìm thấy giao dịch với hash: ${txHash}`);
-  //   }
-  //   console.log(response);
-  //   const tx = response.data.result;
-
-  //   const receiptUrl = `${config.api_url}&module=proxy&action=eth_getTransactionReceipt&txhash=${txHash}&apikey=${config.api_key}`;
-  //   const receiptResponse = await axios.get<{
-  //     jsonrpc: string;
-  //     id: number;
-  //     result: { gasUsed: string; status: string } | null;
-  //   }>(receiptUrl);
-
-  //   const receipt = receiptResponse.data.result;
-  //   const provider = new ethers.JsonRpcProvider(config.rpc_url);
-  //   const blockData = await provider.getBlock(tx.blockNumber, false);
-  //   const convertValue = (value: string) => {
-  //     console.log(value);
-  //     const valueBigInt = BigInt(value);
-  //     const decimalValue = Number(valueBigInt) / Math.pow(10, token_decimals!);
-
-  //     return decimalValue.toString();
-  //   };
-
-  //   const gasUsed = receipt ? BigInt(receipt.gasUsed) : BigInt(0);
-  //   const gasPrice = BigInt(tx.gasPrice);
-  //   const feeNetworkBigInt = gasUsed * gasPrice;
-  //   const feeNetwork = (
-  //     Number(feeNetworkBigInt) / Math.pow(10, token_decimals || 18)
-  //   ).toString();
-  //   return {
-  //     hash: tx.hash,
-  //     from: tx.from,
-  //     to: tx.to || '',
-  //     value: convertValue(tx.value),
-  //     gasUsed: feeNetwork,
-  //     gasPrice: tx.gasPrice,
-  //     blockHash: tx.blockHash,
-  //     blockNumber: parseInt(tx.blockNumber, 16),
-  //     timestamp: blockData ? blockData.timestamp : 0,
-  //     status: receipt
-  //       ? receipt.status === '0x1'
-  //         ? 'success'
-  //         : 'failed'
-  //       : 'unknown',
-  //     gasLimit: tx.gas,
-  //     nonce: parseInt(tx.nonce, 16),
-  //   };
-  // } catch (error) {
-  //   console.error(
-  //     `Lỗi khi lấy thông tin giao dịch ${txHash} trên chain ${chain_id}:`,
-  //     error,
-  //   );
-  //   return null;
-  // }
-  const provider = new ethers.JsonRpcProvider(rpc_url);
   try {
-    const tx = await provider.getTransaction(txHash);
-    console.log('tx', tx);
-    const receipt = await provider.getTransactionReceipt(txHash);
-    console.log('receipt', receipt);
+    const config = networkConfigService.getNetworkConfig(chain_id);
+    if (!config || !config.api_url || !config.api_key || config.status !== 1) {
+      throw new Error(
+        `Cấu hình mạng không hợp lệ hoặc mạng đang offline cho chain_id: ${chain_id}`,
+      );
+    }
 
-    const blockData = tx?.blockNumber
-      ? await provider.getBlock(tx.blockNumber)
-      : null;
-    console.log('blockData', blockData);
+    const url = `${config.api_url}&module=proxy&action=eth_getTransactionByHash&txhash=${txHash}&apikey=${config.api_key}`;
 
-    const result = {
-      hash: tx?.hash || '',
-      from: tx?.from || '',
-      to: tx?.to || '',
-      value: tx?.value ? ethers.formatEther(tx.value) : '0',
-      gasUsed: receipt?.gasUsed ? receipt.gasUsed.toString() : '0',
-      gasPrice: tx?.gasPrice ? tx.gasPrice.toString() : '0',
-      blockHash: tx?.blockHash || '',
-      blockNumber: tx?.blockNumber ?? 0,
-      timestamp: blockData?.timestamp ?? 0,
+    const response = await axios.get<{
+      jsonrpc: string;
+      id: number;
+      result: EtherscanTransaction | null;
+    }>(url);
+
+    if (!response.data.result) {
+      throw new Error(`Không tìm thấy giao dịch với hash: ${txHash}`);
+    }
+    console.log(response);
+    const tx = response.data.result;
+
+    const receiptUrl = `${config.api_url}&module=proxy&action=eth_getTransactionReceipt&txhash=${txHash}&apikey=${config.api_key}`;
+    const receiptResponse = await axios.get<{
+      jsonrpc: string;
+      id: number;
+      result: { gasUsed: string; status: string } | null;
+    }>(receiptUrl);
+
+    const receipt = receiptResponse.data.result;
+    const provider = new ethers.JsonRpcProvider(config.rpc_url);
+    const blockData = await provider.getBlock(tx.blockNumber, false);
+    const convertValue = (value: string) => {
+      console.log(value);
+      const valueBigInt = BigInt(value);
+      const decimalValue = Number(valueBigInt) / Math.pow(10, token_decimals!);
+
+      return decimalValue.toString();
+    };
+
+    const gasUsed = receipt ? BigInt(receipt.gasUsed) : BigInt(0);
+    const gasPrice = BigInt(tx.gasPrice);
+    const feeNetworkBigInt = gasUsed * gasPrice;
+    const feeNetwork = (
+      Number(feeNetworkBigInt) / Math.pow(10, token_decimals || 18)
+    ).toString();
+    return {
+      hash: tx.hash,
+      from: tx.from,
+      to: tx.to || '',
+      value: convertValue(tx.value),
+      gasUsed: feeNetwork,
+      gasPrice: tx.gasPrice,
+      blockHash: tx.blockHash,
+      blockNumber: parseInt(tx.blockNumber, 16),
+      timestamp: blockData ? blockData.timestamp : 0,
       status: receipt
-        ? receipt.status === 1
+        ? receipt.status === '0x1'
           ? 'success'
           : 'failed'
         : 'unknown',
-      gasLimit: tx?.gasLimit ? tx.gasLimit.toString() : '0',
-      nonce: tx?.nonce ?? 0,
+      gasLimit: tx.gas,
+      nonce: parseInt(tx.nonce, 16),
     };
-
-    console.log(result);
-    return result;
   } catch (error) {
     console.error(
       `Lỗi khi lấy thông tin giao dịch ${txHash} trên chain ${chain_id}:`,
@@ -572,4 +532,44 @@ export async function getTransactionByHash(
     );
     return null;
   }
+  // const provider = new ethers.JsonRpcProvider(rpc_url);
+  // try {
+  //   const tx = await provider.getTransaction(txHash);
+  //   console.log('tx', tx);
+  //   const receipt = await provider.getTransactionReceipt(txHash);
+  //   console.log('receipt', receipt);
+
+  //   const blockData = tx?.blockNumber
+  //     ? await provider.getBlock(tx.blockNumber)
+  //     : null;
+  //   console.log('blockData', blockData);
+
+  //   const result = {
+  //     hash: tx?.hash || '',
+  //     from: tx?.from || '',
+  //     to: tx?.to || '',
+  //     value: tx?.value ? ethers.formatEther(tx.value) : '0',
+  //     gasUsed: receipt?.gasUsed ? receipt.gasUsed.toString() : '0',
+  //     gasPrice: tx?.gasPrice ? tx.gasPrice.toString() : '0',
+  //     blockHash: tx?.blockHash || '',
+  //     blockNumber: tx?.blockNumber ?? 0,
+  //     timestamp: blockData?.timestamp ?? 0,
+  //     status: receipt
+  //       ? receipt.status === 1
+  //         ? 'success'
+  //         : 'failed'
+  //       : 'unknown',
+  //     gasLimit: tx?.gasLimit ? tx.gasLimit.toString() : '0',
+  //     nonce: tx?.nonce ?? 0,
+  //   };
+
+  //   console.log(result);
+  //   return result;
+  // } catch (error) {
+  //   console.error(
+  //     `Lỗi khi lấy thông tin giao dịch ${txHash} trên chain ${chain_id}:`,
+  //     error,
+  //   );
+  //   return null;
+  // }
 }

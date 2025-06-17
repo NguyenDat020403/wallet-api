@@ -25,6 +25,8 @@ import { CoinService } from '../coinpaprika/coinpaprika.service';
 import { CoinMarketResponse } from '../coinpaprika/coinpaprika.dto';
 import { CacheService } from '../cache/cache.service';
 import pLimit from 'p-limit';
+import { TokenWithNetwork } from '../wallet/wallet.dto';
+import { networks } from 'generated/prisma';
 const limit = pLimit(3);
 @UseGuards(JwtGuard)
 @Injectable()
@@ -172,6 +174,112 @@ export class TokenService {
       ),
     );
   }
+  async getTokensV1(wallet_id: string) {
+    const walletTokenNetwork = await this.prisma.wallet_network_tokens.findMany(
+      {
+        where: { wallet_id },
+      },
+    );
+
+    const token_networkList = await Promise.all(
+      walletTokenNetwork.map(async (item) =>
+        this.cacheService.getOrSet(
+          `token_network_${item.token_network_id}`,
+          () =>
+            this.prisma.token_networks.findFirst({
+              where: { token_network_id: item.token_network_id! },
+            }),
+        ),
+      ),
+    );
+
+    const groupedByNetworkName: {
+      [networkName: string]: {
+        network: networks;
+        tokens: TokenWithNetwork[];
+      };
+    } = {};
+
+    const tokenWithNetworkList = await Promise.all(
+      token_networkList.map(async (item) =>
+        limit(async () => {
+          const [token, network, wallet_network] = await Promise.all([
+            this.cacheService.getOrSet(`token_${item?.token_id}`, () =>
+              this.prisma.tokens.findFirst({
+                where: { token_id: item?.token_id || '' },
+              }),
+            ),
+            this.cacheService.getOrSet(`network_${item?.network_id}`, () =>
+              this.prisma.networks.findFirst({
+                where: { network_id: item?.network_id || '' },
+              }),
+            ),
+            this.cacheService.getOrSet(
+              `wallet_network_${wallet_id}_${item?.network_id}`,
+              () =>
+                this.prisma.wallet_networks.findFirst({
+                  where: { wallet_id: wallet_id, network_id: item?.network_id },
+                }),
+            ),
+          ]);
+          const market_data: CoinMarketResponse | null =
+            await this.getTokenMarketData({
+              symbol: token?.symbol || '',
+              name: token?.token_name || '',
+            });
+          const market = {
+            price: market_data?.quotes.USD.price ?? 0,
+            percent_change_1h: market_data?.quotes.USD.percent_change_1h ?? 0,
+            percent_change_24h: market_data?.quotes.USD.percent_change_24h ?? 0,
+            percent_change_7d: market_data?.quotes.USD.percent_change_7d ?? 0,
+            percent_change_30d: market_data?.quotes.USD.percent_change_30d ?? 0,
+            volume_24h: market_data?.quotes.USD.volume_24h ?? 0,
+            volume_24h_change_24h: Number(
+              market_data?.quotes.USD.volume_24h_change_24h ?? 0,
+            ),
+          };
+          const balance = await getBalanceV1(
+            wallet_network!.address.toLowerCase(),
+            network?.symbol,
+            network?.rpc_url,
+            item?.contract_address,
+            token?.decimals,
+          );
+
+          return {
+            token: token,
+            network: network,
+            contract_address: item?.contract_address,
+            balance,
+            market_data: market,
+          };
+        }),
+      ),
+    );
+    console.log('first');
+    for (const item of tokenWithNetworkList) {
+      if (!item || !item.network) continue;
+
+      const networkName = item.network?.network_name || 'Unknown';
+      if (!groupedByNetworkName[networkName]) {
+        groupedByNetworkName[networkName] = {
+          network: item.network,
+          tokens: [],
+        };
+      }
+
+      groupedByNetworkName[networkName].tokens.push({
+        token: item.token,
+        network: item.network,
+        contract_address: item.contract_address,
+        balance: item.balance,
+        market_data: item.market_data,
+      });
+    }
+    console.log(groupedByNetworkName);
+    return groupedByNetworkName;
+  }
+
   async createDefaultToken() {
     const tokenMetadataList: TokenMetadata[] = [];
     for (const token of defaultTokens) {
@@ -417,6 +525,28 @@ export class TokenService {
       },
     });
     return walletN;
+  }
+  async getTokensByNetworkId(network_id: string, wallet_id: string) {
+    const tokens = await this.prisma.token_networks.findFirst({
+      where: {
+        network_id: network_id,
+      },
+    });
+
+    if (!tokens) {
+      return [];
+    }
+
+    const walletTNs = await this.prisma.wallet_network_tokens.findMany({
+      where: {
+        token_network_id: {
+          in: [tokens.token_network_id],
+        },
+        wallet_id: wallet_id,
+      },
+    });
+    console.log(walletTNs);
+    return walletTNs;
   }
   // async getPriceFeedId(symbol: string): Promise<string | null> {
   //   try {
